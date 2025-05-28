@@ -1,16 +1,4 @@
-# clairity
+# Clairity
 
-A new Flutter project.
+Clarity is a mobile application that captures and predicts the air quality of indoor restrooms, giving valuable insights to caretakers of specific workplaces, instutitions, and companies. 
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
