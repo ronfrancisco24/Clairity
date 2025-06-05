@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'screens/splash_screen.dart';
+import 'screens/notifications_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -10,9 +11,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(360, 690), // base size for scaling
+      minTextAdapt: true,
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: NotificationScreen(),
+        );
+      },
     );
   }
 }
