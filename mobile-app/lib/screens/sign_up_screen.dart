@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/auth_text_field.dart';
 import '../widgets/bottomsheet.dart';
-import 'sign_in_screen.dart';
+import 'notifications_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -36,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SignInScreen(),
+                builder: (context) => NotificationScreen(),
               ),
             );
           },
