@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../widgets/notifications_button.dart';
 
+//TODO: configure mo nalang ung notifications button for void callbacks. e.g. navigation
+//TODO: add metric cards: air quality, air quality/trends graph, air quality reminder, and pollutant card.
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
