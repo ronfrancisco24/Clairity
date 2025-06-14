@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'sign_in_screen.dart';
+import 'sign_up_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -7,7 +9,14 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignInScreen(),
+            ),
+          );
+        },
         child: Container(
           height: double.infinity,
           width: double.infinity,
@@ -30,13 +39,11 @@ class SplashScreen extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
-                  fontFamily: 'Times New Roman',
                 ),
               ),
               Text(
                 'Breathe Easy. Monitor Smarter',
                 style: TextStyle(
-                  fontFamily: 'Times New Roman',
                 ),
               )
             ],
