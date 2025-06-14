@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+
 class NotificationsButton extends StatelessWidget {
   const NotificationsButton({super.key});
 
@@ -31,9 +32,7 @@ class NotificationsButton extends StatelessWidget {
               height: 10,
               width: 10,
               decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(20)
-              ),
+                  color: Colors.red, borderRadius: BorderRadius.circular(20)),
             ),
           )
         ],
