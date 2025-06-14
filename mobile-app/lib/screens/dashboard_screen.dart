@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/notifications_button.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -15,8 +16,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
         color: Colors.white,
         width: double.infinity,
         height: double.infinity,
-        child: Column(
-          children: [],
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          'Good Morning, John!',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                        Text('Monday, June 1'),
+                      ],
+                    ),
+                    NotificationsButton()
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
