@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/notifications_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'screens/sign_in_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: SignInScreen(),
+          home: SplashScreen(),
         );
       },
     );

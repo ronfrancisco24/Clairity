@@ -3,13 +3,13 @@ import 'auth_text_field.dart';
 import 'sign_button.dart';
 import 'social_button.dart';
 
-class SignUpBottomsheet extends StatefulWidget {
+class Bottomsheet extends StatefulWidget {
   final List<Widget> formFields;
   final VoidCallback onSignUp;
   final bool? isChecked;
   final bool? showCheckbox;
 
-  const SignUpBottomsheet({
+  const Bottomsheet({
     super.key,
     required this.formFields,
     required this.onSignUp,
@@ -18,10 +18,10 @@ class SignUpBottomsheet extends StatefulWidget {
   });
 
   @override
-  State<SignUpBottomsheet> createState() => _SignUpBottomsheetState();
+  State<Bottomsheet> createState() => _BottomsheetState();
 }
 
-class _SignUpBottomsheetState extends State<SignUpBottomsheet> {
+class _BottomsheetState extends State<Bottomsheet> {
   bool? isChecked = false;
 
   @override
