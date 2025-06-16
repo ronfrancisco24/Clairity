@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/bottomsheet.dart';
-import '../widgets/auth_text_field.dart';
+import '../../widgets/onboarding/bottomsheet.dart';
+import '../../widgets/onboarding/auth_text_field.dart';
 import 'sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
