@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'screens/notifications_screen.dart';
+import 'screens/notifications/notifications_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'screens/sensor_screen.dart';
-import 'screens/sign_in_screen.dart';
-import 'screens/splash_screen.dart';
+import 'screens/sensor/sensor_screen.dart';
+import 'screens/onboarding/sign_in_screen.dart';
+import 'screens/onboarding/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
