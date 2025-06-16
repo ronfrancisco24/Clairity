@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/sensor_card.dart'; // Import SensorCard as it's used here
+import '../widgets/sensor/sensor_card.dart'; // Import SensorCard as it's used here
 
 class SensorUtils {
   static List<SensorCard> getFilteredSensorData(

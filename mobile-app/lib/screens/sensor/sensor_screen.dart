@@ -3,15 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 // Import all separated widgets
-import '../widgets/notifications_button.dart';
-import '../widgets/sensor_card.dart';
-import '../widgets/circular_indicator.dart';
-import '../widgets/time_info_tile.dart';
-import '../widgets/sensor_grid.dart';
-import '../widgets/sensor_gender_buttons.dart';
+import '../../widgets/sensor/notifications_button.dart';
+import '../../widgets/sensor/sensor_card.dart';
+import '../../widgets/sensor/circular_indicator.dart';
+import '../../widgets/sensor/time_info_tile.dart';
+import '../../widgets/sensor/sensor_grid.dart';
+import '../../widgets/sensor/sensor_gender_buttons.dart';
 
 // Import the new utility file
-import '../utils/sensor_utils.dart';
+import '../../utils/sensor_utils.dart';
 
 class SensorScreen extends StatefulWidget {
   const SensorScreen({super.key});

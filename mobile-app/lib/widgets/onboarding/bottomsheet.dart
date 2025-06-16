@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'auth_text_field.dart';
 import 'sign_button.dart';
-import 'social_button.dart';
+import './social_button.dart';
 
 class Bottomsheet extends StatefulWidget {
   final List<Widget> formFields;

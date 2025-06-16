@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../widgets/notification_card.dart';
-import '../utils/notif_utils.dart';
+import '../../widgets/sensor/notification_card.dart';
+import '../../utils/notif_utils.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
