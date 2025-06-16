@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/auth_text_field.dart';
-import '../widgets/bottomsheet.dart';
-import 'dashboard_screen.dart';
+import '../../widgets/onboarding/bottomsheet.dart';
+import '../../widgets/onboarding/auth_text_field.dart';
+import '../dashboard/dashboard_screen.dart';
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
