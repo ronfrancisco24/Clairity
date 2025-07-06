@@ -15,7 +15,7 @@ class SignButton extends StatelessWidget {
           width: double.infinity,
           height: 50,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
                 Color(0xFF0B334D),
                 Color(0xFF477023),
@@ -26,11 +26,11 @@ class SignButton extends StatelessWidget {
               BoxShadow(
                 color: Colors.black.withOpacity(0.2), // shadow color
                 blurRadius: 10, // how blurry the shadow is
-                offset: Offset(0, 4), // horizontal and vertical shift
+                offset: const Offset(0, 4), // horizontal and vertical shift
               ),
             ],
           ),
-          child: Center(
+          child: const Center(
             child: Text(
               'Sign Up',
               style: TextStyle(color: Colors.white),

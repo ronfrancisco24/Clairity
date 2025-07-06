@@ -28,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
         isDismissible: false,
         enableDrag: false,
         builder: (context) => Bottomsheet(
-          formFields: [
+          formFields: const [
             AuthTextField(title: 'Full Name'),
             AuthTextField(title: 'Email'),
             AuthTextField(title: 'Password'),
@@ -38,7 +38,7 @@ class _SignInScreenState extends State<SignInScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SignUpScreen(),
+                builder: (context) => const SignUpScreen(),
               ),
             );
           },
@@ -55,7 +55,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
             end: Alignment.topRight,

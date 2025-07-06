@@ -7,9 +7,9 @@ class SensorGridWidget extends StatelessWidget {
   final List<SensorCard> sensorData; // Now accepts data as a parameter
 
   const SensorGridWidget({
-    Key? key,
+    super.key,
     required this.sensorData, // Make data required
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

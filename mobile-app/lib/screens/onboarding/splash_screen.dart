@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'sign_in_screen.dart';
-import 'sign_up_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -13,14 +12,14 @@ class SplashScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SignInScreen(),
+              builder: (context) => const SignInScreen(),
             ),
           );
         },
         child: Container(
           height: double.infinity,
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
@@ -30,7 +29,7 @@ class SplashScreen extends StatelessWidget {
               ],
             ),
           ),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(

@@ -10,14 +10,14 @@ class SensorCard extends StatelessWidget {
   final TextStyle? subtitleStyle;
 
   const SensorCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     required this.color,
     this.titleStyle,
     this.subtitleStyle,
     this.gender,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
