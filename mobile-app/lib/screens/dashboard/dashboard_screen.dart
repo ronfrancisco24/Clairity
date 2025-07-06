@@ -30,12 +30,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               children: [
                 // Header
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           'Good Morning, John!',
                           style: TextStyle(
@@ -65,35 +65,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 SizedBox(height: 16.h),
                 // Time Selector
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(times.length, (index) {
-                    final selected = selectedTimeIndex == index;
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedTimeIndex = index;
-                        });
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-                        decoration: BoxDecoration(
-                          color: selected ? Colors.black : Colors.transparent,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: selected ? Colors.black : Colors.grey.shade300,
+                SizedBox(
+                  height: 32.h,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: times.length,
+                    separatorBuilder: (context, index) => SizedBox(width: 12.w),
+                    itemBuilder: (context, index) {
+                      final selected = selectedTimeIndex == index;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedTimeIndex = index;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                          decoration: BoxDecoration(
+                            color: selected ? Colors.black : Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: selected ? Colors.black :  Colors.black,
+                            ),
+                          ),
+                          child: Text(
+                            times[index],
+                            style: TextStyle(
+                              color: selected ? Colors.white : Colors.black,
+                              fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                            ),
                           ),
                         ),
-                        child: Text(
-                          times[index],
-                          style: TextStyle(
-                            color: selected ? Colors.white : Colors.black,
-                            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
+                      );
+                    },
+                  ),
                 ),
                 SizedBox(height: 16.h),
                 // Air Quality & Trend Cards
@@ -111,12 +116,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(width: 12.w),
                     // Quality Card
                     Expanded(
-                      child: CardQuality(
-                        onTap: () {
-                          // TODO: Navigate to sensor screen
-                        },
-                        trendLabel: 'Air Quality Trend',
-                        trendValue: 'Ammonia',
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CardQuality(
+                            onTap: () {
+                              // TODO: Navigate to sensor screen
+                            },
+                            trendLabel: 'Air Quality Trend',
+                            trendValue: 'Ammonia',
+                            trendLevel: 'Moderate',
+                          ),
+                          const SizedBox(height: 8),
+                        ],
                       ),
                     ),
                   ],

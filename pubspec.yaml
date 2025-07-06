@@ -43,6 +43,7 @@ dependencies:
   icons_plus: ^4.0.0
   material_symbols_icons: ^4.0.0
   google_fonts: ^6.2.1
+  fl_chart: ^0.66.0
 
 
 dev_dependencies:
