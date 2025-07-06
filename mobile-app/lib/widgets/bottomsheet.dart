@@ -78,10 +78,10 @@ class _BottomsheetState extends State<Bottomsheet> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SocialButton(),
-                  SocialButton(),
-                  SocialButton(),
-                  SocialButton(),
+                  // SocialButton(),
+                  // SocialButton(),
+                  // SocialButton(),
+                  // SocialButton(),
                 ],
               ),
             ),
