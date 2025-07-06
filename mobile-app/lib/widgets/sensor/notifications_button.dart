@@ -18,7 +18,7 @@ class NotificationsButton extends StatelessWidget {
               color: CupertinoColors.black,
             ),
           ),
-          Positioned(
+          const Positioned(
             left: 8,
             top: 6,
             child: Icon(

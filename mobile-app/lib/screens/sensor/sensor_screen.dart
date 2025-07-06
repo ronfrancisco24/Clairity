@@ -27,73 +27,73 @@ class _SensorScreenState extends State<SensorScreen> {
   // Define all sensor data here, with a 'gender' field for filtering
   final List<SensorCard> _allSensorData = [
     // Male restroom sensor data
-    SensorCard(
+    const SensorCard(
       gender: 'male',
       title: 'Good',
       subtitle: 'Air Quality',
-      color: const Color(0xFF7D9B4B),
+      color: Color(0xFF7D9B4B),
     ),
-    SensorCard(
+    const SensorCard(
       gender: 'male',
       title: 'Low',
       subtitle: 'Dust',
-      color: const Color(0xFF425861),
+      color: Color(0xFF425861),
     ),
-    SensorCard(
+    const SensorCard(
       gender: 'male',
       title: 'High',
       subtitle: 'Ammonia',
-      color: const Color(0xFFD26A6A),
+      color: Color(0xFFD26A6A),
     ),
-    SensorCard(
+    const SensorCard(
       gender: 'male',
       title: 'Safe',
       subtitle: 'CO',
-      color: const Color(0xFFF47C2A),
+      color: Color(0xFFF47C2A),
     ),
-    SensorCard(
+    const SensorCard(
       gender: 'male',
       title: 'Decent',
       subtitle: 'Temperature',
-      color: const Color(0xFFF47C2A),
+      color: Color(0xFFF47C2A),
     ),
-    SensorCard(
+    const SensorCard(
       gender: 'male',
       title: 'Excellent',
       subtitle: 'Humidity',
-      color: const Color(0xFF2A9D8F),
+      color: Color(0xFF2A9D8F),
     ),
 
     // Female restroom sensor data
-    SensorCard(
+    const SensorCard(
       gender: 'female',
       title: 'Very Good',
       subtitle: 'Air Quality',
-      color: const Color(0xFF7D9B4B),
+      color: Color(0xFF7D9B4B),
     ),
-    SensorCard(
+    const SensorCard(
       gender: 'female',
       title: 'Moderate',
       subtitle: 'Dust',
-      color: const Color(0xFF425861),
+      color: Color(0xFF425861),
     ),
-    SensorCard(
+    const SensorCard(
       gender: 'female',
       title: 'Low',
       subtitle: 'Ammonia',
-      color: const Color(0xFF2A9D8F),
+      color: Color(0xFF2A9D8F),
     ),
-    SensorCard(
+    const SensorCard(
       gender: 'female',
       title: 'Critical',
       subtitle: 'CO',
-      color: const Color(0xFF8B0000),
+      color: Color(0xFF8B0000),
     ),
-    SensorCard(
+    const SensorCard(
       gender: 'female',
       title: 'Cool',
       subtitle: 'Temperature',
-      color: const Color(0xFF425861),
+      color: Color(0xFF425861),
     ),
   ];
 
@@ -122,7 +122,7 @@ class _SensorScreenState extends State<SensorScreen> {
                     "Sensors",
                     style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold),
                   ),
-                  NotificationsButton(),
+                  const NotificationsButton(),
                 ],
               ),
               SizedBox(height: 16.h), // Spacing below the header
@@ -194,13 +194,13 @@ class _SensorScreenState extends State<SensorScreen> {
               SensorCard(
                 title: 'Alerts',
                 subtitle: 'Smell too strong – Clean Now!',
-                color: Color(0xFF8B0000),
+                color: const Color(0xFF8B0000),
                 titleStyle: TextStyle(fontSize: 24.sp, color: Colors.white, fontWeight: FontWeight.bold),
                 subtitleStyle: TextStyle(fontSize: 16.sp, color: Colors.white),
               ),
               SizedBox(height: 20.h),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   TimeInfoTile(time: "10:30", label: "Last Cleaned", icon: Icons.wb_sunny_outlined),
                   SizedBox(width: 12),
                   TimeInfoTile(time: "2:00", label: "Clean Again By", icon: Icons.dark_mode_outlined),

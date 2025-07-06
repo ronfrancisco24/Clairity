@@ -19,9 +19,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         color: Colors.white,
         width: double.infinity,
         height: double.infinity,
-        child: SafeArea(
+        child: const SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(30.0),
+            padding: EdgeInsets.all(30.0),
             child: Column(
               children: [
                 Row(

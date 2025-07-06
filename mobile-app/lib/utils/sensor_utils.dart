@@ -17,7 +17,7 @@ class SensorUtils {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary: Colors.blueGrey, // Header background color
               onPrimary: Colors.white, // Header text color
               onSurface: Colors.black, // Body text color
