@@ -8,11 +8,11 @@ class AuthTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 50),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Stack(
         children: [
           Card(
-            color: Color(0xFFD9D9D9),
+            color: const Color(0xFFD9D9D9),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -27,7 +27,7 @@ class AuthTextField extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(child: Text(title), left: 20, top: -5),
+          Positioned(left: 20, top: -5, child: Text(title)),
         ],
       ),
     );
