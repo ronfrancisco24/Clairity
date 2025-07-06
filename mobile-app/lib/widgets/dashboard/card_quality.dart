@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class CardQuality extends StatelessWidget {
   const CardQuality({
@@ -6,11 +7,13 @@ class CardQuality extends StatelessWidget {
     required this.onTap,
     required this.trendLabel,
     required this.trendValue,
+    required this.trendLevel,
   });
 
   final VoidCallback onTap;
   final String trendLabel;
   final String trendValue;
+  final String trendLevel;
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +21,13 @@ class CardQuality extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       onTap: onTap,
       child: Container(
-        height: 110,
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.black12),
+          border: Border.all(color: Colors.black), // Black border
         ),
-        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -32,47 +35,66 @@ class CardQuality extends StatelessWidget {
               trendLabel,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: 16,
               ),
             ),
-            const Spacer(),
-            // Placeholder for graph
-            Container(
-              height: 32,
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 80,
               width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Center(
-                child: Text(
-                  'Graph',
-                  style: TextStyle(
-                    color: Colors.blueGrey,
-                    fontSize: 12,
-                  ),
+              child: LineChart(
+                LineChartData(
+                  gridData: FlGridData(show: false),
+                  titlesData: FlTitlesData(show: false),
+                  borderData: FlBorderData(show: false),
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: [
+                        FlSpot(0, 1),
+                        FlSpot(1, 1.5),
+                        FlSpot(2, 1.4),
+                        FlSpot(3, 3.4),
+                        FlSpot(4, 2),
+                        FlSpot(5, 2.2),
+                        FlSpot(6, 1.8),
+                      ],
+                      isCurved: true,
+                      color: Colors.blueAccent,
+                      barWidth: 4,
+                      dotData: FlDotData(show: false),
+                    ),
+                  ],
                 ),
               ),
             ),
-            const Spacer(),
+            const SizedBox(height: 12),
+            // TrendLevel above TrendValue, both left-aligned, arrow right
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Text(
-                  'Low',
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 12,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      trendLevel,
+                      style: const TextStyle(
+                        color: Colors.black38,
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    Text(
+                      trendValue,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  trendValue,
-                  style: const TextStyle(
-                    color: Colors.black54,
-                    fontSize: 12,
-                  ),
-                ),
-                const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.black54),
+                const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black54),
               ],
             ),
           ],
