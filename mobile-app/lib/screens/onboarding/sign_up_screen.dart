@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/auth_text_field.dart';
-import '../widgets/bottomsheet.dart';
-import 'dashboard_screen.dart';
+import '../../widgets/onboarding/bottomsheet.dart';
+import '../../widgets/onboarding/auth_text_field.dart';
+import '../dashboard/dashboard_screen.dart';
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -28,7 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         isDismissible: false,
         enableDrag: false,
         builder: (context) => Bottomsheet(
-          formFields: [
+          formFields: const [
             AuthTextField(title: 'Email'),
             AuthTextField(title: 'Password'),
           ],
@@ -36,7 +37,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DashboardScreen(),
+                builder: (context) => const DashboardScreen(),
               ),
             );
           },
@@ -53,7 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
             end: Alignment.topRight,
