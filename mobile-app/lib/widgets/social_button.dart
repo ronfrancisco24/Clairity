@@ -2,19 +2,36 @@ import 'package:flutter/material.dart';
 import '';
 
 class SocialButton extends StatelessWidget {
-  const SocialButton({super.key});
+
+  final VoidCallback? onTap;
+  const SocialButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: SizedBox(
-        height: 30,
-        width: 30,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.asset('images/google.jpg'),
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2), // shadow color
+              blurRadius: 10, // how blurry the shadow is
+              offset: Offset(0, 4), // horizontal and vertical shift
+            ),
+          ],
         ),
-      )
+        child: Center(
+          child: Text(
+            'Sign in with Google',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+        ),
+      ),
+
     );
   }
 }
