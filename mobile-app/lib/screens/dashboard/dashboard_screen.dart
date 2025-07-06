@@ -5,6 +5,7 @@ import '../../widgets/dashboard/card_location.dart';
 import '../../widgets/dashboard/card_currents.dart';
 import '../../widgets/dashboard/card_quality.dart';
 import '../../widgets/dashboard/card_status_sensor.dart';
+import '../../widgets/dashboard/card_message.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -40,7 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           'Good Morning, John!',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            fontSize: 24,
                           ),
                         ),
                         SizedBox(height: 4),
@@ -135,21 +136,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 SizedBox(height: 16.h),
                 // Warning
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: EdgeInsets.all(12.w),
-                  child: const Text(
-                    'Air quality in CR2 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                CardMessage(
+                  message: 'Air quality in CR2 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
                 ),
                 SizedBox(height: 16.h),
                 // Pollutant Cards
@@ -177,6 +165,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     );
                   },
                 ),
+                SizedBox(height: 42.h),
               ],
             ),
           ),
