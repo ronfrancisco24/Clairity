@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../widgets/sensor/notifications_button.dart';
-
-//TODO: configure mo nalang ung notifications button for void callbacks. e.g. navigation
-//TODO: add metric cards: air quality, air quality/trends graph, air quality reminder, and pollutant card.
+import '../../widgets/dashboard/card_location.dart';
+import '../../widgets/dashboard/card_currents.dart';
+import '../../widgets/dashboard/card_quality.dart';
+import '../../widgets/dashboard/card_status_sensor.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -12,32 +14,156 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  int selectedTimeIndex = 0;
+  final List<String> times = ['8:00 am', '9:00 am', '9:30 am', '10:00 am'];
+
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: const Size(360, 690));
+
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        width: double.infinity,
-        height: double.infinity,
-        child: const SafeArea(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(30.0),
+            padding: EdgeInsets.all(20.w), // Match SensorScreen margins
             child: Column(
               children: [
+                // Header
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
-                      children: [
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
                         Text(
                           'Good Morning, John!',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
-                        Text('Monday, June 1'),
+                        SizedBox(height: 4),
+                        Text(
+                          'Monday, June 1',
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 14,
+                          ),
+                        ),
                       ],
                     ),
-                    NotificationsButton()
+                    NotificationsButton(),
                   ],
+                ),
+                SizedBox(height: 16.h),
+                // Location Card
+                const CardLocation(
+                  imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
+                  title: 'PGN 1st Floor',
+                  subtitle: 'Near Printing Station',
+                ),
+                SizedBox(height: 16.h),
+                // Time Selector
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(times.length, (index) {
+                    final selected = selectedTimeIndex == index;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedTimeIndex = index;
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+                        decoration: BoxDecoration(
+                          color: selected ? Colors.black : Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: selected ? Colors.black : Colors.grey.shade300,
+                          ),
+                        ),
+                        child: Text(
+                          times[index],
+                          style: TextStyle(
+                            color: selected ? Colors.white : Colors.black,
+                            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+                SizedBox(height: 16.h),
+                // Air Quality & Trend Cards
+                Row(
+                  children: [
+                    // Currents Card
+                    const Expanded(
+                      child: CardCurrents(
+                        value: 56,
+                        low: 52,
+                        high: 89,
+                        status: 'Moderate',
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    // Quality Card
+                    Expanded(
+                      child: CardQuality(
+                        onTap: () {
+                          // TODO: Navigate to sensor screen
+                        },
+                        trendLabel: 'Air Quality Trend',
+                        trendValue: 'Ammonia',
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16.h),
+                // Warning
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: EdgeInsets.all(12.w),
+                  child: const Text(
+                    'Air quality in CR2 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                // Pollutant Cards
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    int crossAxisCount = constraints.maxWidth > 400 ? 4 : 2;
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 8,
+                        childAspectRatio: 2.2,
+                      ),
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return const CardStatusSensor(
+                          value: 12,
+                          maxValue: 120,
+                          label: 'PM2.5',
+                          progress: 0.1,
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),
