@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../widgets/constants.dart';
-import '../widgets/auth_text_field.dart';
+import '../../widgets/constants.dart';
+import '../../widgets/onboarding/auth_text_field.dart';
 import 'sign_up_screen.dart';
-import '../widgets/sign_button.dart';
+import '../../widgets/onboarding/sign_button.dart';
 
 //TODO: navigate to r
 class ForgotPasswordScreen extends StatelessWidget {

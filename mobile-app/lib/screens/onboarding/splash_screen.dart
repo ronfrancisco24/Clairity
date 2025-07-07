@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'sign_in_screen.dart';
-import '../widgets/constants.dart';
+import '../../widgets/constants.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
