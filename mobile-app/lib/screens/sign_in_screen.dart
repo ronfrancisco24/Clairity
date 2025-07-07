@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottomsheet.dart';
 import '../widgets/auth_text_field.dart';
+import '../widgets/constants.dart';
 import '../widgets/sign_button.dart';
 import '../widgets/social_button.dart';
+import 'dashboard_screen.dart';
+import 'forgot_password_screen.dart';
 import 'sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -21,16 +24,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [
-              Color(0xFF0B334D),
-              Color(0xFF477023),
-            ],
-          ),
-        ),
+        decoration: const BoxDecoration(gradient: kBackgroundGradient),
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(25),
@@ -38,29 +32,17 @@ class _SignInScreenState extends State<SignInScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Center(
-                  child: Text(
-                    'Clairity',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
+                  child: Image(image: AssetImage('images/logo.png'))
                 ),
-                const Align(
+                Container(
+                  margin: EdgeInsets.only(top: 30),
                   alignment: Alignment.centerLeft,
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text('Login', style: kHeading),
                       Text(
-                        'Sign Up',
-                        style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Just some details to get you in!',
+                        "Glad you're back!",
                         style: TextStyle(fontSize: 15, color: Colors.white),
                       ),
                     ],
@@ -68,9 +50,29 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const AuthTextField(title: 'Email/Phone'),
                 const AuthTextField(title: 'Password'),
-                const AuthTextField(title: 'Confirm Password'),
                 SignButton(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DashboardScreen(),
+                      ),
+                    );
+                  },
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ForgotPasswordScreen(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Forgot Password?',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 Container(
                   child: const Row(
@@ -78,7 +80,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       Expanded(
                         child: Divider(
                           color: Color(0xFF37964E),
-                          thickness: 2,
+                          thickness: 3,
                         ),
                       ),
                       Padding(
@@ -93,27 +95,56 @@ class _SignInScreenState extends State<SignInScreen> {
                       Expanded(
                         child: Divider(
                           color: Color(0xFF37964E),
-                          thickness: 2,
+                          thickness: 3,
                         ),
                       ),
                     ],
                   ),
                 ),
                 SocialButton(
+                  title: 'Sign up with ',
                   onTap: () {},
                 ),
-                const Center(
-                  child: Text(
-                    'Already Registered? Login Here.',
-                    style: TextStyle(color: Colors.blue),
+                Center(
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        const TextSpan(text: "Don't have an account? "),
+                        WidgetSpan(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignUpScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Sign Up',
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text('Terms & Conditions'),
-                    Text('Support'),
-                    Text('Customer Care')
+                    Text(
+                      'Terms & Conditions',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Support',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Customer Care',
+                      style: TextStyle(color: Colors.white),
+                    )
                   ],
                 ),
                 const SizedBox(

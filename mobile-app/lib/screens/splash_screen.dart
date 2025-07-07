@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'sign_in_screen.dart';
-import 'sign_up_screen.dart';
+import '../widgets/constants.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -33,18 +33,13 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                'Clairity',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+              const Center(
+                  child: Image(image: AssetImage('images/logo.png'))
               ),
+              SizedBox(height:30),
               Text(
                 'Breathe Easy. Monitor Smarter',
-                style: TextStyle(
-                ),
+                style: kSubheading
               )
             ],
           ),

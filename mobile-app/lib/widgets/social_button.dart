@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '';
 
 class SocialButton extends StatelessWidget {
-
   final VoidCallback? onTap;
-  const SocialButton({super.key, required this.onTap});
+  final String title;
+
+  const SocialButton({super.key, required this.onTap, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +24,25 @@ class SocialButton extends StatelessWidget {
             ),
           ],
         ),
-        child: Center(
-          child: Text(
-            'Sign in with Google',
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(
+            '$title Google',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
-        ),
+          SizedBox(
+            width: 25,
+          ),
+          SizedBox(
+            height: 25,
+            width: 25,
+            child: CircleAvatar(
+              backgroundImage: AssetImage('images/google.jpg'),
+              backgroundColor: Colors.white,
+            ),
+          )
+        ]),
       ),
-
     );
   }
 }
