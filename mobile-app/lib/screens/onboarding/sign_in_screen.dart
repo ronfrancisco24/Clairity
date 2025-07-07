@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import '../widgets/auth_text_field.dart';
-import '../widgets/sign_button.dart';
-import '../widgets/social_button.dart';
-import 'dashboard_screen.dart';
-import '../widgets/constants.dart';
+import '../../widgets/onboarding/auth_text_field.dart';
+import '../../widgets/constants.dart';
+import '../../widgets/onboarding/sign_button.dart';
+import '../../widgets/onboarding/social_button.dart';
+import '../dashboard/dashboard_screen.dart';
 import 'forgot_password_screen.dart';
-import 'sign_in_screen.dart';
+import 'sign_up_screen.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   bool? isChecked = false;
 
   @override
@@ -23,16 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [
-              Color(0xFF0B334D),
-              Color(0xFF477023),
-            ],
-          ),
-        ),
+        decoration: const BoxDecoration(gradient: kBackgroundGradient),
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(25),
@@ -40,7 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Center(
-                    child: Image(image: AssetImage('images/logo.png'))
+                  child: Image(image: AssetImage('images/logo.png'))
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 30),
@@ -48,31 +39,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Sign Up', style: kHeading),
-                      Text('Just some details to get you in!',
-                          style: kSubheading),
+                      Text('Login', style: kHeading),
+                      Text(
+                        "Glad you're back!",
+                        style: TextStyle(fontSize: 15, color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
                 const AuthTextField(title: 'Email/Phone'),
                 const AuthTextField(title: 'Password'),
-                const AuthTextField(title: 'Confirm Password'),
                 SignButton(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SignUpScreen(),
+                        builder: (context) => DashboardScreen(),
                       ),
                     );
                   },
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ForgotPasswordScreen(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Forgot Password?',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 Container(
                   child: const Row(
                     children: [
                       Expanded(
                         child: Divider(
-                          color: kGreenAccent,
+                          color: Color(0xFF37964E),
                           thickness: 3,
                         ),
                       ),
@@ -81,13 +87,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Text(
                           'Or',
                           style: TextStyle(
-                            color: kGreenAccent,
+                            color: Color(0xFF37964E),
                           ),
                         ),
                       ),
                       Expanded(
                         child: Divider(
-                          color: kGreenAccent,
+                          color: Color(0xFF37964E),
                           thickness: 3,
                         ),
                       ),
@@ -95,26 +101,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 SocialButton(
-                  title: 'Sign in with ',
+                  title: 'Sign up with ',
                   onTap: () {},
                 ),
                 Center(
                   child: RichText(
                     text: TextSpan(
                       children: [
-                        const TextSpan(text: 'Already Registered? '),
+                        const TextSpan(text: "Don't have an account? "),
                         WidgetSpan(
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SignInScreen(),
+                                  builder: (context) => SignUpScreen(),
                                 ),
                               );
                             },
                             child: const Text(
-                              'Login Here',
+                              'Sign Up',
                               style: TextStyle(color: Colors.blue),
                             ),
                           ),

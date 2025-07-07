@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'auth_text_field.dart';
 import 'sign_button.dart';
-import 'social_button.dart';
+import './social_button.dart';
 
 class Bottomsheet extends StatefulWidget {
   final List<Widget> formFields;
@@ -57,7 +56,7 @@ class _BottomsheetState extends State<Bottomsheet> {
                       });
                     },
                   ),
-                  Text('I agree to the Processing of Data.'),
+                  const Text('I agree to the Processing of Data.'),
                 ],
               ),
             const Padding(
@@ -73,8 +72,8 @@ class _BottomsheetState extends State<Bottomsheet> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -86,7 +85,7 @@ class _BottomsheetState extends State<Bottomsheet> {
               ),
             ),
             const Text('Already have an account? Sign in!'),
-            SizedBox(height: 10,)
+            const SizedBox(height: 10,)
           ],
         ),
       ),
