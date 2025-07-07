@@ -37,7 +37,7 @@ class SocialButton extends StatelessWidget {
             height: 25,
             width: 25,
             child: CircleAvatar(
-              backgroundImage: AssetImage('images/google.jpg'),
+              backgroundImage: AssetImage('images/logo_google.jpg'),
               backgroundColor: Colors.white,
             ),
           )
