@@ -17,7 +17,8 @@ class AlertTile extends StatelessWidget {
       child: ListTile(
         leading: Icon(Icons.warning, color: Colors.redAccent),
         title: Text(alert, style: TextStyle(fontSize: 14.sp)),
-        subtitle: Text("Date: $date\nStatus: $status", style: TextStyle(fontSize: 12.sp)),
+        subtitle: Text("Date: $date\nStatus: $status",
+            style: TextStyle(fontSize: 12.sp)),
       ),
     );
   }

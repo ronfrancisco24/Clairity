@@ -151,7 +151,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         crossAxisCount: crossAxisCount,
                         mainAxisSpacing: 8,
                         crossAxisSpacing: 8,
-                        childAspectRatio: 2.2,
+                        childAspectRatio: 1.2,
                       ),
                       itemCount: 4,
                       itemBuilder: (context, index) {
@@ -159,7 +159,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           value: 12,
                           maxValue: 120,
                           label: 'PM2.5',
-                          progress: 0.1,
+                          progress: 0.7,
                         );
                       },
                     );
