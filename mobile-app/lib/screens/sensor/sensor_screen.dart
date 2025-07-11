@@ -164,7 +164,7 @@ class _SensorScreenState extends State<SensorScreen> {
                 ),
               ),
               SizedBox(height: 20.h), // Spacing after the date selector
-              const CircularIndicator(percentage: 75, label: "Good"),
+              const CircularIndicator(percentage: 38, label: "Good"),
               SizedBox(height: 20.h),
               Text(
                 "Lorem ipsum dolor sit amet consectetur. Faucibus mattis volutpat pellentesque et enim lectus sed integer in.",
