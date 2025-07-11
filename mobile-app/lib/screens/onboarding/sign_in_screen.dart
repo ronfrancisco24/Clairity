@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/navbar_utils.dart';
 import '../../widgets/onboarding/auth_text_field.dart';
 import '../../constants.dart';
 import '../../widgets/onboarding/sign_button.dart';
@@ -55,7 +56,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DashboardScreen(),
+                        builder: (context) => NavController(),
                       ),
                     );
                   },
