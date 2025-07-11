@@ -26,7 +26,7 @@ class CleanerTile extends StatelessWidget {
             Row(
               children: List.generate(
                 5,
-                    (index) => Icon(
+                (index) => Icon(
                   index < stars ? Icons.star : Icons.star_border,
                   size: 14.sp,
                   color: Colors.amber,

@@ -23,7 +23,8 @@ class SensorChart extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+            Text(label,
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
             SizedBox(
               height: 150.h,
               child: LineChart(
@@ -38,7 +39,8 @@ class SensorChart extends StatelessWidget {
                       isCurved: true,
                       color: color,
                       barWidth: 3.w,
-                      belowBarData: BarAreaData(show: true, color: color.withOpacity(0.3)),
+                      belowBarData: BarAreaData(
+                          show: true, color: color.withOpacity(0.3)),
                     )
                   ],
                   titlesData: FlTitlesData(show: false),
