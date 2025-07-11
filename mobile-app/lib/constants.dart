@@ -8,26 +8,36 @@ enum NavRoute {
   profile,
 }
 
-  const Color white = Color(0xFFF3F4F5);
-  const Color lightBlo = Color(0xFFA6BDBE);
-  const Color darkBlo = Color(0xFF0B334D);
-  const Color apricot = Color(0xFFF8B978);
-  const Color red = Color(0xFF65000B);
-  const Color darkRed = Color(0xFF3C1414);
+const Color white = Color(0xFFF3F4F5);
+const Color lightBlo = Color(0xFFA6BDBE);
+const Color darkBlo = Color(0xFF0B334D);
+const Color apricot = Color(0xFFF8B978);
+const Color red = Color(0xFF65000B);
+const Color darkRed = Color(0xFF3C1414);
 
-  const Color oliveGreen = Color(0xFF6E8649);
-  const Color mossGreen = Color(0xFF477023);
-  const Color forestGreen = Color(0xFF2D531A);
+const Color oliveGreen = Color(0xFF6E8649);
+const Color mossGreen = Color(0xFF477023);
+const Color forestGreen = Color(0xFF2D531A);
+const Color greenAccent = Color(0xFF37964E);
 
 class AppGradients {
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    stops: [0.0, 0.53, 1.0],
+    end: Alignment.bottomCenter,
+    stops: [0.0, 0.34, 1.0],
     colors: [
-      Color(0xFF2D531A), // Stop 0%
+      Color(0xFF18232A), // Stop 0%
       Color(0xFF0B334D), // Stop 53%
-      Color(0xFF18232A), // Stop 100%
+      Color(0xFF2D531A), // Stop 100%
+    ],
+  );
+
+  static const LinearGradient secondaryGradient = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [
+      Color(0xFF0B334D),
+      Color(0xFF477023),
     ],
   );
 }
@@ -46,6 +56,23 @@ class NavIcons {
 )
 */
 
+class AuthTheme {
+  final ThemeData authTheme = ThemeData(
+    scaffoldBackgroundColor: Colors.black,
+    textTheme: GoogleFonts.dmSansTextTheme().apply(
+      bodyColor: Colors.white,
+      displayColor: Colors.white,
+    ),
+  );
+}
+
+const TextStyle kTitle =
+    TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white);
+
+const TextStyle kHeading =
+    TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white);
+
+const TextStyle kSubheading = TextStyle(fontSize: 15, color: Colors.white);
 
 TextStyle kDisplayLarge = GoogleFonts.dmSans(
   fontSize: 57,
@@ -141,7 +168,3 @@ TextStyle kNameTextStyle = GoogleFonts.dmSans(
   fontWeight: FontWeight.w700,
   fontSize: 18,
 );
-
-
-
-

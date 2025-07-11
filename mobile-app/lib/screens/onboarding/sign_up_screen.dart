@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/onboarding/auth_text_field.dart';
 import '../../widgets/onboarding/sign_button.dart';
 import '../../widgets/onboarding/social_button.dart';
-import '../../widgets/constants.dart';
-import 'forgot_password_screen.dart';
+import '../../constants.dart';
 import 'sign_in_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -22,16 +21,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [
-              Color(0xFF0B334D),
-              Color(0xFF477023),
-            ],
-          ),
-        ),
+        decoration:
+            const BoxDecoration(gradient: AppGradients.secondaryGradient),
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(25),
@@ -39,24 +30,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Center(
-                    child: Image(image: AssetImage('images/logo.png'))
-                ),
+                    child: Image(image: AssetImage('images/logo.png'))),
                 Container(
                   margin: EdgeInsets.only(top: 30),
                   alignment: Alignment.centerLeft,
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Sign Up', style: kHeading),
-                      Text('Just some details to get you in!',
-                          style: kSubheading),
+                      Text('Sign Up', style: kTitleMedium),
+                      Text(
+                        'Just some details to get you in!',
+                        style: kTitleMedium,
+                      ),
                     ],
                   ),
                 ),
                 const AuthTextField(title: 'Email/Phone'),
-                const AuthTextField(title: 'Password'),
-                const AuthTextField(title: 'Confirm Password'),
+                const AuthTextField(
+                  title: 'Password',
+                  obscureText: true,
+                ),
+                const AuthTextField(
+                  title: 'Confirm Password',
+                  obscureText: true,
+                ),
                 SignButton(
+                  title: 'Sign Up',
                   onTap: () {
                     Navigator.push(
                       context,
@@ -71,7 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       Expanded(
                         child: Divider(
-                          color: kGreenAccent,
+                          color: greenAccent,
                           thickness: 3,
                         ),
                       ),
@@ -80,13 +79,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Text(
                           'Or',
                           style: TextStyle(
-                            color: kGreenAccent,
+                            color: greenAccent,
                           ),
                         ),
                       ),
                       Expanded(
                         child: Divider(
-                          color: kGreenAccent,
+                          color: greenAccent,
                           thickness: 3,
                         ),
                       ),

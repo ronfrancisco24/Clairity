@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class SignButton extends StatelessWidget {
 
   final VoidCallback? onTap;
-  const SignButton({super.key, required this.onTap});
+  final String title;
+  const SignButton({super.key, required this.onTap, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class SignButton extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            'Sign Up',
+            '$title',
             style: TextStyle(color: Colors.white),
           ),
         ),

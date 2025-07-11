@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../widgets/constants.dart';
+import '../../constants.dart';
 import '../../widgets/onboarding/auth_text_field.dart';
+import 'reset_password_screen.dart';
 import 'sign_up_screen.dart';
 import '../../widgets/onboarding/sign_button.dart';
 
-//TODO: navigate to r
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
 
@@ -44,16 +44,22 @@ class ForgotPasswordScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const AuthTextField(title: 'example@mail.com'),
-                SignButton(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignUpScreen(),
-                      ),
-                    );
-                  },
+                Transform.translate(
+                    offset: Offset(0, -20),
+                    child: const AuthTextField(title: 'example@mail.com')),
+                Transform.translate(
+                  offset: Offset(0, -40),
+                  child: SignButton(
+                    title: 'Reset Password',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ResetPasswordScreen(),
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -73,7 +79,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 50,
                 )
               ],
             ),
