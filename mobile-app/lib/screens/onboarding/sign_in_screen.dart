@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/onboarding/auth_text_field.dart';
-import '../../widgets/constants.dart';
+import '../../constants.dart';
 import '../../widgets/onboarding/sign_button.dart';
 import '../../widgets/onboarding/social_button.dart';
 import '../dashboard/dashboard_screen.dart';
@@ -23,7 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(gradient: kBackgroundGradient),
+        decoration: const BoxDecoration(gradient: AppGradients.secondaryGradient),
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(25),
@@ -48,8 +48,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 const AuthTextField(title: 'Email/Phone'),
-                const AuthTextField(title: 'Password'),
+                const AuthTextField(title: 'Password', showToggle: true),
                 SignButton(
+                  title: 'Sign In',
                   onTap: () {
                     Navigator.push(
                       context,
@@ -78,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     children: [
                       Expanded(
                         child: Divider(
-                          color: Color(0xFF37964E),
+                          color: greenAccent,
                           thickness: 3,
                         ),
                       ),
@@ -87,13 +88,13 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: Text(
                           'Or',
                           style: TextStyle(
-                            color: Color(0xFF37964E),
+                            color: greenAccent,
                           ),
                         ),
                       ),
                       Expanded(
                         child: Divider(
-                          color: Color(0xFF37964E),
+                          color: greenAccent,
                           thickness: 3,
                         ),
                       ),

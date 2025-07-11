@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'sign_in_screen.dart';
-import '../../widgets/constants.dart';
+import '../../constants.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -21,14 +21,7 @@ class SplashScreen extends StatelessWidget {
           height: double.infinity,
           width: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [
-                Color(0xFF0B334D),
-                Color(0xFF477023),
-              ],
-            ),
+            gradient: AppGradients.primaryGradient
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

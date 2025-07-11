@@ -151,7 +151,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         crossAxisCount: crossAxisCount,
                         mainAxisSpacing: 8,
                         crossAxisSpacing: 8,
-                        childAspectRatio: 2.2,
+                        childAspectRatio: 1.4,
                       ),
                       itemCount: 4,
                       itemBuilder: (context, index) {
