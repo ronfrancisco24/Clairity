@@ -44,6 +44,8 @@ dependencies:
   material_symbols_icons: ^4.0.0
   google_fonts: ^6.2.1
   fl_chart: ^0.66.0
+  syncfusion_flutter_gauges: ^29.1.38
+  gauge_indicator: ^0.4.3
 
 
 dev_dependencies:

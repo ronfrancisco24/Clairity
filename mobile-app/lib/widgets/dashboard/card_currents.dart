@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gauge_indicator/gauge_indicator.dart';
 
 class CardCurrents extends StatelessWidget {
   const CardCurrents({
@@ -9,15 +10,15 @@ class CardCurrents extends StatelessWidget {
     required this.status,
   });
 
-  final int value;
-  final int low;
-  final int high;
+  final double value;
+  final double low;
+  final double high;
   final String status;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 110,
+      height: 210,
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.circular(16),
@@ -26,28 +27,94 @@ class CardCurrents extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 8),
-          Text(
-            '$value',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
           const SizedBox(height: 2),
-          Text(
-            '$low    $high',
-            style: const TextStyle(
-              color: Colors.greenAccent,
-              fontSize: 16,
-            ),
+          SizedBox(
+            height: 125,
+            child: Stack(children: [
+              AnimatedRadialGauge(
+                duration: Duration(seconds: 1),
+                curve: Curves.elasticOut,
+                radius: 100,
+                value: value,
+                axis: GaugeAxis(
+                  min: low,
+                  max: high,
+                  degrees: 240,
+                  style: GaugeAxisStyle(
+                    thickness: 20,
+                    background: Color(0xFFDFDFDF),
+                    segmentSpacing: 4,
+                  ),
+                  progressBar: GaugeProgressBar.rounded(
+                    gradient: GaugeAxisGradient(
+                      colors: [
+                        Color(0xFF00E400), // Good
+                        Color(0xFFFFFF00), // Moderate
+                        Color(0xFFFF7E00), // Unhealthy for Sensitive
+                        Color(0xFFFF0000), // Unhealthy
+                      ],
+                      colorStops: [
+                        0.0,
+                        0.33,
+                        0.66,
+                        1.0
+                      ], // Optional: control color positions
+                    ),
+                  ),
+                  pointer: GaugePointer.circle(
+                    radius: 10,
+                    color: Colors.white,
+                    border: GaugePointerBorder(
+                      color: Colors.black,
+                      width: 3,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 65,
+                top: 45,
+                child: Text(
+                  '${value.toStringAsFixed(0)}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 95,
+                left: 55,
+                child: Text(
+                  '${low.toStringAsFixed(0)}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 95,
+                left: 110,
+                child: Text(
+                  '${high.toStringAsFixed(0)}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ]),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 10),
           Text(
             status,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 16,
+              fontSize: 30,
             ),
           ),
         ],

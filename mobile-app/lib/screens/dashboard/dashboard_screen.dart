@@ -108,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     // Currents Card
                     const Expanded(
                       child: CardCurrents(
-                        value: 56,
+                        value: 120,
                         low: 52,
                         high: 89,
                         status: 'Moderate',
