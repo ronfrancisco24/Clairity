@@ -83,30 +83,6 @@ class CardCurrents extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                top: 95,
-                left: 55,
-                child: Text(
-                  '${low.toStringAsFixed(0)}',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 95,
-                left: 110,
-                child: Text(
-                  '${high.toStringAsFixed(0)}',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
             ]),
           ),
           const SizedBox(height: 10),
