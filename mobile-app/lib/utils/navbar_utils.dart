@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../widgets/navbar/navbar.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/sensor/sensor_screen.dart';
 import '../screens/history/history_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../constants.dart' as constants;
+
+//TODO: Fix position
 
 class NavController extends StatefulWidget {
   const NavController({super.key});
@@ -37,8 +40,6 @@ class _NavControllerState extends State<NavController> {
 
   @override
   Widget build(BuildContext context) {
-    
-    const double bottomOffset = 50.0;
 
     return Scaffold(
       body: Stack(
@@ -47,7 +48,7 @@ class _NavControllerState extends State<NavController> {
           Positioned(
             left: 24,
             right: 24,
-            bottom: bottomOffset,
+            bottom: constants.bottomOffset.h,
             child: MainNavigationBar(
               activeRoute: _activeRoute,
               onSelect: _onNavSelect,
