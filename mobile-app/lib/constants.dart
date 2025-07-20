@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 enum NavRoute {
   home,
@@ -19,6 +20,7 @@ const Color oliveGreen = Color(0xFF6E8649);
 const Color mossGreen = Color(0xFF477023);
 const Color forestGreen = Color(0xFF2D531A);
 const Color greenAccent = Color(0xFF37964E);
+const double bottomOffset = 30.0;
 
 class AppGradients {
   static const LinearGradient primaryGradient = LinearGradient(
