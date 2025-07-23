@@ -4,11 +4,11 @@ import '../../widgets/sensor/notifications_button.dart';
 import '../../widgets/dashboard/card_location.dart';
 import '../../widgets/dashboard/card_currents.dart';
 import '../../widgets/dashboard/card_quality.dart';
-import '../../widgets/dashboard/card_status_sensor.dart';
+import '../../widgets/dashboard/pollutant_grid.dart';
+import '../../widgets/dashboard/time_selector.dart';
 import '../../widgets/dashboard/card_message.dart';
 import '../../utils/dashboard_time_utils.dart';
 import 'dart:math';
-
 
 // TODO: modularize code here more.
 class DashboardScreen extends StatefulWidget {
@@ -32,14 +32,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         'progress': min(0.3 + index * 0.2, 1.0)
       },
       {
-        'label': 'PM10',
-        'value': 20 + index * 4,
-        'progress': min(0.2 + index * 0.1, 1.0),
-      },
-      {
         'label': 'VOC',
         'value': 20 + index * 4,
         'progress': min(0.3 + index * 0.1, 1.0),
+      },
+      {
+        'label': 'CO',
+        'value': 20 + index * 4,
+        'progress': min(0.4 + index * 0.1, 1.0),
       },
       {
         'label': 'CO₂',
@@ -48,6 +48,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       },
       {
         'label': 'NH₃',
+        'value': 20 + index * 4,
+        'progress': min(0.2 + index * 0.15, 1.0),
+      },
+      {
+        'label': 'CH₄',
+        'value': 20 + index * 4,
+        'progress': min(0.2 + index * 0.15, 1.0),
+      },
+      {
+        'label': 'H₂S',
         'value': 20 + index * 4,
         'progress': min(0.2 + index * 0.15, 1.0),
       },
@@ -104,38 +114,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 SizedBox(height: 16.h),
                 // Time Selector
                 SizedBox(
-                  height: 32.h,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: times.length,
-                    separatorBuilder: (context, index) => SizedBox(width: 12.w),
-                    itemBuilder: (context, index) {
-                      final selected = selectedTimeIndex == index;
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedTimeIndex = index;
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20.w, vertical: 8.h),
-                          decoration: BoxDecoration(
-                            color: selected ? Colors.black : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.black),
-                          ),
-                          child: Text(
-                            times[index],
-                            style: TextStyle(
-                              color: selected ? Colors.white : Colors.black,
-                              fontWeight: selected
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      );
+                  height: 32.h, // Ensure it fits the ListView
+                  child: TimeSelector(
+                    times: times,
+                    selectedIndex: selectedTimeIndex,
+                    onSelected: (index) {
+                      setState(() {
+                        selectedTimeIndex = index;
+                      });
                     },
                   ),
                 ),
@@ -146,7 +132,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     // Currents Card
                     const Expanded(
                       child: CardCurrents(
-                        value: 75,
+                        value: 80,
                         low: 52,
                         high: 89,
                         status: 'Moderate',
@@ -182,26 +168,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // Pollutant Cards
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    int crossAxisCount = constraints.maxWidth > 400 ? 4 : 2;
-                    return GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: crossAxisCount,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                          childAspectRatio: 1.4,
-                        ),
-                        itemCount: pollutantData[selectedTimeIndex].length,
-                        itemBuilder: (context, index) {
-                          final data = pollutantData[selectedTimeIndex][index];
-                          return CardStatusSensor(
-                            value: data['value'],
-                            maxValue: 120,
-                            label: data['label'],
-                            progress: data['progress'],
-                          );
-                        });
+                    return PollutantGrid( //TODO: use state management tool to keep data consistent
+                      pollutantList: pollutantData[selectedTimeIndex],
+                    );
                   },
                 ),
                 SizedBox(height: 42.h),
