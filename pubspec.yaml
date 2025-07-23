@@ -46,6 +46,7 @@ dependencies:
   fl_chart: ^0.66.0
   syncfusion_flutter_gauges: ^29.1.38
   gauge_indicator: ^0.4.3
+  gradient_progress_bar: ^1.0.7
 
 
 dev_dependencies:
