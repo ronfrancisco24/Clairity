@@ -1,13 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../screens/notifications/notifications_screen.dart';
 
 
 class NotificationsButton extends StatelessWidget {
-  const NotificationsButton({super.key});
+  final bool hasNotifications; //TODO: implement logic when notifications is detected (use state management tool for this)
+
+  const NotificationsButton({super.key, this.hasNotifications = true});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: (){
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => NotificationScreen()),
+        );
+      },
       child: Stack(
         children: [
           Container(
@@ -26,7 +35,7 @@ class NotificationsButton extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          Positioned(
+          hasNotifications ? Positioned(
             left: 28,
             child: Container(
               height: 10,
@@ -34,7 +43,7 @@ class NotificationsButton extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Colors.red, borderRadius: BorderRadius.circular(20)),
             ),
-          )
+          ) : const SizedBox.shrink()
         ],
       ),
     );

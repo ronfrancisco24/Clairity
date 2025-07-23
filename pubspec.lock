@@ -179,6 +179,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.1"
+  gradient_progress_bar:
+    dependency: "direct main"
+    description:
+      name: gradient_progress_bar
+      sha256: "7a2b2900efe2afa64a410eefafe06de9ee15d4b55b63fd9c4f7e631a5339c91b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.7"
   http:
     dependency: transitive
     description:

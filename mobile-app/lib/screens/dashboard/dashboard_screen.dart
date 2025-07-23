@@ -6,6 +6,7 @@ import '../../widgets/dashboard/card_currents.dart';
 import '../../widgets/dashboard/card_quality.dart';
 import '../../widgets/dashboard/card_status_sensor.dart';
 import '../../widgets/dashboard/card_message.dart';
+import '../../utils/dashboard_time_utils.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -15,8 +16,9 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+
   int selectedTimeIndex = 0;
-  final List<String> times = ['8:00 am', '9:00 am', '9:30 am', '10:00 am'];
+  final List<String> times = generateTimeSlots();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Good Morning, John!',
+                          'Good Morning, User!',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
@@ -86,7 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             color: selected ? Colors.black : Colors.transparent,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: selected ? Colors.black :  Colors.black,
+                              color: Colors.black
                             ),
                           ),
                           child: Text(
@@ -108,7 +110,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     // Currents Card
                     const Expanded(
                       child: CardCurrents(
-                        value: 120,
+                        value: 75,
                         low: 52,
                         high: 89,
                         status: 'Moderate',
@@ -159,7 +161,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           value: 12,
                           maxValue: 120,
                           label: 'PM2.5',
-                          progress: 0.1,
+                          progress: 0.8,
                         );
                       },
                     );
