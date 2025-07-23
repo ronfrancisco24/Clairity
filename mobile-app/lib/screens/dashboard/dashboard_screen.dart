@@ -7,7 +7,10 @@ import '../../widgets/dashboard/card_quality.dart';
 import '../../widgets/dashboard/card_status_sensor.dart';
 import '../../widgets/dashboard/card_message.dart';
 import '../../utils/dashboard_time_utils.dart';
+import 'dart:math';
 
+
+// TODO: modularize code here more.
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -16,9 +19,40 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-
   int selectedTimeIndex = 0;
   final List<String> times = generateTimeSlots();
+
+  // used for the different values in time.
+  List<List<Map<String, dynamic>>> pollutantData = List.generate(
+    5,
+    (index) => [
+      {
+        'label': 'PM2.5',
+        'value': 12 + index * 5,
+        'progress': min(0.3 + index * 0.2, 1.0)
+      },
+      {
+        'label': 'PM10',
+        'value': 20 + index * 4,
+        'progress': min(0.2 + index * 0.1, 1.0),
+      },
+      {
+        'label': 'VOC',
+        'value': 20 + index * 4,
+        'progress': min(0.3 + index * 0.1, 1.0),
+      },
+      {
+        'label': 'CO₂',
+        'value': 20 + index * 4,
+        'progress': min(0.4 + index * 0.1, 1.0),
+      },
+      {
+        'label': 'NH₃',
+        'value': 20 + index * 4,
+        'progress': min(0.2 + index * 0.15, 1.0),
+      },
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +96,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 SizedBox(height: 16.h),
                 // Location Card
                 const CardLocation(
-                  imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
+                  imageUrl:
+                      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
                   title: 'PGN 1st Floor',
                   subtitle: 'Near Printing Station',
                 ),
@@ -83,19 +118,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           });
                         },
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.w, vertical: 8.h),
                           decoration: BoxDecoration(
                             color: selected ? Colors.black : Colors.transparent,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.black
-                            ),
+                            border: Border.all(color: Colors.black),
                           ),
                           child: Text(
                             times[index],
                             style: TextStyle(
                               color: selected ? Colors.white : Colors.black,
-                              fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                              fontWeight: selected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                             ),
                           ),
                         ),
@@ -139,7 +175,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 SizedBox(height: 16.h),
                 // Warning
                 CardMessage(
-                  message: 'Air quality in CR2 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
+                  message:
+                      'Air quality in CR2 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
                 ),
                 SizedBox(height: 16.h),
                 // Pollutant Cards
@@ -147,24 +184,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   builder: (context, constraints) {
                     int crossAxisCount = constraints.maxWidth > 400 ? 4 : 2;
                     return GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        mainAxisSpacing: 8,
-                        crossAxisSpacing: 8,
-                        childAspectRatio: 1.4,
-                      ),
-                      itemCount: 4,
-                      itemBuilder: (context, index) {
-                        return const CardStatusSensor(
-                          value: 12,
-                          maxValue: 120,
-                          label: 'PM2.5',
-                          progress: 0.8,
-                        );
-                      },
-                    );
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                          childAspectRatio: 1.4,
+                        ),
+                        itemCount: pollutantData[selectedTimeIndex].length,
+                        itemBuilder: (context, index) {
+                          final data = pollutantData[selectedTimeIndex][index];
+                          return CardStatusSensor(
+                            value: data['value'],
+                            maxValue: 120,
+                            label: data['label'],
+                            progress: data['progress'],
+                          );
+                        });
                   },
                 ),
                 SizedBox(height: 42.h),
