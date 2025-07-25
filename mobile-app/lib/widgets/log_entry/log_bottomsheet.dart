@@ -15,17 +15,17 @@ class LogBottomsheet extends StatefulWidget {
 }
 
 class _LogBottomsheetState extends State<LogBottomsheet> {
+  final TextEditingController _commentController = TextEditingController();
+  int _selectedRating = 0;
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _commentController = TextEditingController();
-    int _selectedRating = 0;
-
-    @override
-    void dispose() {
-      _commentController.dispose();
-      super.dispose();
-    }
-
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.5,
       width: MediaQuery.sizeOf(context).width * 1,
@@ -83,29 +83,34 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
                 SizedBox(
                   width: 10,
                 ),
-                EntryButton(
-                  text: 'Save Log',
-                  color: oliveGreen,
-                  textColor: Colors.white,
-                  onTap: () {
-                    final newLog = CleaningRecord(
-                      cleaningId: DateTime.now().millisecondsSinceEpoch,
-                      // temp ID
-                      restroomId: 1,
-                      // Hardcoded for now
-                      userId: 1,
-                      // Hardcoded
-                      comment: 'User comment here',
-                      // Use TextField value
-                      rating: 4,
-                      // Use Ratings widget value
-                      timestamp: DateTime.now(),
-                    );
+                // Listens to see if text field has a value.
+                ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: _commentController,  // <-- Listens for changes in text
+                  builder: (context, value, child) {
+                    final hasText = value.text.isNotEmpty;
+                    return EntryButton(
+                      text: 'Save Log',
+                      color: oliveGreen,
+                      textColor: Colors.white,
+                      hasText: hasText,
+                      onTap: hasText
+                          ? () {
+                        final newLog = CleaningRecord(
+                          cleaningId: DateTime.now().millisecondsSinceEpoch,
+                          restroomId: 1,
+                          userId: 1,
+                          comment: _commentController.text,
+                          rating: _selectedRating,
+                          timestamp: DateTime.now(),
+                        );
 
-                    context.read<LogProvider>().addLog(newLog);
-                    Navigator.pop(context); // Close modal
+                        context.read<LogProvider>().addLog(newLog);
+                        Navigator.pop(context);
+                      }
+                          : null,
+                    );
                   },
-                ),
+                )
               ],
             ),
           ],

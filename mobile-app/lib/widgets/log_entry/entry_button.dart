@@ -3,7 +3,7 @@ import '../../constants.dart';
 
 class EntryButton extends StatelessWidget {
   final String text;
-  final bool? hasText;
+  final bool hasText;
   final Color color;
   final Color? textColor;
   final VoidCallback? onTap;
@@ -12,8 +12,8 @@ class EntryButton extends StatelessWidget {
       {super.key,
       required this.text,
       required this.color,
-        required this.onTap,
-      this.hasText,
+      required this.onTap,
+      this.hasText = false,
       this.textColor});
 
   @override
@@ -25,9 +25,10 @@ class EntryButton extends StatelessWidget {
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Colors.grey),
-                color: color),
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(color: Colors.grey),
+              color: hasText ? color : color.withOpacity(0.5),
+            ),
             child: Center(
               child: Text(
                 text,
