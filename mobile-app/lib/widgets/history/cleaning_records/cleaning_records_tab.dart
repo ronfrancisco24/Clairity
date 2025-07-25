@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/log_provider.dart';
 import '../../../utils/history_utils.dart';
 import 'cleaner_tile.dart';
 import '../cleaner_calendar.dart';
@@ -17,6 +19,7 @@ class CleaningRecordsTab extends StatefulWidget {
 
 class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
   DateTime selectedDate = DateTime.now();
+
 
   // Sample data using CleaningLog model
   final List<CleaningRecord> cleaningRecords = [
@@ -70,6 +73,11 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
 
   @override
   Widget build(BuildContext context) {
+
+    // For provider (testing)
+    final logs = context.watch<LogProvider>().logs;
+    final filteredLogs = filterRecordsByDate(logs, selectedDate);
+
     return Container(
       color: Colors.grey[50],
       child: Column(
@@ -112,7 +120,7 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
           ),
           SizedBox(height: 16.h),
           Expanded(
-            child: filteredRecords.isEmpty
+            child: filteredLogs.isEmpty
                 ? Padding(
               padding: const EdgeInsets.only(bottom: 130),
               child: Center(
@@ -132,9 +140,9 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
                     bottom: constants.bottomOffset.h + 100),
                 child: ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  itemCount: filteredRecords.length,
+                  itemCount: filteredLogs.length,
                   itemBuilder: (context, index) {
-                    final record = filteredRecords[index];
+                    final record = filteredLogs[index];
                     return CleanerTile(
                       userId: record.userId,
                       comment: record.comment,

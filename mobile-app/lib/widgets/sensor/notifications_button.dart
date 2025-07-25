@@ -4,9 +4,9 @@ import '../../screens/notifications/notifications_screen.dart';
 
 
 class NotificationsButton extends StatelessWidget {
-  final bool hasNotifications; //TODO: implement logic when notifications is detected (use state management tool for this)
+  final bool readNotfications; //TODO: implement logic when notifications is detected (use state management tool for this)
 
-  const NotificationsButton({super.key, this.hasNotifications = true});
+  const NotificationsButton({super.key, this.readNotfications = true});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class NotificationsButton extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          hasNotifications ? Positioned(
+          readNotfications ? Positioned(
             left: 28,
             child: Container(
               height: 10,

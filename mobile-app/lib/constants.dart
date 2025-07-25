@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 enum NavRoute {
   home,
   sensor,
+  log,
   history,
   profile,
 }

@@ -47,10 +47,10 @@ class MainNavigationBar extends StatelessWidget {
             spotlight: true, // Custom property for spotlight effect
           ),
           NavigationItem(
-            label: 'Notifications',
+            label: 'LogEntry',
             iconData: Icons.add_circle_outline,
-            isSelected: false,
-            onSelect: () {},
+            isSelected: (activeRoute == NavRoute.log),
+            onSelect: () => onSelect(NavRoute.log),
           ),
           NavigationItem(
             label: 'History',
