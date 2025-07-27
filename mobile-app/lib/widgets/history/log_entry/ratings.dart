@@ -2,17 +2,28 @@ import 'package:flutter/material.dart';
 
 class Ratings extends StatefulWidget {
   final Color color;
+  final int initialRating;
   final ValueChanged<int> onRatingSelected;
 
-  const Ratings(
-      {super.key, required this.color, required this.onRatingSelected});
+  const Ratings({
+    super.key,
+    required this.color,
+    required this.onRatingSelected,
+    required this.initialRating,
+  });
 
   @override
   State<Ratings> createState() => _RatingsState();
 }
 
 class _RatingsState extends State<Ratings> {
-  int _selectedRating = 0;
+  late int _selectedRating;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedRating = widget.initialRating;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +34,6 @@ class _RatingsState extends State<Ratings> {
             setState(() {
               _selectedRating = index + 1;
             });
-            // passes the selectedRating value back to the parent.
             widget.onRatingSelected(_selectedRating);
           },
           child: Icon(

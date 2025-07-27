@@ -47,12 +47,6 @@ class MainNavigationBar extends StatelessWidget {
             spotlight: true, // Custom property for spotlight effect
           ),
           NavigationItem(
-            label: 'LogEntry',
-            iconData: Icons.add_circle_outline,
-            isSelected: (activeRoute == NavRoute.log),
-            onSelect: () => onSelect(NavRoute.log),
-          ),
-          NavigationItem(
             label: 'History',
             iconData: Icons.history,
             isSelected: (activeRoute == NavRoute.history),
