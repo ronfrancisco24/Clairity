@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/log_provider.dart';
 import '../../../utils/history_utils.dart';
+import '../log_entry/log_bottomsheet.dart';
 import 'cleaner_tile.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
@@ -19,55 +20,6 @@ class CleaningRecordsTab extends StatefulWidget {
 
 class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
   DateTime selectedDate = DateTime.now();
-
-
-  // Sample data using CleaningLog model
-  final List<CleaningRecord> cleaningRecords = [
-    CleaningRecord(
-      timestamp: DateTime(2025, 7, 14, 14, 22),
-      cleaningId: 1,
-      restroomId: 1,
-      userId: 001,
-      comment: 'Smelled bad, cleaned thoroughly',
-      rating: 4,
-    ),
-    CleaningRecord(
-      timestamp: DateTime(2025, 7, 14, 15, 22),
-      cleaningId: 2,
-      restroomId: 1,
-      userId: 002,
-      comment: 'Regular cleaning, mopped the floor',
-      rating: 3,
-    ),
-    CleaningRecord(
-      timestamp: DateTime(2025, 7, 17, 16, 22),
-      cleaningId: 3,
-      restroomId: 2,
-      userId: 003,
-      comment: 'Collaborative session with international team, light cleanup',
-      rating: 4,
-    ),
-    CleaningRecord(
-      timestamp: DateTime(2025, 7, 14, 13, 22),
-      cleaningId: 4,
-      restroomId: 1,
-      userId: 004,
-      comment: 'Disinfected all surfaces thoroughly',
-      rating: 5,
-    ),
-    CleaningRecord(
-      timestamp: DateTime(2025, 1, 7, 12, 22),
-      cleaningId: 5,
-      restroomId: 3,
-      userId: 005,
-      comment: 'Cleaned quickly but missed a few spots',
-      rating: 2,
-    ),
-  ];
-
-  List<CleaningRecord> get filteredRecords {
-    return filterRecordsByDate(cleaningRecords, selectedDate);
-  }
 
   String get formattedDate => formatSelectedDate(selectedDate);
 
@@ -94,6 +46,11 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            decoration: BoxDecoration(
+              color: Colors.black87,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 16.w),
             child: Row(
               children: [
                 Icon(
@@ -110,13 +67,29 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+                Spacer(),
+                SizedBox(
+                  width: 40.w,
+                  height: 40.w,
+                  child: (selectedDate.year == DateTime.now().year &&
+                      selectedDate.month == DateTime.now().month &&
+                      selectedDate.day == DateTime.now().day)
+                      ? IconButton(
+                          padding: EdgeInsets.zero,
+                          iconSize: 20.sp,
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (_) => const LogBottomsheet(),
+                            );
+                          },
+                          icon: Icon(Icons.add, color: Colors.white),
+                        )
+                      : const SizedBox.shrink(), // Keeps space but shows nothing
+                ),
               ],
             ),
-            decoration: BoxDecoration(
-              color: Colors.black87,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 16.w),
           ),
           SizedBox(height: 16.h),
           Expanded(
@@ -143,12 +116,7 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
                   itemCount: filteredLogs.length,
                   itemBuilder: (context, index) {
                     final record = filteredLogs[index];
-                    return CleanerTile(
-                      userId: record.userId,
-                      comment: record.comment,
-                      rating: record.rating,
-                      date: record.timestamp,
-                    );
+                    return CleanerTile(record: record);
                   },
                 ),
               ),

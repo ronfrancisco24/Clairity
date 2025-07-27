@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import '../../../constants.dart';
+import '../../../models/cleaning_log_model.dart';
 import '../../../utils/history_utils.dart';
+import '../log_entry/log_bottomsheet.dart';
 
 class CleanerTile extends StatelessWidget {
-  final String comment;
-  final int rating, userId;
-  final DateTime date;
+  final CleaningRecord record;
 
   const CleanerTile({
     super.key,
-    required this.userId,
-    required this.comment,
-    required this.rating,
-    required this.date,
+    required this.record,
   });
 
   @override
@@ -57,29 +55,40 @@ class CleanerTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Time and Name Row
+                // Time and optional edit button
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
-                      Icons.access_time,
-                      size: 12.sp,
-                      color: Colors.grey[600],
+                    Row(
+                      children: [
+                        Icon(Icons.access_time, size: 12.sp, color: Colors.grey[600]),
+                        SizedBox(width: 4.w),
+                        Text(
+                          DateFormat('hh:mm a').format(record.timestamp),
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      DateFormat('hh:mm a').format(date),
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
+                    if (record.userId == currentUserId)
+                      GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) => LogBottomsheet(recordToEdit: record),
+                          );
+                        },
+                        child: Icon(Icons.edit, size: 18.sp, color: Colors.grey[700]),
                       ),
-                    ),
                   ],
                 ),
                 SizedBox(height: 4.h),
-                // Name
                 Text(
-                  userId.toString(),
+                  record.userId.toString(),
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -87,9 +96,8 @@ class CleanerTile extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 6.h),
-                // Comment
                 Text(
-                  comment,
+                  record.comment,
                   style: TextStyle(
                     fontSize: 13.sp,
                     color: Colors.grey[700],
@@ -99,7 +107,6 @@ class CleanerTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 8.h),
-                // Rating Section
                 Row(
                   children: [
                     Text(
@@ -111,12 +118,11 @@ class CleanerTile extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 12.w),
-                    // Stars
                     Row(
                       children: List.generate(
                         5,
                             (index) => Icon(
-                          index < rating ? Icons.star : Icons.star_border,
+                          index < record.rating ? Icons.star : Icons.star_border,
                           size: 16.sp,
                           color: Colors.red,
                         ),
