@@ -5,14 +5,44 @@ import '../../../constants.dart';
 import '../../../models/cleaning_log_model.dart';
 import '../../../utils/history_utils.dart';
 import '../log_entry/log_bottomsheet.dart';
+import '../delete_overlay/delete_overlay.dart';
 
-class CleanerTile extends StatelessWidget {
+class CleanerTile extends StatefulWidget {
   final CleaningRecord record;
 
   const CleanerTile({
     super.key,
     required this.record,
   });
+
+  @override
+  State<CleanerTile> createState() => _CleanerTileState();
+}
+
+class _CleanerTileState extends State<CleanerTile> {
+  OverlayEntry? _overlayEntry;
+
+  void _showDeleteConfirmation() {
+    _overlayEntry = OverlayEntry(
+      builder: (context) => DeleteConfirmationOverlay(
+        record: widget.record,
+        onCancel: _hideDeleteConfirmation,
+      ),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void _hideDeleteConfirmation() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  @override
+  void dispose() {
+    _hideDeleteConfirmation();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +85,7 @@ class CleanerTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Time and optional edit button
+                // Time and optional edit/delete buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -64,7 +94,7 @@ class CleanerTile extends StatelessWidget {
                         Icon(Icons.access_time, size: 12.sp, color: Colors.grey[600]),
                         SizedBox(width: 4.w),
                         Text(
-                          DateFormat('hh:mm a').format(record.timestamp),
+                          DateFormat('hh:mm a').format(widget.record.timestamp),
                           style: TextStyle(
                             fontSize: 11.sp,
                             color: Colors.grey[600],
@@ -73,22 +103,37 @@ class CleanerTile extends StatelessWidget {
                         ),
                       ],
                     ),
-                    if (record.userId == currentUserId)
-                      GestureDetector(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (_) => LogBottomsheet(recordToEdit: record),
-                          );
-                        },
-                        child: Icon(Icons.edit, size: 18.sp, color: Colors.grey[700]),
+                    if (widget.record.userId == currentUserId)
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (_) => LogBottomsheet(recordToEdit: widget.record),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(4.w),
+                              child: Icon(Icons.edit, size: 18.sp, color: Colors.grey[700]),
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          GestureDetector(
+                            onTap: _showDeleteConfirmation,
+                            child: Container(
+                              padding: EdgeInsets.all(4.w),
+                              child: Icon(Icons.delete_forever, size: 18.sp, color: Colors.red[600]),
+                            ),
+                          ),
+                        ],
                       ),
                   ],
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  record.userId.toString(),
+                  widget.record.userId.toString(),
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -97,7 +142,7 @@ class CleanerTile extends StatelessWidget {
                 ),
                 SizedBox(height: 6.h),
                 Text(
-                  record.comment,
+                  widget.record.comment,
                   style: TextStyle(
                     fontSize: 13.sp,
                     color: Colors.grey[700],
@@ -122,7 +167,7 @@ class CleanerTile extends StatelessWidget {
                       children: List.generate(
                         5,
                             (index) => Icon(
-                          index < record.rating ? Icons.star : Icons.star_border,
+                          index < widget.record.rating ? Icons.star : Icons.star_border,
                           size: 16.sp,
                           color: Colors.red,
                         ),
