@@ -23,10 +23,16 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   late int initialPage;
   late int maxPage;
 
+  DateTime _getStartOfWeek(DateTime date) {
+    return date.subtract(Duration(days: date.weekday - 1));
+  }
+
   @override
   void initState() {
     super.initState();
-    final daysSinceStart = today.difference(startDate).inDays;
+    final startOfWeekToday = _getStartOfWeek(today);
+    final startOfWeekStartDate = _getStartOfWeek(startDate);
+    final daysSinceStart = startOfWeekToday.difference(startOfWeekStartDate).inDays;
     initialPage = daysSinceStart ~/ 7;
     maxPage = initialPage;
     _pageController = PageController(initialPage: initialPage);
