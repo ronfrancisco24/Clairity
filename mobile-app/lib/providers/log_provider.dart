@@ -11,6 +11,14 @@ class LogProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void editLog(CleaningRecord updatedRecord) {
+    final index = _logs.indexWhere((log) => log.cleaningId == updatedRecord.cleaningId);
+    if (index != -1) {
+      _logs[index] = updatedRecord;
+      notifyListeners();
+    }
+  }
+
   void removeLog(int cleaningId) {
     _logs.removeWhere((log) => log.cleaningId == cleaningId);
     notifyListeners();

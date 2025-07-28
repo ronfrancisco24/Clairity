@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../constants.dart';
-import '../../providers/log_provider.dart';
-import '../../models/cleaning_log_model.dart';
+import '../../../constants.dart';
+import '../../../providers/log_provider.dart';
+import '../../../models/cleaning_log_model.dart';
 import 'entry_button.dart';
 import 'log_text_field.dart';
 import 'ratings.dart';
 
 class LogBottomsheet extends StatefulWidget {
-  const LogBottomsheet({super.key});
+  final CleaningRecord? recordToEdit;
+
+  const LogBottomsheet({super.key, this.recordToEdit});
 
   @override
   State<LogBottomsheet> createState() => _LogBottomsheetState();
@@ -19,6 +21,15 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
   int _selectedRating = 0;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.recordToEdit != null) {
+      _commentController.text = widget.recordToEdit!.comment;
+      _selectedRating = widget.recordToEdit!.rating;
+    }
+  }
+
+  @override
   void dispose() {
     _commentController.dispose();
     super.dispose();
@@ -26,6 +37,8 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
 
   @override
   Widget build(BuildContext context) {
+    final isEdit = widget.recordToEdit != null;
+
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.5,
       width: MediaQuery.sizeOf(context).width * 1,
@@ -41,70 +54,86 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Add Log Entry',
+                  isEdit ? 'Edit Log Entry' : 'Add Log Entry',
                   style: kHeadlineSmall.copyWith(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                 )
               ],
             ),
-            Text('Rate Your Experience'),
+            const Text('Rate Your Experience'),
             Ratings(
               color: Colors.yellow,
+              initialRating: _selectedRating,
               onRatingSelected: (rating) {
                 setState(() {
                   _selectedRating = rating;
                 });
               },
             ),
-            Text('Add a comment.'),
+            const Text('Add a comment.'),
             Expanded(
               child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: LogTextField(
-                    controller: _commentController,
-                  )),
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: LogTextField(
+                  controller: _commentController,
+                ),
+              ),
             ),
             Row(
               children: [
                 EntryButton(
                   text: 'Cancel',
                   color: Colors.white,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                SizedBox(
-                  width: 10,
-                ),
+                const SizedBox(width: 10),
                 // Listens to see if text field has a value.
                 ValueListenableBuilder<TextEditingValue>(
-                  valueListenable: _commentController,  // <-- Listens for changes in text
+                  valueListenable: _commentController,
                   builder: (context, value, child) {
                     final hasText = value.text.isNotEmpty;
                     return EntryButton(
-                      text: 'Save Log',
+                      text: isEdit ? 'Update Log' : 'Save Log',
                       color: oliveGreen,
                       textColor: Colors.white,
                       hasText: hasText,
                       onTap: hasText
                           ? () {
-                        final newLog = CleaningRecord(
-                          cleaningId: DateTime.now().millisecondsSinceEpoch,
-                          restroomId: 1,
-                          userId: 1,
-                          comment: _commentController.text,
-                          rating: _selectedRating,
-                          timestamp: DateTime.now(),
-                        );
+                        final logProvider = context.read<LogProvider>();
 
-                        context.read<LogProvider>().addLog(newLog);
+                        if (isEdit) {
+                          final updatedLog = widget.recordToEdit!.copyWith(
+                            comment: _commentController.text,
+                            rating: _selectedRating,
+                            timestamp: DateTime.now(),
+                          );
+
+                          logProvider.editLog(updatedLog);
+                        } else {
+                          final newLog = CleaningRecord(
+                            cleaningId: DateTime.now().millisecondsSinceEpoch, //To bo modified
+                            restroomId: 1,
+                            userId: currentUserId, // from constants.dart
+                            comment: _commentController.text,
+                            rating: _selectedRating,
+                            timestamp: DateTime.now(),
+                          );
+
+                          logProvider.addLog(newLog);
+                        }
+
                         Navigator.pop(context);
                       }
                           : null,

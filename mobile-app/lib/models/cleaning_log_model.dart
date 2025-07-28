@@ -27,4 +27,22 @@
         timestamp: DateTime.parse(json['timestamp']),
       );
     }
+
+    CleaningRecord copyWith({
+      int? cleaningId,
+      int? restroomId,
+      int? userId,
+      String? comment,
+      int? rating,
+      DateTime? timestamp,
+    }) {
+      return CleaningRecord(
+        cleaningId: cleaningId ?? this.cleaningId,
+        restroomId: restroomId ?? this.restroomId,
+        userId: userId ?? this.userId,
+        comment: comment ?? this.comment,
+        rating: rating ?? this.rating,
+        timestamp: timestamp ?? this.timestamp,
+      );
+    }
   }

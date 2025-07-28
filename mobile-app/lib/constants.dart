@@ -5,10 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 enum NavRoute {
   home,
   sensor,
-  log,
   history,
   profile,
 }
+
+const currentUserId = 1; // For testing purposes
 
 const Color white = Color(0xFFF3F4F5);
 const Color lightBlo = Color(0xFFA6BDBE);
