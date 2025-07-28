@@ -5,7 +5,6 @@ import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/sensor/sensor_screen.dart';
 import '../screens/history/history_screen.dart';
 import '../screens/profile/profile_screen.dart';
-import '../widgets/log_entry/log_bottomsheet.dart';
 import '../constants.dart' as constants;
 
 //TODO: Fix position
@@ -30,23 +29,13 @@ class _NavControllerState extends State<NavController> {
         return const HistoryScreen();
       case constants.NavRoute.profile:
         return const ProfileScreen();
-      case constants.NavRoute.log:
-        return const SizedBox.shrink(); // or throw an assertion error
     }
   }
 
   void _onNavSelect(constants.NavRoute route) {
-    if (route == constants.NavRoute.log) {
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (_) => const LogBottomsheet(),
-      );
-    } else {
-      setState(() {
-        _activeRoute = route;
-      });
-    }
+    setState(() {
+      _activeRoute = route;
+    });
   }
 
   @override
