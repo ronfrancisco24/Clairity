@@ -48,6 +48,8 @@ dependencies:
   gauge_indicator: ^0.4.3
   gradient_progress_bar: ^1.0.7
   provider: ^6.1.5
+  firebase_core: ^4.0.0
+  firebase_auth: ^6.0.0
 
 
 dev_dependencies:

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "627824286697",
+    "project_id": "clairity-e0694",
+    "storage_bucket": "clairity-e0694.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627824286697:android:de43e9e80d31a46fe80978",
+        "android_client_info": {
+          "package_name": "com.example.clairity"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsCRZgz-oOqwjK62UOWFjcx-___l1pR5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
