@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 import '../../widgets/onboarding/auth_text_field.dart';
 import 'reset_password_screen.dart';
+import 'sign_in_screen.dart';
 import 'sign_up_screen.dart';
 import '../../widgets/onboarding/sign_button.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  const ForgotPasswordScreen({super.key});
+  ForgotPasswordScreen({super.key});
+
+  final phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,27 +42,44 @@ class ForgotPasswordScreen extends StatelessWidget {
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Forgot Password', style: kHeading),
-                      Text('Please enter your email.', style: kSubheading),
+                      Text('Resend OTP', style: kHeading),
+                      Text('Please enter your phone number.',
+                          style: kSubheading),
                     ],
                   ),
                 ),
+                AuthTextField(
+                  title: 'Phone No.',
+                  controller: phoneController,
+                ),
+                SignButton(
+                  title: 'Get OTP',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignInScreen(),
+                      ),
+                    );
+                  },
+                ),
                 Transform.translate(
-                    offset: Offset(0, -20),
-                    child: const AuthTextField(title: 'example@mail.com')),
-                Transform.translate(
-                  offset: Offset(0, -40),
+                  offset: Offset(0, -20),
                   child: SignButton(
-                    title: 'Reset Password',
+                    title: 'Return to Sign In',
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ResetPasswordScreen(),
+                          builder: (context) => SignInScreen(),
                         ),
                       );
                     },
                   ),
+                ),
+                Divider(
+                  color: greenAccent,
+                  thickness: 3,
                 ),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -79,7 +99,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(
-                  height: 50,
+                  height: 20,
                 )
               ],
             ),
