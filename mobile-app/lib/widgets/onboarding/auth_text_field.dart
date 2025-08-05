@@ -4,10 +4,12 @@ class AuthTextField extends StatefulWidget {
   final String title;
   final bool showToggle;
   final bool obscureText;
+  final TextEditingController controller;
 
   const AuthTextField(
       {super.key,
       required this.title,
+      required this.controller,
       this.showToggle = false,
       this.obscureText = false});
 
@@ -24,7 +26,6 @@ class _AuthTextFieldState extends State<AuthTextField> {
     _obscure = widget.obscureText;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,7 +37,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
       child: Padding(
         padding: EdgeInsets.all(5.0),
         child: TextField(
+          controller: widget.controller,
           obscureText: _obscure,
+          style: TextStyle(color: Colors.white),
           textAlignVertical: TextAlignVertical.center,
           decoration: InputDecoration(
             labelStyle: TextStyle(color: Colors.white),

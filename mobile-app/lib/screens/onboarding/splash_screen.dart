@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'retrieve_otp_screen.dart';
 import 'sign_in_screen.dart';
 import '../../constants.dart';
 
@@ -13,7 +14,7 @@ class SplashScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SignInScreen(),
+              builder: (context) => RetrieveOtpScreen(),
             ),
           );
         },
