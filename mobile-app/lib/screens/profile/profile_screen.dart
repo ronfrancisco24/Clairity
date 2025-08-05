@@ -7,6 +7,7 @@ import '../../widgets/profile/popups/about_popup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../widgets/sensor/notifications_button.dart';
+import '../onboarding/splash_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -79,11 +80,20 @@ class ProfileScreen extends StatelessWidget {
                   );
                 },
               ),
-              SettingsTile( //TODO: implement logout functionality.
+              SettingsTile(
+                //TODO: implement logout functionality.
                 tileTitle: 'Logout',
                 isToggle: false,
                 iconContainerColor: Colors.red,
                 icon: Icons.logout,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SplashScreen(),
+                    ),
+                  );
+                },
               ),
             ],
           ),

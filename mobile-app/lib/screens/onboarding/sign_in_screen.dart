@@ -4,12 +4,15 @@ import '../../widgets/onboarding/auth_text_field.dart';
 import '../../constants.dart';
 import '../../widgets/onboarding/sign_button.dart';
 import '../../widgets/onboarding/social_button.dart';
-import '../dashboard/dashboard_screen.dart';
-import 'forgot_password_screen.dart';
+import '../../widgets/onboarding/onboarding_divider.dart';
+import 'retrieve_otp_screen.dart';
 import 'sign_up_screen.dart';
+import '../../services/auth_service.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+  final String? verificationId;
+
+  const SignInScreen({super.key, this.verificationId});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -17,14 +20,19 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   bool? isChecked = false;
+  final authService = AuthService();
+  final phoneController = TextEditingController();
+  final otpController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(gradient: AppGradients.secondaryGradient),
+        decoration:
+            const BoxDecoration(gradient: AppGradients.secondaryGradient),
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(25),
@@ -32,8 +40,7 @@ class _SignInScreenState extends State<SignInScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Center(
-                  child: Image(image: AssetImage('images/logo.png'))
-                ),
+                    child: Image(image: AssetImage('images/logo.png'))),
                 Container(
                   margin: EdgeInsets.only(top: 30),
                   alignment: Alignment.centerLeft,
@@ -48,17 +55,42 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                 ),
-                const AuthTextField(title: 'Email/Phone'),
-                const AuthTextField(title: 'Password', showToggle: true),
+                AuthTextField(
+                  title: 'Enter Password / OTP',
+                  showToggle: true,
+                  controller: otpController,
+                ),
                 SignButton(
                   title: 'Sign In',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NavController(),
-                      ),
-                    );
+                  onTap: () async {
+                    final code = otpController.text.trim();
+
+                    // if code is empty show snackbar/
+                    if (code.isEmpty || widget.verificationId == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Please get OTP first")),
+                      );
+                      return;
+                    }
+
+                    // verify OTP once verification ID is passed.
+                    try {
+                      await authService.verifyOTP(
+                        verificationId: widget.verificationId!,
+                        smsCode: code,
+                      );
+
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => NavController()),
+                      );
+
+                      // if OTP is invalid show snackbar.
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Invalid OTP: ${e.toString()}")),
+                      );
+                    }
                   },
                 ),
                 GestureDetector(
@@ -66,71 +98,20 @@ class _SignInScreenState extends State<SignInScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ForgotPasswordScreen(),
+                        builder: (context) => RetrieveOtpScreen(),
                       ),
                     );
                   },
                   child: Text(
-                    'Forgot Password?',
-                    style: TextStyle(color: Colors.white),
+                    'Get OTP here',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.white),
                   ),
                 ),
-                Container(
-                  child: const Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          color: greenAccent,
-                          thickness: 3,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(
-                          'Or',
-                          style: TextStyle(
-                            color: greenAccent,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          color: greenAccent,
-                          thickness: 3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SocialButton(
-                  title: 'Sign up with ',
-                  onTap: () {},
-                ),
-                Center(
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        const TextSpan(text: "Don't have an account? "),
-                        WidgetSpan(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignUpScreen(),
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              'Sign Up',
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                const OnboardingDivider(),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

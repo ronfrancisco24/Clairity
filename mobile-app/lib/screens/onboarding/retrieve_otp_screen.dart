@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 import '../../widgets/onboarding/auth_text_field.dart';
-import 'reset_password_screen.dart';
 import 'sign_in_screen.dart';
-import 'sign_up_screen.dart';
 import '../../widgets/onboarding/sign_button.dart';
+import '../../services/auth_service.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
-  ForgotPasswordScreen({super.key});
+class RetrieveOtpScreen extends StatelessWidget {
+  RetrieveOtpScreen({super.key});
 
   final phoneController = TextEditingController();
+  final authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -42,8 +43,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Resend OTP', style: kHeading),
-                      Text('Please enter your phone number.',
+                      Text('Start with One Time Password.', style: kHeading),
+                      Text(
+                          'Please enter your phone number, to retrieve password.',
                           style: kSubheading),
                     ],
                   ),
@@ -53,29 +55,36 @@ class ForgotPasswordScreen extends StatelessWidget {
                   controller: phoneController,
                 ),
                 SignButton(
+                  // get OTP here
                   title: 'Get OTP',
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignInScreen(),
-                      ),
-                    );
-                  },
-                ),
-                Transform.translate(
-                  offset: Offset(0, -20),
-                  child: SignButton(
-                    title: 'Return to Sign In',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignInScreen(),
-                        ),
+                    final phone = phoneController.text.trim();
+
+                    if (phone.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text("Please enter your phone number")),
                       );
-                    },
-                  ),
+                      return;
+                    }
+                    authService.sendOTP(
+                        phoneNumber: phone,
+                        // pass verification back to Sign in screen.
+                        onCodeSent: (verificationId) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SignInScreen(verificationId: verificationId),
+                            ),
+                          );
+                        },
+                        onError: (error) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Error: $error")),
+                          );
+                        });
+                  },
                 ),
                 Divider(
                   color: greenAccent,

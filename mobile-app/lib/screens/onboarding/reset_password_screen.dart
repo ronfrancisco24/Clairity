@@ -45,17 +45,17 @@ class ResetPasswordScreen extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    AuthTextField(
-                      title: 'New Password',
-                      obscureText: true,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    AuthTextField(title: 'Confirm Password', obscureText: true),
-                    SizedBox(
-                      height: 40,
-                    ),
+                    // AuthTextField(
+                    //   title: 'New Password',
+                    //   obscureText: true,
+                    // ),
+                    // SizedBox(
+                    //   height: 20,
+                    // ),
+                    // AuthTextField(title: 'Confirm Password', obscureText: true),
+                    // SizedBox(
+                    //   height: 40,
+                    // ),
                     SignButton(
                       onTap: () {
                         Navigator.push(

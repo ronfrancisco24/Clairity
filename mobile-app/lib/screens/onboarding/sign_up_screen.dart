@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/onboarding/auth_text_field.dart';
+import '../../widgets/onboarding/onboarding_divider.dart';
 import '../../widgets/onboarding/sign_button.dart';
 import '../../widgets/onboarding/social_button.dart';
 import '../../constants.dart';
@@ -45,15 +46,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                 ),
-                const AuthTextField(title: 'Email/Phone'),
-                const AuthTextField(
-                  title: 'Password',
-                  obscureText: true,
-                ),
-                const AuthTextField(
-                  title: 'Confirm Password',
-                  obscureText: true,
-                ),
+                // const AuthTextField(title: 'Email/Phone'),
+                // const AuthTextField(
+                //   title: 'Password',
+                //   obscureText: true,
+                // ),
+                // const AuthTextField(
+                //   title: 'Confirm Password',
+                //   obscureText: true,
+                // ),
                 SignButton(
                   title: 'Sign Up',
                   onTap: () {
@@ -65,33 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     );
                   },
                 ),
-                Container(
-                  child: const Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          color: greenAccent,
-                          thickness: 3,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(
-                          'Or',
-                          style: TextStyle(
-                            color: greenAccent,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          color: greenAccent,
-                          thickness: 3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                const OnboardingDivider(),
                 SocialButton(
                   title: 'Sign in with ',
                   onTap: () {},
