@@ -7,7 +7,6 @@ import '../log_entry/log_bottomsheet.dart';
 import 'cleaner_tile.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
-import '../../../models/cleaning_log_model.dart';
 
 //TODO: Username based on userId
 

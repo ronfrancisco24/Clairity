@@ -123,12 +123,14 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
                           logProvider.editLog(updatedLog);
                         } else {
                           final newLog = CleaningRecord(
-                            cleaningId: DateTime.now().millisecondsSinceEpoch, //To bo modified
-                            restroomId: 1,
+                            cleaningId: "1", //To bo modified
+                            sensorId: "1",
                             userId: currentUserId, // from constants.dart
                             comment: _commentController.text,
                             rating: _selectedRating,
                             timestamp: DateTime.now(),
+                            acknowledged: false,
+                            adminMessage: '',
                           );
 
                           logProvider.addLog(newLog);
