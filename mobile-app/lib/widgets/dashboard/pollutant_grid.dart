@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/sensor_data_utils.dart';
 import 'card_status_sensor.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'dart:math';
@@ -29,8 +30,10 @@ class PollutantGrid extends StatelessWidget {
         return StaggeredGridTile.fit(
           crossAxisCellCount: (isLastItem && isOddCount) ? crossAxisCount : 1,
           child: CardStatusSensor(
+            // input firestore data
             value: data['value'],
-            maxValue: 120,
+            // take from pollutantMaxValues and assign its label.
+            maxValue: (pollutantMaxValues[data['label']] ?? 100).toInt(),
             label: data['label'],
             progress: data['progress'],
           ),

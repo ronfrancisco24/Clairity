@@ -11,7 +11,7 @@ class CardStatusSensor extends StatelessWidget {
     this.progressColor = Colors.redAccent,
   });
 
-  final int value;
+  final double value;
   final int maxValue;
   final String label;
   final double progress;
@@ -27,7 +27,7 @@ class CardStatusSensor extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // ✅ Make column shrink-wrap its content
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FittedBox(

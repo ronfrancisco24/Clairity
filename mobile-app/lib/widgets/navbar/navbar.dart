@@ -100,7 +100,7 @@ class NavigationItem extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: RadialGradient(
                         colors: [
-                          Colors.redAccent.withOpacity(0.3),
+                          greenAccent.withOpacity(0.3),
                           Colors.transparent,
                         ],
                         radius: 0.8,
@@ -117,18 +117,18 @@ class NavigationItem extends StatelessWidget {
                       width: 24,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: Colors.redAccent,
+                        color: greenAccent,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
                   Icon(
                     iconData,
-                    color: isSelected ? Colors.redAccent : Colors.white70,
+                    color: isSelected ? greenAccent : Colors.white70,
                     size: isSelected ? 30 : 26,
                     shadows: isSelected
                         ? [
                             Shadow(
-                              color: Colors.redAccent.withOpacity(0.5),
+                              color: greenAccent.withOpacity(0.5),
                               blurRadius: 16,
                             ),
                           ]
