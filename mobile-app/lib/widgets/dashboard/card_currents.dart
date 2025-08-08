@@ -71,15 +71,16 @@ class CardCurrents extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                left: 65,
-                top: 45,
-                child: Text(
-                  '${value.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text(
+                    '${value.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

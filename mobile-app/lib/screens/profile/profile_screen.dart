@@ -5,15 +5,36 @@ import '../../widgets/profile/settings_tile.dart';
 import '../../widgets/profile/popups/help_popup.dart';
 import '../../widgets/profile/popups/about_popup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:provider/provider.dart';
+import '../../providers/user_provider.dart';
 import '../../widgets/sensor/notifications_button.dart';
 import '../onboarding/splash_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Load user data once when screen opens
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.loadUserData();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
+    final firstName = userProvider.userData?['firstName'] ?? 'No name';
+    final lastName = userProvider.userData?['lastName'] ?? 'No name';
+    final phoneNo = userProvider.userData?['phoneNo'] ?? 'No number';
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -37,8 +58,8 @@ class ProfileScreen extends StatelessWidget {
                 height: 10,
               ),
               ProfileContainer(
-                name: 'Kyle Mariano',
-                email: 'kyle@hau.staff.com',
+                name: '$firstName $lastName',
+                email: phoneNo,
                 building: 'PGN',
               ),
               SizedBox(

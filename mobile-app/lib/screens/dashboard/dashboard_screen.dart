@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../models/sensor_model.dart';
+import '../../utils/sensor_data_utils.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/sensor/notifications_button.dart';
 import '../../widgets/dashboard/card_location.dart';
 import '../../widgets/dashboard/card_currents.dart';
@@ -8,7 +11,9 @@ import '../../widgets/dashboard/pollutant_grid.dart';
 import '../../widgets/dashboard/time_selector.dart';
 import '../../widgets/dashboard/card_message.dart';
 import '../../utils/dashboard_time_utils.dart';
-import 'dart:math';
+import '../../providers/sensor_provider.dart';
+import '../../providers/user_provider.dart';
+import '../../services/sensor_reading_service.dart';
 
 // TODO: modularize code here more.
 class DashboardScreen extends StatefulWidget {
@@ -19,53 +24,39 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.loadUserData();
+    _initializeSensorData();
+  }
+
+  void _initializeSensorData() async {
+    String sensorId = "YDTdkdd2dSFsw6dtyvjd";
+
+    String? readingId = await SensorReadingService().fetchLatestReadingId(
+        sensorId);
+
+    if (readingId != null) {
+      Provider.of<SensorProvider>(context, listen: false)
+          .listenToSensor(sensorId);
+    } else {
+      debugPrint("No latest reading found for sensor $sensorId");
+    }
+  }
+
   int selectedTimeIndex = 0;
   final List<String> times = generateTimeSlots();
 
-  // used for the different values in time.
-  List<List<Map<String, dynamic>>> pollutantData = List.generate(
-    5,
-    (index) => [
-      {
-        'label': 'PM2.5',
-        'value': 12 + index * 5,
-        'progress': min(0.3 + index * 0.2, 1.0)
-      },
-      {
-        'label': 'VOC',
-        'value': 20 + index * 4,
-        'progress': min(0.3 + index * 0.1, 1.0),
-      },
-      {
-        'label': 'CO',
-        'value': 20 + index * 4,
-        'progress': min(0.4 + index * 0.1, 1.0),
-      },
-      {
-        'label': 'CO₂',
-        'value': 20 + index * 4,
-        'progress': min(0.4 + index * 0.1, 1.0),
-      },
-      {
-        'label': 'NH₃',
-        'value': 20 + index * 4,
-        'progress': min(0.2 + index * 0.15, 1.0),
-      },
-      {
-        'label': 'CH₄',
-        'value': 20 + index * 4,
-        'progress': min(0.2 + index * 0.15, 1.0),
-      },
-      {
-        'label': 'H₂S',
-        'value': 20 + index * 4,
-        'progress': min(0.2 + index * 0.15, 1.0),
-      },
-    ],
-  );
-
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
+    final firstName =
+        (userProvider.userData?['firstName'] ?? 'No name').toString();
+
     ScreenUtil.init(context, designSize: const Size(360, 690));
 
     return Scaffold(
@@ -77,14 +68,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               children: [
                 // Header
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Good Morning, User!',
+                          'Good Morning, $firstName!',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
@@ -130,12 +121,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Row(
                   children: [
                     // Currents Card
-                    const Expanded(
-                      child: CardCurrents(
-                        value: 80,
-                        low: 52,
-                        high: 89,
-                        status: 'Moderate',
+                    Expanded(
+                      child: Consumer<SensorProvider>(
+                        builder: (context, provider, _) {
+                          final current = provider.currentData;
+                          final forecastList = provider.forecastReadingData;
+
+                          SensorDetails? selectedReading;
+                          if (selectedTimeIndex == 0) {
+                            selectedReading = current;
+                          } else if (selectedTimeIndex - 1 <
+                              forecastList.length) {
+                            selectedReading =
+                                forecastList[selectedTimeIndex - 1];
+                          }
+
+                          // You can adjust how you calculate these
+                          final value = (selectedReading?.aqi ?? 0);
+                          final low = 23.0;
+                          final high = 100.0;
+                          final status =
+                              selectedReading?.aqiCategory ?? 'Unknown';
+
+                          return CardCurrents(
+                            value: value, // If CardCurrents needs int
+                            low: low,
+                            high: high,
+                            status: status,
+                          );
+                        },
                       ),
                     ),
                     SizedBox(width: 12.w),
@@ -145,8 +159,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CardQuality(
-                            onTap: () {
+                            onTap: () async {
                               // TODO: Navigate to sensor screen
+                              await SensorReadingService()
+                                  .generateTestSensorData(
+                                      'YDTdkdd2dSFsw6dtyvjd');
                             },
                             trendLabel: 'Air Quality Trend',
                             trendValue: 'Ammonia',
@@ -166,13 +183,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 SizedBox(height: 16.h),
                 // Pollutant Cards
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    return PollutantGrid( //TODO: use state management tool to keep data consistent
-                      pollutantList: pollutantData[selectedTimeIndex],
-                    );
-                  },
-                ),
+
+                Consumer<SensorProvider>(builder: (context, provider, _) {
+                  final current = provider.currentData;
+                  final forecastList = provider.forecastReadingData;
+
+                  SensorDetails? selectedReading;
+
+                  if (selectedTimeIndex == 0) {
+                    selectedReading = current;
+                  } else if (selectedTimeIndex - 1 < forecastList.length) {
+                    selectedReading = forecastList[selectedTimeIndex - 1];
+                  }
+
+                  final List<Map<String, dynamic>> pollutants =
+                      selectedReading != null
+                          ? currentData(selectedReading)
+                          : [];
+
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      return PollutantGrid(
+                        //TODO: use state management tool to keep data consistent
+                        pollutantList: pollutants, // show placeholder data
+                      );
+                    },
+                  );
+                }),
                 SizedBox(height: 42.h),
               ],
             ),
