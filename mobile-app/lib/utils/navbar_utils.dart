@@ -5,6 +5,7 @@ import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/sensor/sensor_screen.dart';
 import '../screens/history/history_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../screens/databases/databases_screen.dart';
 import '../constants.dart' as constants;
 
 //TODO: Fix position
@@ -19,14 +20,16 @@ class NavController extends StatefulWidget {
 class _NavControllerState extends State<NavController> {
   constants.NavRoute _activeRoute = constants.NavRoute.home;
 
-  Widget _getScreen(constants.NavRoute route) {
+  Widget _getScreen(constants.NavRoute route, String role) {
     switch (route) {
       case constants.NavRoute.home:
         return const DashboardScreen();
       case constants.NavRoute.sensor:
         return const SensorScreen();
       case constants.NavRoute.history:
-        return const HistoryScreen();
+        return  role == 'admin'
+            ? const DatabasesScreen()
+            : const HistoryScreen();
       case constants.NavRoute.profile:
         return const ProfileScreen();
     }
@@ -43,7 +46,7 @@ class _NavControllerState extends State<NavController> {
     return Scaffold(
       body: Stack(
         children: [
-          _getScreen(_activeRoute),
+          _getScreen(_activeRoute, constants.role),
           Positioned(
             left: 24,
             right: 24,

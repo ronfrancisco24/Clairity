@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'models/cleaning_log_model.dart';
 
 enum NavRoute {
   home,
@@ -9,7 +9,44 @@ enum NavRoute {
   profile,
 }
 
-const currentUserId = 1; // For testing purposes
+// For Testing purposes
+const currentUserId = "1";
+const String role = "admin";
+
+final List<CleaningRecord> sampleLogs = [
+  CleaningRecord(
+    cleaningId: "1",
+    sensorId: "101",
+    userId: "201",
+    comment: 'Wala na po cleaning detergents',
+    rating: 3,
+    timestamp: DateTime(2025, 8, 7, 10, 30),
+    acknowledged: false,
+    adminMessage: '',
+  ),
+  CleaningRecord(
+    cleaningId: "2",
+    sensorId: "101",
+    userId: "202",
+    comment: 'Madaming nagdumi. Turuan niyo ang mga estudyante magtapon ng mga basura nila!',
+    rating: 2,
+    timestamp: DateTime(2025, 8, 7, 8, 30),
+    acknowledged: true,
+    adminMessage: 'Noted. Will remind students.',
+  ),
+  CleaningRecord(
+    cleaningId: "3",
+    sensorId: "101",
+    userId: "203",
+    comment: 'Ayoko na po mag linis.',
+    rating: 1,
+    timestamp: DateTime(2025, 8, 7, 7, 30),
+    acknowledged: false,
+    adminMessage: '',
+  ),
+];
+
+//
 
 const Color white = Color(0xFFF3F4F5);
 const Color lightBlo = Color(0xFFA6BDBE);
@@ -25,10 +62,28 @@ const Color greenAccent = Color(0xFF37964E);
 const Color vividGreen = Color(0xFF10e84a);
 const double bottomOffset = 30.0;
 
+final legendColors = [
+  Color(0xFF547327),
+  Color(0xFF222B45),
+  Color(0xFFE69F5C),
+  Color(0xFF8B8B9B),
+  Color(0xFF45A29E),
+  Color(0xFFB15F65),
+  Color(0xFF7E7D9E),
+  Color(0xFF5E9C3E),
+  Color(0xFF3B566D),
+  Color(0xFFC78A4D),
+  Color(0xFF9F9F8B),
+  Color(0xFF6A9B97),
+  Color(0xFFD07C82),
+  Color(0xFF9796B8),
+  Color(0xFF4D4E6D),
+];
+
 class AppGradients {
   static const LinearGradient primaryGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomCenter,
+    begin: Alignment.bottomCenter,
+    end: Alignment.topRight,
     stops: [0.0, 0.34, 1.0],
     colors: [
       Color(0xFF18232A), // Stop 0%
@@ -43,6 +98,16 @@ class AppGradients {
     colors: [
       Color(0xFF0B334D),
       Color(0xFF477023),
+    ],
+  );
+
+  static const LinearGradient adminGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.topRight,
+    colors: [
+      Color(0xFF0B334D),
+      Color(0xFF597885),
+      Color(0xFF719082),
     ],
   );
 }
