@@ -110,7 +110,7 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
                       textColor: Colors.white,
                       hasText: hasText,
                       onTap: hasText
-                          ? () {
+                          ? () async {
                         final logProvider = context.read<LogProvider>();
 
                         if (isEdit) {
@@ -120,12 +120,12 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
                             timestamp: DateTime.now(),
                           );
 
-                          logProvider.editLog(updatedLog);
+                          await logProvider.editLog(updatedLog);
                         } else {
                           final newLog = CleaningRecord(
-                            cleaningId: "1", //To bo modified
-                            sensorId: "1",
-                            userId: currentUserId, // from constants.dart
+                            cleaningId: '',
+                            sensorId: "1", // TODO: Selected Sensor
+                            userId: currentUserId, // TODO: Logged User ID
                             comment: _commentController.text,
                             rating: _selectedRating,
                             timestamp: DateTime.now(),
@@ -133,10 +133,10 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
                             adminMessage: '',
                           );
 
-                          logProvider.addLog(newLog);
+                          await logProvider.addLog(newLog);
                         }
 
-                        Navigator.pop(context);
+                        if (mounted) Navigator.pop(context);
                       }
                           : null,
                     );

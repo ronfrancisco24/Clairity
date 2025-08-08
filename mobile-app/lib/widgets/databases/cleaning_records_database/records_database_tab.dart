@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import '../../../models/cleaning_log_model.dart';
 import '../../../providers/log_provider.dart';
 import '../../../utils/history_utils.dart';
 import '../../history/cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
-import 'acknowledge_card.dart';
+import 'acknowledge_card/acknowledge_card.dart';
 import 'bottomsheet/acknowledge_bottomsheet.dart';
 
 //TODO: Username based on userId
@@ -20,14 +19,18 @@ class CleaningRecordsDatabaseTab extends StatefulWidget {
 
 class _CleaningRecordsDatabaseTabState extends State<CleaningRecordsDatabaseTab> {
   DateTime selectedDate = DateTime.now();
-  List<CleaningRecord> records = constants.sampleLogs;
-
   String get formattedDate => formatSelectedDate(selectedDate);
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<LogProvider>().fetchLogs(); // Make sure this method exists
+  }
 
   @override
   Widget build(BuildContext context) {
     final logs = context.watch<LogProvider>().logs;
-    final filteredLogs = filterRecordsByDate(records, selectedDate);
+    final filteredLogs = filterRecordsByDate(logs, selectedDate);
 
     return Container(
       color: Colors.grey[50],
@@ -41,7 +44,11 @@ class _CleaningRecordsDatabaseTabState extends State<CleaningRecordsDatabaseTab>
               });
             },
           ),
-          SizedBox(height: 10.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            child: Divider(),
+          ),
+          SizedBox(height: 10.h,),
           Expanded(
             child: filteredLogs.isEmpty
                 ? Padding(
@@ -89,11 +96,4 @@ class _CleaningRecordsDatabaseTabState extends State<CleaningRecordsDatabaseTab>
       ),
     );
   }
-}
-
-String formatTime(DateTime dateTime) {
-  final hour = dateTime.hour > 12 ? dateTime.hour - 12 : dateTime.hour;
-  final amPm = dateTime.hour >= 12 ? 'pm' : 'am';
-  final minute = dateTime.minute.toString().padLeft(2, '0');
-  return '$hour:$minute $amPm';
 }
