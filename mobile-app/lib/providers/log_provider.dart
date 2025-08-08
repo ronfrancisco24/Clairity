@@ -19,7 +19,7 @@ class LogProvider with ChangeNotifier {
     }
   }
 
-  void removeLog(int cleaningId) {
+  void removeLog(String cleaningId) {
     _logs.removeWhere((log) => log.cleaningId == cleaningId);
     notifyListeners();
   }
