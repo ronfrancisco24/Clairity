@@ -124,8 +124,8 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
                         } else {
                           final newLog = CleaningRecord(
                             cleaningId: '',
-                            sensorId: "1", // TODO: Selected Sensor
-                            userId: currentUserId, // TODO: Logged User ID
+                            sensorId: "1", // TODO: Fix sensor ID
+                            userId: currentUserId,
                             comment: _commentController.text,
                             rating: _selectedRating,
                             timestamp: DateTime.now(),
