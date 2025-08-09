@@ -31,9 +31,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
 
-    final firstName = userProvider.userData?['firstName'] ?? 'No name';
-    final lastName = userProvider.userData?['lastName'] ?? 'No name';
-    final phoneNo = userProvider.userData?['phoneNo'] ?? 'No number';
+    final firstName = userProvider.user?.firstName ?? 'No name';
+    final lastName = userProvider.user?.lastName ?? 'No name';
+    final phoneNo = userProvider.user?.phoneNo ?? 'No number';
 
     return Scaffold(
       backgroundColor: Colors.white,

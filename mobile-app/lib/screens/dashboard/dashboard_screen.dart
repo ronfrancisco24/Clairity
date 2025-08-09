@@ -15,7 +15,6 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../services/sensor_reading_service.dart';
 
-// TODO: modularize code here more.
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -55,7 +54,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final userProvider = Provider.of<UserProvider>(context);
 
     final firstName =
-        (userProvider.userData?['firstName'] ?? 'No name').toString();
+        (userProvider.user?.firstName ?? 'No name').toString();
 
     ScreenUtil.init(context, designSize: const Size(360, 690));
 

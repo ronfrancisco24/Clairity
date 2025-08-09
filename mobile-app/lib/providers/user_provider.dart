@@ -1,20 +1,40 @@
-import 'package:flutter/material.dart';
-import '../services/profile_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import '../models/user_model.dart';
 
-class UserProvider with ChangeNotifier {
-  Map<String, dynamic>? _userData;
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Map<String, dynamic>? get userData => _userData;
+class UserProvider extends ChangeNotifier {
+  UserModel? _user;
 
-  bool get isLoaded => _userData != null;
+  UserModel? get user => _user;
+
+  bool get isLoaded => _user != null;
+
+  Future<UserModel?> getUserDetails() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final uid = user.uid;
+      DocumentSnapshot doc = await _firestore.collection('users').doc(uid).get();
+
+      if (doc.exists) {
+        return UserModel.fromMap(uid, doc.data() as Map<String, dynamic>);
+      } else {
+        print('User document not found in Firestore.');
+      }
+    }
+    return null;
+  }
 
   Future<void> loadUserData() async {
-    _userData = await getUserDetails();
+    _user = await getUserDetails();
     notifyListeners();
   }
 
   void clearUserData() {
-    _userData = null;
+    _user = null;
     notifyListeners();
   }
 }
+
