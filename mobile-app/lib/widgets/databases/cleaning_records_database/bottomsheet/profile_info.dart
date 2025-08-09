@@ -20,17 +20,18 @@ class ProfileInfo extends StatelessWidget {
         child: Column(
           children: [
             CircleAvatar(radius: 30.r),
+            SizedBox(height: 10.h,),
             Text(
-              'user${record.userId}_staff',
+              '${record.userId}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 24.sp,
+                fontSize: 16.sp,
               ),
             ),
             Text(
               'Add actual name here',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 fontSize: 12.sp,
               ),
             ),
