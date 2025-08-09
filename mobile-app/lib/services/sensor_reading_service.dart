@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
+import '../models/sensor_model.dart';
+
 class SensorReadingService {
   final _db = FirebaseFirestore.instance;
   final _now = DateTime.now();
@@ -8,11 +10,12 @@ class SensorReadingService {
 
   //TODO: once documents are populated use QuerySnapshot to read multiple docs
   //TODO: always base off the current document
-  Stream<QueryDocumentSnapshot<Map<String, dynamic>>> streamLatestReading(String sensorId) {
+  //TODO: change current structure
+  Stream<QueryDocumentSnapshot<Map<String, dynamic>>> streamLatestCleanedReading(String sensorId) {
     return _db
         .collection('sensors')
         .doc(sensorId)
-        .collection('readings')
+        .collection('cleanedReadingData')
         .orderBy('timestamp', descending: true)
         .limit(1)
         .snapshots()
@@ -20,12 +23,12 @@ class SensorReadingService {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamForecastReadings(
-      String sensorId, String readingId) {
+      String sensorId, String cleanReadingId) {
     return _db
         .collection('sensors')
         .doc(sensorId)
-        .collection('readings')
-        .doc(readingId)
+        .collection('cleanedReadingData')
+        .doc(cleanReadingId)
         .collection('forecast')
         .orderBy('timestamp')
         .snapshots();
@@ -36,7 +39,7 @@ class SensorReadingService {
     final snapshot = await _db
         .collection('sensors')
         .doc(sensorId)
-        .collection('readings')
+        .collection('cleanedReadingData')
         .orderBy('timestamp', descending: true)
         .limit(1)
         .get();
@@ -49,32 +52,64 @@ class SensorReadingService {
   }
 
   // for testing purposes, generate 8 documents under readings
-  // TODO: use to test history for sensor data.
-  Future<void> generateTestSensorData(String sensorId) async {
+  // populate raw, clean, and forecast data.
+  Future<void> generateRawTestData(String sensorId) async {
     for (int i = 0; i < 8; i++) {
       final readingTime = _now.subtract(Duration(hours: i * 3));
       final testData = generateSensorValues(readingTime);
 
-      // Add the reading document
-      final readingRef = await _db
+      // Raw Data
+      final rawRef = await _db
           .collection('sensors')
           .doc(sensorId)
-          .collection('readings')
+          .collection('rawReadingData')
           .add(testData);
 
-      // Add 4 forecast documents
+      final rawId = rawRef.id;
+
+      final cleanedDocId = '${rawId}_clean';
+
+      // Cleaned Data
+      // TODO: change later to cleaned data.
+      final cleanedRef = _db
+          .collection('sensors')
+          .doc(sensorId)
+          .collection('cleanedReadingData')
+          .doc(cleanedDocId);
+
+      await cleanedRef.set(testData); // for now use the same test data from raw data
+
+    // Add 4 forecast documents
+
       for (int j = 1; j <= 4; j++) {
         final forecastTime = readingTime.add(Duration(minutes: j * 30));
         final forecastData = generateSensorValues(forecastTime);
+        final forecastDataId = '${cleanedDocId}_${30 * j}mins';
 
-        await readingRef
+        await cleanedRef
             .collection('forecast')
-            .doc('forecast$j')
+            .doc(forecastDataId)
             .set(forecastData);
       }
     }
-
     print('Test data generated successfully');
+  }
+
+  Stream<List<SensorDetails>> streamSensorHistoryData(String sensorId, DateTime selectedDate) {
+    final startOfDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+    final endOfDay = startOfDay.add(Duration(days: 1));
+
+    return _db
+        .collection('sensors')
+        .doc(sensorId)
+        .collection('cleanedReadingData')
+        .where('timestamp', isGreaterThanOrEqualTo: startOfDay)
+        .where('timestamp', isLessThan: endOfDay)
+        .orderBy('timestamp')
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+        .map((doc) => SensorDetails.fromMap(doc.data()))
+        .toList());
   }
 
   // generate random sensor values
