@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../providers/log_provider.dart';
 import '../../../models/cleaning_log_model.dart';
+import '../../../providers/user_provider.dart';
 import 'entry_button.dart';
 import 'log_text_field.dart';
 import 'ratings.dart';
@@ -38,6 +39,8 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
   @override
   Widget build(BuildContext context) {
     final isEdit = widget.recordToEdit != null;
+    final userProvider = Provider.of<UserProvider>(context);
+    final userID = userProvider.user?.uid ?? '';
 
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.5,
@@ -125,7 +128,7 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
                           final newLog = CleaningRecord(
                             cleaningId: '',
                             sensorId: "1", // TODO: Fix sensor ID
-                            userId: currentUserId,
+                            userId: userID,
                             comment: _commentController.text,
                             rating: _selectedRating,
                             timestamp: DateTime.now(),

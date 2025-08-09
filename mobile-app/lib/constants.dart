@@ -9,45 +9,6 @@ enum NavRoute {
   profile,
 }
 
-// For Testing purposes
-const currentUserId = "1";
-const String role = "user";
-
-final List<CleaningRecord> sampleLogs = [
-  CleaningRecord(
-    cleaningId: "1",
-    sensorId: "101",
-    userId: "201",
-    comment: 'Wala na po cleaning detergents',
-    rating: 3,
-    timestamp: DateTime(2025, 8, 7, 10, 30),
-    acknowledged: true,
-    adminMessage: 'Acknowledged.',
-  ),
-  CleaningRecord(
-    cleaningId: "2",
-    sensorId: "101",
-    userId: "202",
-    comment: 'Madaming nagdumi. Turuan niyo ang mga estudyante magtapon ng mga basura nila!',
-    rating: 2,
-    timestamp: DateTime(2025, 8, 7, 8, 30),
-    acknowledged: true,
-    adminMessage: 'Noted. Will remind students.',
-  ),
-  CleaningRecord(
-    cleaningId: "3",
-    sensorId: "101",
-    userId: "203",
-    comment: 'Ayoko na po mag linis.',
-    rating: 1,
-    timestamp: DateTime(2025, 8, 7, 7, 30),
-    acknowledged: false,
-    adminMessage: '',
-  ),
-];
-
-//
-
 const Color white = Color(0xFFF3F4F5);
 const Color lightBlo = Color(0xFFA6BDBE);
 const Color darkBlo = Color(0xFF0B334D);
