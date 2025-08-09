@@ -56,9 +56,10 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 AuthTextField(
-                  title: 'Enter Password / OTP',
+                  hint: 'Enter Password / OTP',
                   showToggle: true,
                   controller: otpController,
+                  type: 'OTP',
                 ),
                 SignButton(
                   title: 'Sign In',
