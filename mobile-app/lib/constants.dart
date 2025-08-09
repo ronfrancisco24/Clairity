@@ -11,7 +11,7 @@ enum NavRoute {
 
 // For Testing purposes
 const currentUserId = "1";
-const String role = "admin";
+const String role = "user";
 
 final List<CleaningRecord> sampleLogs = [
   CleaningRecord(
@@ -21,8 +21,8 @@ final List<CleaningRecord> sampleLogs = [
     comment: 'Wala na po cleaning detergents',
     rating: 3,
     timestamp: DateTime(2025, 8, 7, 10, 30),
-    acknowledged: false,
-    adminMessage: '',
+    acknowledged: true,
+    adminMessage: 'Acknowledged.',
   ),
   CleaningRecord(
     cleaningId: "2",

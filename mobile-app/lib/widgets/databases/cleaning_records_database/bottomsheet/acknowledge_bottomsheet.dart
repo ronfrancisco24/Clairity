@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import '../../../../models/cleaning_log_model.dart';
+import '../../../../providers/log_provider.dart';
 import 'admin_message.dart';
 import 'profile_info.dart';
 import 'record_description/record_info_container.dart';
 
-class AcknowledgeBottomSheet extends StatelessWidget {
+class AcknowledgeBottomSheet extends StatefulWidget {
   final CleaningRecord record;
 
   const AcknowledgeBottomSheet({super.key, required this.record});
 
   @override
+  State<AcknowledgeBottomSheet> createState() => _AcknowledgeBottomSheetState();
+}
+
+class _AcknowledgeBottomSheetState extends State<AcknowledgeBottomSheet> {
+  @override
   Widget build(BuildContext context) {
+    final TextEditingController _controller = TextEditingController();
+
     return FractionallySizedBox(
       heightFactor: 0.85,
       child: Container(
@@ -38,19 +47,23 @@ class AcknowledgeBottomSheet extends StatelessWidget {
                   ),
                 ),
               ),
-              ProfileInfo(record: record),
+              ProfileInfo(record: widget.record),
               SizedBox(height: 10.h,),
-              RecordInfoContainer(record: record),
+              RecordInfoContainer(record: widget.record),
               SizedBox(height: 10.h),
 
               // Admin comment widget
               AdminMessage(
                 onSubmit: () {
-                  // Handle the acknowledge logic here
-                  // For example:
-                  // 1. Set record.acknowledged = true
-                  // 2. Add adminMessage
-                  // 3. Call a provider method or backend service
+                  final message = _controller.text.trim().isEmpty
+                      ? "Acknowledged."
+                      : _controller.text.trim();
+
+                  context.read<LogProvider>().updateLog(
+                    widget.record.cleaningId,
+                    acknowledged: true,
+                    adminMessage: message,
+                  );
 
                   Navigator.pop(context);
                 },

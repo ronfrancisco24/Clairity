@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../providers/log_provider.dart';
 import '../../../utils/history_utils.dart';
 import '../log_entry/log_bottomsheet.dart';
-import 'cleaner_tile.dart';
+import 'cleaner_tile/cleaner_tile.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
 
@@ -19,13 +19,16 @@ class CleaningRecordsTab extends StatefulWidget {
 
 class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
   DateTime selectedDate = DateTime.now();
-
   String get formattedDate => formatSelectedDate(selectedDate);
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    context.read<LogProvider>().fetchLogs(); // Make sure this method exists
+  }
 
-    // For provider (testing)
+  @override
+  Widget build(BuildContext context) {
     final logs = context.watch<LogProvider>().logs;
     final filteredLogs = filterRecordsByDate(logs, selectedDate);
 
@@ -41,7 +44,6 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
               });
             },
           ),
-          SizedBox(height: 10.h),
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -68,8 +70,8 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
                 ),
                 Spacer(),
                 SizedBox(
-                  width: 40.w,
-                  height: 40.w,
+                  width: 30.w,
+                  height: 30.h,
                   child: (selectedDate.year == DateTime.now().year &&
                       selectedDate.month == DateTime.now().month &&
                       selectedDate.day == DateTime.now().day)
@@ -90,7 +92,7 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
               ],
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 12.h),
           Expanded(
             child: filteredLogs.isEmpty
                 ? Padding(
@@ -115,7 +117,15 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
                   itemCount: filteredLogs.length,
                   itemBuilder: (context, index) {
                     final record = filteredLogs[index];
-                    return CleanerTile(record: record);
+                    return CleanerTile(
+                      record: record,
+                      onEdit: () {
+                        //TODO:  Edit featrue
+                      },
+                      onDelete: () {
+                        //TODO:  Delete feature
+                      },
+                    );
                   },
                 ),
               ),
