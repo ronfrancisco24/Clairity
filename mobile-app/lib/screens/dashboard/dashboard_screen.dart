@@ -162,7 +162,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             onTap: () async {
                               // TODO: Navigate to sensor screen
                               await SensorReadingService()
-                                  .generateTestSensorData(
+                                  .generateRawTestData(
                                       'YDTdkdd2dSFsw6dtyvjd');
                             },
                             trendLabel: 'Air Quality Trend',
