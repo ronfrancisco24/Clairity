@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import '../../../../models/user_model.dart';
+import '../../../../providers/user_provider.dart';
 import 'action_confirmation.dart';
 import 'action_type.dart';
 import 'info_container/info_container.dart';
 
-void showUserBottomSheet(BuildContext context, Map<String, dynamic> user) {
+void showUserBottomSheet(BuildContext context, UserModel user) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     builder: (context) {
       ActionType currentAction = ActionType.none;
+      Map<String, dynamic> updatedData = {};
 
       return StatefulBuilder(
         builder: (context, setState) {
           return FractionallySizedBox(
-            heightFactor: 0.6,
+            heightFactor: 0.7,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -48,25 +52,31 @@ void showUserBottomSheet(BuildContext context, Map<String, dynamic> user) {
                           currentAction = action;
                         });
                       },
+                      currentAction: currentAction,
+                      onEditDataChanged: (data) {
+                        updatedData = data;
+                      },
                     ),
                     SizedBox(height: 20.h),
                     ActionConfirmation(
                       controller: TextEditingController(),
                       actionType: currentAction,
-                      onConfirm: () {
+                      onConfirm: () async {
+                        final userProvider = Provider.of<UserProvider>(context, listen: false);
+
                         if (currentAction == ActionType.delete) {
-                          print('Delete');
-
-                          //Add Delete
-
-                          Navigator.pop(context);
+                          await userProvider.deleteUser(user.uid);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('User deleted successfully')),
+                          );
                         } else if (currentAction == ActionType.edit) {
-                          print('Edit');
-
-                          //Add edit
-
-                          Navigator.pop(context);
+                          await userProvider.editUser(user.uid, updatedData);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('User updated successfully')),
+                          );
                         }
+
+                        Navigator.pop(context);
                       },
                     ),
 

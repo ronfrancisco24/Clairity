@@ -56,9 +56,19 @@ class _ActionConfirmationState extends State<ActionConfirmation> {
     if (widget.actionType == ActionType.none) {
       return Colors.grey[300]!;
     } else if (_inputCorrect) {
-      return Colors.red;
+      return widget.actionType == ActionType.delete
+          ? Colors.red
+          : Colors.green;
     } else {
       return Colors.grey[300]!;
+    }
+  }
+
+  @override
+  void didUpdateWidget(ActionConfirmation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.actionType != widget.actionType) {
+      _checkInput(widget.controller.text); // Revalidate input on action change
     }
   }
 

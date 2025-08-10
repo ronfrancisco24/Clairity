@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../constants.dart' as constants;
+import '../../../models/user_model.dart';
 
 class DashboardCard extends StatelessWidget {
-  final List<Map<String, dynamic>> users;
+  final List<UserModel?> users;
 
   const DashboardCard({super.key, required this.users});
 
@@ -13,7 +14,7 @@ class DashboardCard extends StatelessWidget {
     final buildingCounts = <String, int>{};
 
     for (var user in users) {
-      final building = user['assignedBuilding'] ?? 'Unknown';
+      final building = user!.building ?? 'Unknown';
       buildingCounts[building] = (buildingCounts[building] ?? 0) + 1;
     }
 
