@@ -33,4 +33,17 @@ class UserModel {
       building: map['building'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'firstName': firstName,
+      'lastName': lastName,
+      'role': role,
+      'phoneNo': phoneNo,
+      'username': username,
+      'createdAt': createdAt.toIso8601String(),
+      'building': building ?? '',
+    };
+  }
 }
