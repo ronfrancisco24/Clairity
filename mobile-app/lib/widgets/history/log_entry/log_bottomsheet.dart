@@ -11,7 +11,10 @@ import 'ratings.dart';
 class LogBottomsheet extends StatefulWidget {
   final CleaningRecord? recordToEdit;
 
-  const LogBottomsheet({super.key, this.recordToEdit});
+  const LogBottomsheet({
+    super.key,
+    this.recordToEdit,
+  });
 
   @override
   State<LogBottomsheet> createState() => _LogBottomsheetState();
@@ -127,7 +130,7 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
                         } else {
                           final newLog = CleaningRecord(
                             cleaningId: '',
-                            sensorId: "1", // TODO: Fix sensor ID
+                            sensorId: 'YDTdkdd2dSFsw6dtyvjd', // TODO: Fix sensor ID
                             userId: userID,
                             comment: _commentController.text,
                             rating: _selectedRating,

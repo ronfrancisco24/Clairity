@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../widgets/history/gender_toggle_pill.dart';
 import '../../widgets/history/history_tab_selector.dart';
 import '../../widgets/history/past_alerts/past_alerts_tab.dart';
 import '../../widgets/history/cleaning_records/cleaning_records_tab.dart';
@@ -17,7 +16,6 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  String selectedGender = 'Male';
   int selectedIndex = 1;
 
   final List<String> _tabTitles = [
@@ -44,25 +42,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      "History ",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30.sp,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    GenderTogglePill(
-                      selectedGender: selectedGender,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedGender = value;
-                        });
-                      },
-                    ),
-                  ],
+                Text(
+                  "History ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30.sp,
+                    color: Colors.black87,
+                  ),
                 ),
                 const NotificationsButton(),
               ],

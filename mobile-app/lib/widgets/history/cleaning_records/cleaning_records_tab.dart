@@ -8,8 +8,6 @@ import 'cleaner_tile/cleaner_tile.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
 
-//TODO: Username based on userId
-
 class CleaningRecordsTab extends StatefulWidget {
   const CleaningRecordsTab({super.key});
 
@@ -120,10 +118,14 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
                     return CleanerTile(
                       record: record,
                       onEdit: () {
-                        //TODO:  Edit featrue
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (_) => LogBottomsheet(recordToEdit: record),
+                        );
                       },
                       onDelete: () {
-                        //TODO:  Delete feature
+                        context.read<LogProvider>().removeLog(record.cleaningId);
                       },
                     );
                   },
