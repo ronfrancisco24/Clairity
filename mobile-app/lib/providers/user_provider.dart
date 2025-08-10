@@ -27,6 +27,16 @@ class UserProvider extends ChangeNotifier {
     return null;
   }
 
+  Stream<UserModel?> getUserDetailsStreamById(String uid) {
+    return _firestore.collection('users').doc(uid).snapshots().map((doc) {
+      if (doc.exists) {
+        return UserModel.fromMap(uid, doc.data() as Map<String, dynamic>);
+      } else {
+        return null;
+      }
+    });
+  }
+
   Future<void> loadUserData() async {
     _user = await getUserDetails();
     notifyListeners();

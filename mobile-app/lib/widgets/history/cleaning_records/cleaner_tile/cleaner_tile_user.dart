@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../models/cleaning_log_model.dart';
+import '../../../../models/user_model.dart';
 
 class CleanerTileUser extends StatelessWidget {
-  final CleaningRecord record;
+  final UserModel? record;
 
   const CleanerTileUser({
     super.key,
@@ -13,7 +13,7 @@ class CleanerTileUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      record.userId.toString(),
+      record!.username,
       style: TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeight.w600,
