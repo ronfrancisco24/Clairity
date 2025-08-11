@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../delete_confirm_dialog.dart';
 
-class DeleteButton extends StatelessWidget {
-  final VoidCallback onDelete;
+class BackButtonWidget extends StatelessWidget {
+  final VoidCallback onTap;
 
-  const DeleteButton({
-    super.key,
-    required this.onDelete,
-  });
+  const BackButtonWidget({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => showDeleteConfirmationDialog(context, onDelete),
+      onTap: onTap,
       child: Container(
-        width: 30.w,
-        height: 30.w,
+        width: 40.w,
+        height: 40.w,
         decoration: BoxDecoration(
-          color: Colors.red[400],
+          color: Colors.red,
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: Icon(
-          Icons.delete,
+          Icons.arrow_back,
           color: Colors.white,
           size: 16.w,
         ),

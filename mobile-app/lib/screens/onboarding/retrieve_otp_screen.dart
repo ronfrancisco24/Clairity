@@ -51,8 +51,9 @@ class RetrieveOtpScreen extends StatelessWidget {
                   ),
                 ),
                 AuthTextField(
-                  title: 'Phone No.',
                   controller: phoneController,
+                  hint: '9XXXXXXXXX',
+                  type: 'phone',
                 ),
                 SignButton(
                   // get OTP here
@@ -62,28 +63,30 @@ class RetrieveOtpScreen extends StatelessWidget {
 
                     if (phone.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("Please enter your phone number")),
+                        const SnackBar(content: Text("Please enter your phone number")),
                       );
                       return;
                     }
+
+                    final fullPhoneNumber = '+63$phone';
+
                     authService.sendOTP(
-                        phoneNumber: phone,
-                        // pass verification back to Sign in screen.
-                        onCodeSent: (verificationId) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  SignInScreen(verificationId: verificationId),
-                            ),
-                          );
-                        },
-                        onError: (error) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Error: $error")),
-                          );
-                        });
+                      phoneNumber: fullPhoneNumber,
+                      onCodeSent: (verificationId) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SignInScreen(verificationId: verificationId),
+                          ),
+                        );
+                      },
+                      onError: (error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Error: $error")),
+                        );
+                      },
+                    );
                   },
                 ),
                 Divider(

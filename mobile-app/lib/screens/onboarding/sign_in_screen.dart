@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/user_provider.dart';
 import '../../utils/navbar_utils.dart';
 import '../../widgets/onboarding/auth_text_field.dart';
 import '../../constants.dart';
 import '../../widgets/onboarding/sign_button.dart';
-import '../../widgets/onboarding/social_button.dart';
 import '../../widgets/onboarding/onboarding_divider.dart';
 import 'retrieve_otp_screen.dart';
-import 'sign_up_screen.dart';
 import '../../services/auth_service.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -56,9 +56,10 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 AuthTextField(
-                  title: 'Enter Password / OTP',
+                  hint: 'Enter Password / OTP',
                   showToggle: true,
                   controller: otpController,
+                  type: 'OTP',
                 ),
                 SignButton(
                   title: 'Sign In',
@@ -80,12 +81,13 @@ class _SignInScreenState extends State<SignInScreen> {
                         smsCode: code,
                       );
 
+                      // Load user data after login
+                      await Provider.of<UserProvider>(context, listen: false).loadUserData();
+
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (_) => NavController()),
+                        MaterialPageRoute(builder: (_) => const NavController()),
                       );
-
-                      // if OTP is invalid show snackbar.
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Invalid OTP: ${e.toString()}")),

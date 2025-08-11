@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../models/user_model.dart';
 import 'bottomsheet/user_bottomsheet.dart';
 
 class UserTable extends StatelessWidget {
-  final List<Map<String, dynamic>> users;
+  final List<UserModel> users;
 
   const UserTable({super.key, required this.users});
 
   @override
   Widget build(BuildContext context) {
     if (users.isEmpty) {
-      return Center(child: Text('No users found.'));
+      return const Center(child: Text('No users found.'));
     }
 
-    final columns = users.first.keys.toList();
+    // Get columns from model's map keys
+    final columns = users.first.toMap().keys.toList();
 
     return Scrollbar(
       thumbVisibility: true,
@@ -29,12 +31,13 @@ class UserTable extends StatelessWidget {
                 .map((key) => DataColumn(label: Text(_beautifyHeader(key))))
                 .toList(),
             rows: users.map((user) {
+              final data = user.toMap();
               return DataRow(
                 onSelectChanged: (_) {
                   showUserBottomSheet(context, user);
                 },
                 cells: columns
-                    .map((key) => DataCell(Text(user[key].toString())))
+                    .map((key) => DataCell(Text(data[key].toString())))
                     .toList(),
               );
             }).toList(),

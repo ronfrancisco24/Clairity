@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import '../../../../models/cleaning_log_model.dart';
+import '../../../../models/user_model.dart'; // Import UserModel
+import '../../../../providers/user_provider.dart';
 import '../../../../utils/history_utils.dart';
 import '../../../databases/cleaning_records_database/acknowledge_card/admin_message_container.dart';
 import 'cleaner_tile_header.dart';
@@ -26,11 +29,22 @@ class CleanerTile extends StatefulWidget {
 
 class _CleanerTileState extends State<CleanerTile> {
   late Color iconColor;
+  late Stream<UserModel?> _userDetails; // Store the future
 
   @override
   void initState() {
     super.initState();
     iconColor = getRandomIconColor();
+    _userDetails = Provider.of<UserProvider>(context, listen: false)
+        .getUserDetailsStreamById(widget.record.userId);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _userDetails = Provider.of<UserProvider>(context, listen: false)
+        .getUserDetailsStreamById(widget.record.userId);
   }
 
   @override
@@ -81,7 +95,19 @@ class _CleanerTileState extends State<CleanerTile> {
                       onDelete: widget.onDelete,
                     ),
                     SizedBox(height: 4.h),
-                    CleanerTileUser(record: widget.record),
+                    // Use FutureBuilder to handle the async data
+                    StreamBuilder<UserModel?>(
+                      stream: _userDetails, // The stream from your provider
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Text('Loading user...');
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return CleanerTileUser(record: snapshot.data);
+                        }
+                      },
+                    ),
                     SizedBox(height: 6.h),
                     CleanerTileComment(record: widget.record),
                     SizedBox(height: 8.h),
