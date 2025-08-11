@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../constants.dart';
 import '../../../providers/log_provider.dart';
 import '../../../models/cleaning_log_model.dart';
+import '../../../providers/user_provider.dart';
 import 'entry_button.dart';
 import 'log_text_field.dart';
 import 'ratings.dart';
@@ -10,7 +11,10 @@ import 'ratings.dart';
 class LogBottomsheet extends StatefulWidget {
   final CleaningRecord? recordToEdit;
 
-  const LogBottomsheet({super.key, this.recordToEdit});
+  const LogBottomsheet({
+    super.key,
+    this.recordToEdit,
+  });
 
   @override
   State<LogBottomsheet> createState() => _LogBottomsheetState();
@@ -38,6 +42,8 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
   @override
   Widget build(BuildContext context) {
     final isEdit = widget.recordToEdit != null;
+    final userProvider = Provider.of<UserProvider>(context);
+    final userID = userProvider.user?.uid ?? '';
 
     return Container(
       height: MediaQuery.sizeOf(context).height * 0.5,
@@ -124,8 +130,8 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
                         } else {
                           final newLog = CleaningRecord(
                             cleaningId: '',
-                            sensorId: "1", // TODO: Selected Sensor
-                            userId: currentUserId, // TODO: Logged User ID
+                            sensorId: 'YDTdkdd2dSFsw6dtyvjd', // TODO: Fix sensor ID
+                            userId: userID,
                             comment: _commentController.text,
                             rating: _selectedRating,
                             timestamp: DateTime.now(),

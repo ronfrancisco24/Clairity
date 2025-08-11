@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import '../../../../constants.dart';
+import 'package:provider/provider.dart';
 import '../../../../models/cleaning_log_model.dart';
+import '../../../../providers/user_provider.dart';
+import '../../../delete_confirm_dialog.dart';
 
 class CleanerTileHeader extends StatelessWidget {
   final CleaningRecord record;
@@ -18,6 +20,9 @@ class CleanerTileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final userID = userProvider.user?.uid ?? '';
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -35,7 +40,7 @@ class CleanerTileHeader extends StatelessWidget {
             ),
           ],
         ),
-        if (record.userId == currentUserId)
+        if (record.userId == userID && record.acknowledged == false)
           Row(
             children: [
               GestureDetector(
@@ -47,7 +52,7 @@ class CleanerTileHeader extends StatelessWidget {
               ),
               SizedBox(width: 8.w),
               GestureDetector(
-                onTap: onDelete,
+                onTap: () =>  showDeleteConfirmationDialog(context, onDelete),
                 child: Padding(
                   padding: EdgeInsets.all(4.w),
                   child: Icon(Icons.delete_forever, size: 18.sp, color: Colors.red[600]),

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/user_provider.dart';
+import 'add/add_button.dart';
+import 'add/add_user_dialog.dart';
 import 'dashboard_card.dart';
 import 'user_table.dart';
 import 'search_bar.dart';
@@ -15,57 +19,6 @@ class _UserDataTabState extends State<UserDataTab> {
   final TextEditingController _searchController = TextEditingController();
   String searchQuery = '';
 
-  final List<Map<String, dynamic>> _users = [
-    {
-      'name': 'Edward Cullen',
-      'username': 'no-dan_staff',
-      'phoneNo': '09XX-XXXX-XXX',
-      'assignedBuilding': 'FOH',
-      'submittedLogs': 3,
-      'status': 'online',
-    },
-    {
-      'name': 'Jane Smith',
-      'username': 'jane_maintenance',
-      'phoneNo': '09XX-XXXX-XXX',
-      'assignedBuilding': 'Building A',
-      'submittedLogs': 7,
-      'status': 'offline',
-    },
-    {
-      'name': 'Mike Johnson',
-      'username': 'mike_janitor',
-      'phoneNo': '09XX-XXXX-XXX',
-      'assignedBuilding': 'Building B',
-      'submittedLogs': 2,
-      'status': 'offline',
-    },
-    {
-      'name': 'Jane Doe',
-      'username': 'bob_thebuilder',
-      'phoneNo': '09XX-XXXX-XXX',
-      'assignedBuilding': 'Building D',
-      'submittedLogs': 2,
-      'status': 'offline',
-    },
-    {
-      'name': 'Jane Doe',
-      'username': 'bob_thebuilder',
-      'phoneNo': '09XX-XXXX-XXX',
-      'assignedBuilding': 'Building D',
-      'submittedLogs': 2,
-      'status': 'offline',
-    },
-  ];
-
-  List<Map<String, dynamic>> get filteredUsers {
-    if (searchQuery.isEmpty) return _users;
-    return _users.where((user) {
-      return user.values.any((value) =>
-          value.toString().toLowerCase().contains(searchQuery.toLowerCase()));
-    }).toList();
-  }
-
   @override
   void dispose() {
     _searchController.dispose();
@@ -74,29 +27,72 @@ class _UserDataTabState extends State<UserDataTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, MediaQuery.of(context).padding.bottom + 100.h),
-      child: Column(
-        children: [
-          DashboardCard(users: _users),
-          SearchBarWidget(
-            controller: _searchController,
-            onChanged: (value) {
-              setState(() {
-                searchQuery = value;
-              });
-            },
-            onClear: () {
-              _searchController.clear();
-              setState(() {
-                searchQuery = '';
-              });
-            },
+    final userProvider = Provider.of<UserProvider>(context);
+
+    return StreamBuilder(
+      stream: userProvider.nonAdminUsersStream,
+      builder: (context, snapshot) {
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No users found'));
+        }
+
+        final users = snapshot.data!;
+
+        final filteredUsers = searchQuery.isEmpty
+            ? users
+            : users.where((user) {
+          final query = searchQuery.toLowerCase();
+          return user.firstName.toLowerCase().contains(query) ||
+              user.lastName.toLowerCase().contains(query) ||
+              user.username.toLowerCase().contains(query) ||
+              user.phoneNo.toLowerCase().contains(query) ||
+              (user.building?.toLowerCase().contains(query) ?? false);
+        }).toList();
+
+        return Padding(
+          padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, MediaQuery.of(context).padding.bottom + 100.h),
+          child: Column(
+            children: [
+              DashboardCard(users: users),
+              Row(
+                children: [
+                  Flexible(
+                    child: SearchBarWidget(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value;
+                        });
+                      },
+                      onClear: () {
+                        _searchController.clear();
+                        setState(() {
+                          searchQuery = '';
+                        });
+                      },
+                    ),
+                  ),
+                  AddButton(
+                    onAdd: () {
+                      showDialog(
+                        context: context,
+                        builder: (_) => AddUserDialog(),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Expanded(child: UserTable(users: filteredUsers)),
+            ],
           ),
-          SizedBox(height: 20),
-          Expanded(child: UserTable(users: filteredUsers)),
-        ],
-      ),
+        );
+      }
     );
   }
 }
