@@ -63,34 +63,33 @@ class _CleaningRecordsDatabaseTabState extends State<CleaningRecordsDatabaseTab>
                 ),
               ),
             )
-                : SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: EdgeInsets.only(
-                    bottom: constants.bottomOffset.h + 100),
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  itemCount: filteredLogs.length,
-                  itemBuilder: (context, index) {
-                    final record = filteredLogs[index];
-
-                    return AcknowledgeCard(
-                      record: record,
-                      onAcknowledge: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (_) => AcknowledgeBottomSheet(record: record),
+                : ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    itemCount: filteredLogs.length + 1, // add 1 for SizedBox
+                    itemBuilder: (context, index) {
+                      if (index == filteredLogs.length) {
+                        return SizedBox(
+                          height: constants.bottomOffset.h + constants.navBarHeight.h,
                         );
-                      },
-                      onDelete: () {
-                        context.read<LogProvider>().removeLog(record.cleaningId);
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
+                      }
+
+                      final record = filteredLogs[index];
+
+                      return AcknowledgeCard(
+                        record: record,
+                        onAcknowledge: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) => AcknowledgeBottomSheet(record: record),
+                          );
+                        },
+                        onDelete: () {
+                          context.read<LogProvider>().removeLog(record.cleaningId);
+                        },
+                      );
+                    },
+                  ),
           ),
         ],
       ),
