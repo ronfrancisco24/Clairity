@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants.dart';
 import 'navbar_item.dart';
 
@@ -16,15 +17,14 @@ class MainNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double navBarHeight = 64; // Adjust for your preferred pill height
     const double horizontalMargin = 24;
 
     return Container(
-      height: navBarHeight,
+      height: navBarHeight.h,
       margin: const EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 0),
       decoration: BoxDecoration(
         color: Colors.black,
-        borderRadius: BorderRadius.circular(navBarHeight / 2), // pill shape
+        borderRadius: BorderRadius.circular(navBarHeight.h / 2), // pill shape
         boxShadow: [
           BoxShadow(
             color: Colors.black26,

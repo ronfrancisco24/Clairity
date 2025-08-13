@@ -59,6 +59,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   hint: 'Enter Password / OTP',
                   showToggle: true,
                   controller: otpController,
+                  obscureText: true,
                   type: 'OTP',
                 ),
                 SignButton(

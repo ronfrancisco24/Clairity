@@ -14,6 +14,7 @@ import '../../utils/dashboard_time_utils.dart';
 import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../services/sensor_reading_service.dart';
+import '../../constants.dart' as constants;
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -209,7 +210,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                   );
                 }),
-                SizedBox(height: 42.h),
+                SizedBox(height: constants.bottomOffset.h + constants.navBarHeight.h),
               ],
             ),
           ),
