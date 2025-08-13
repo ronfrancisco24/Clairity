@@ -9,11 +9,13 @@ class MainNavigationBar extends StatelessWidget {
     required this.activeRoute,
     required this.onSelect,
     required this.role,
+    required this.onAddRecord,
   });
 
   final NavRoute activeRoute;
   final void Function(NavRoute) onSelect;
   final String role;
+  final VoidCallback onAddRecord;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,12 @@ class MainNavigationBar extends StatelessWidget {
             isSelected: (activeRoute == NavRoute.sensor),
             onSelect: () => onSelect(NavRoute.sensor),
             spotlight: true, // Custom property for spotlight effect
+          ),
+          NavigationItem(
+            label: 'Add',
+            iconData: Icons.add_circle_outline, // Use sensor door icon for demo
+            isSelected: false,
+            onSelect: onAddRecord,
           ),
           NavigationItem(
             label: role == 'admin' ? 'Database' : 'History',
