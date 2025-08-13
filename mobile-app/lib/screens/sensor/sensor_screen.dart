@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-
-// Import all separated widgets
 import '../../widgets/sensor/notifications_button.dart';
 import '../../widgets/sensor/sensor_card.dart';
 import '../../widgets/sensor/circular_indicator.dart';
 import '../../widgets/sensor/time_info_tile.dart';
 import '../../widgets/sensor/sensor_grid.dart';
 import '../../widgets/sensor/sensor_gender_buttons.dart';
-
-// Import the new utility file
 import '../../utils/sensor_utils.dart';
+import '../../constants.dart' as constants;
 
 class SensorScreen extends StatefulWidget {
   const SensorScreen({super.key});
@@ -206,7 +203,7 @@ class _SensorScreenState extends State<SensorScreen> {
                   TimeInfoTile(time: "2:00", label: "Clean Again By", icon: Icons.dark_mode_outlined),
                 ],
               ),
-              SizedBox(height: 30.h),
+              SizedBox(height: constants.bottomOffset.h + constants.navBarHeight.h),
             ],
           ),
         ),

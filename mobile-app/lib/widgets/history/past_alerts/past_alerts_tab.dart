@@ -116,25 +116,25 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
                 ),
               ),
             )
-                : SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: constants.bottomOffset.h + 100),
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  itemCount: filteredRecords.length,
-                  itemBuilder: (context, index) {
-                    final alert = filteredRecords[index];
-                    return AlertTile(
-                      date: alert.timestamp,
-                      alert: getAlertLabel(alert.description), // Optional: map to readable string
-                      status: alert.level == 1 ? "In Progress" : "Resolved",
-                      level: alert.level,
-                    );
-                  },
-                ),
-              ),
-            ),
+                : ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    itemCount: filteredRecords.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == filteredRecords.length) {
+                        return SizedBox(
+                          height: constants.bottomOffset.h + constants.navBarHeight.h,
+                        );
+                      }
+
+                      final alert = filteredRecords[index];
+                      return AlertTile(
+                        date: alert.timestamp,
+                        alert: getAlertLabel(alert.description),
+                        status: alert.level == 1 ? "In Progress" : "Resolved",
+                        level: alert.level,
+                      );
+                    },
+                  ),
           ),
         ],
       ),
