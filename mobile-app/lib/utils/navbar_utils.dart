@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import '../models/cleaning_log_model.dart';
+import '../providers/log_provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/navbar/navbar.dart';
 import '../screens/dashboard/dashboard_screen.dart';
@@ -41,6 +43,32 @@ class _NavControllerState extends State<NavController> {
     });
   }
 
+  Future<void> _addQuickRecord(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final logProvider = Provider.of<LogProvider>(context, listen: false);
+
+    final newRecord = CleaningRecord(
+      cleaningId: '',
+      sensorId: 'YDTdkdd2dSFsw6dtyvjd', // replace with actual sensor if needed
+      userId: userProvider.user?.uid ?? '',
+      comment: 'Cleaned.',
+      rating: 5,
+      timestamp: DateTime.now(),
+      acknowledged: false,
+      adminMessage: '',
+    );
+
+    await logProvider.addLog(newRecord);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Cleaning record added.')),
+    );
+
+    setState(() {
+      _activeRoute = constants.NavRoute.history;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
@@ -58,6 +86,7 @@ class _NavControllerState extends State<NavController> {
               activeRoute: _activeRoute,
               onSelect: _onNavSelect,
               role: role,
+              onAddRecord: () => _addQuickRecord(context),
             ),
           ),
         ],
