@@ -15,6 +15,38 @@ const Map<String, double> pollutantMaxValues = {
   'H₂S': 10.0,
 };
 
+const Map<String, int> aqiMaxValues = {
+  'Good': 50,
+  'Moderate': 100,
+  'SensitiveUnhealthy': 150, // your shortened term
+  'Unhealthy': 200,
+  'VeryUnhealthy': 300,
+  'Hazardous': 500,
+};
+
+String getAqiCategory(int aqi) {
+  if (aqi <= 50) return 'Good';
+  if (aqi <= 100) return 'Moderate';
+  if (aqi <= 150) return 'At Risk';
+  if (aqi <= 200) return 'Unhealthy';
+  return 'Hazardous';
+}
+
+int getAqiWarningLevel(String category) {
+  switch (category) {
+    case 'Good':
+      return 1;
+    case 'Moderate':
+      return 2;
+    case 'At Risk':
+      return 3;
+    case 'Hazardous':
+      return 4;
+    default:
+      return 0; // Safe
+  }
+}
+
 List<Map<String, dynamic>> currentData(SensorDetails data) {
   return [
     {
@@ -54,4 +86,5 @@ List<Map<String, dynamic>> currentData(SensorDetails data) {
     },
   ];
 }
+
 

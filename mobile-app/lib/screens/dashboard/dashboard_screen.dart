@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../models/sensor_model.dart';
 import '../../utils/sensor_data_utils.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/sensor/notifications_button.dart';
+import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../../widgets/dashboard/card_location.dart';
 import '../../widgets/dashboard/card_currents.dart';
 import '../../widgets/dashboard/card_quality.dart';
@@ -33,7 +33,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _initializeSensorData() async {
-    String sensorId = "YDTdkdd2dSFsw6dtyvjd";
+    final sensors = await SensorReadingService().fetchAllSensorIds();
+
+    String sensorId = sensors[0]; // fetch the first sensor
 
     String? readingId = await SensorReadingService().fetchLatestReadingId(
         sensorId);
@@ -159,7 +161,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         children: [
                           CardQuality(
                             onTap: () async {
-                              // TODO: Navigate to sensor screen
+                              // TODO: show highest pollutant,
+                              // fir testing
                               await SensorReadingService()
                                   .generateRawTestData(
                                       'YDTdkdd2dSFsw6dtyvjd');
@@ -176,9 +179,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 SizedBox(height: 16.h),
                 // Warning
+                //TODO: show recommendation based on pollutant values.
+                //TODO: base on the current selected index.
                 CardMessage(
                   message:
-                      'Air quality in CR2 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
+                      'Air quality in NH3 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
                 ),
                 SizedBox(height: 16.h),
                 // Pollutant Cards
@@ -203,7 +208,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   return LayoutBuilder(
                     builder: (context, constraints) {
                       return PollutantGrid(
-                        //TODO: use state management tool to keep data consistent
                         pollutantList: pollutants, // show placeholder data
                       );
                     },

@@ -4,7 +4,7 @@ import '../../widgets/databases/cleaning_records_database/records_database_tab.d
 import '../../widgets/databases/database_tab_selector.dart';
 import '../../widgets/history/past_alerts/past_alerts_tab.dart';
 import '../../widgets/history/sensor_chart/sensor_data_tab.dart';
-import '../../widgets/sensor/notifications_button.dart';
+import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../../widgets/databases/user_data/user_data_tab.dart';
 
 class DatabasesScreen extends StatefulWidget {

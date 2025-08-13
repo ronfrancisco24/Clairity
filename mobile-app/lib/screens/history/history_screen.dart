@@ -4,7 +4,7 @@ import '../../widgets/history/history_tab_selector.dart';
 import '../../widgets/history/past_alerts/past_alerts_tab.dart';
 import '../../widgets/history/cleaning_records/cleaning_records_tab.dart';
 import '../../widgets/history/sensor_chart/sensor_data_tab.dart';
-import '../../widgets/sensor/notifications_button.dart';
+import '../../widgets/sensor/notifications/notifications_button.dart';
 
 //TODO: Make the selected gender filter the data
 

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
-
+import '../utils/sensor_data_utils.dart';
 import '../models/sensor_model.dart';
 
 class SensorReadingService {
@@ -51,6 +51,14 @@ class SensorReadingService {
     return null;
   }
 
+  //TODO: use this function to switch in between sensors.
+  Future<List<String>> fetchAllSensorIds() async {
+    final snapshot = await _db.collection('sensors').get();
+
+    // This returns a list of document IDs (sensor IDs)
+    return snapshot.docs.map((doc) => doc.id).toList();
+  }
+
   // for testing purposes, generate 8 documents under readings
   // populate raw, clean, and forecast data.
   Future<void> generateRawTestData(String sensorId) async {
@@ -59,6 +67,7 @@ class SensorReadingService {
       final testData = generateSensorValues(readingTime);
 
       // Raw Data
+      //TODO: for raw data, remove aqi and aqiCategory field, that will be stored in cleaned data.
       final rawRef = await _db
           .collection('sensors')
           .doc(sensorId)
@@ -70,7 +79,6 @@ class SensorReadingService {
       final cleanedDocId = '${rawId}_clean';
 
       // Cleaned Data
-      // TODO: change later to cleaned data.
       final cleanedRef = _db
           .collection('sensors')
           .doc(sensorId)
@@ -131,9 +139,4 @@ class SensorReadingService {
   }
 }
 
-String getAqiCategory(int aqi) {
-  if (aqi <= 50) return 'Good';
-  if (aqi <= 100) return 'Moderate';
-  if (aqi <= 200) return 'Unhealthy';
-  return 'Hazardous';
-}
+

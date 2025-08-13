@@ -7,7 +7,7 @@ import '../../widgets/profile/popups/about_popup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
-import '../../widgets/sensor/notifications_button.dart';
+import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../onboarding/splash_screen.dart';
 
 class ProfileScreen extends StatefulWidget {

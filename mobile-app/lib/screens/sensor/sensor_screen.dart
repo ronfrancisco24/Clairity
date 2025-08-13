@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 // Import all separated widgets
-import '../../widgets/sensor/notifications_button.dart';
+import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../../widgets/sensor/sensor_card.dart';
 import '../../widgets/sensor/circular_indicator.dart';
 import '../../widgets/sensor/time_info_tile.dart';
