@@ -21,7 +21,8 @@ const Color mossGreen = Color(0xFF477023);
 const Color forestGreen = Color(0xFF2D531A);
 const Color greenAccent = Color(0xFF37964E);
 const Color vividGreen = Color(0xFF10e84a);
-const double bottomOffset = 30.0;
+const double bottomOffset = 30.0; // nav bar height
+const double navBarHeight = 50; // nav bar height
 
 final legendColors = [
   Color(0xFF547327),
