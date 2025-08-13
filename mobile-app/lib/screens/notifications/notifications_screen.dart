@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../widgets/sensor/notification_card.dart';
+import '../../widgets/sensor/notifications/notification_card.dart';
 import '../../utils/notif_utils.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -82,6 +82,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
           "Notifications",
           style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
