@@ -1,16 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 import '../utils/sensor_data_utils.dart';
-import '../models/sensor_model.dart';
+import '../models/sensor_model_details.dart';
 
 class SensorReadingService {
   final _db = FirebaseFirestore.instance;
   final _now = DateTime.now();
   final random = Random();
 
-  //TODO: once documents are populated use QuerySnapshot to read multiple docs
-  //TODO: always base off the current document
-  //TODO: change current structure
   Stream<QueryDocumentSnapshot<Map<String, dynamic>>> streamLatestCleanedReading(String sensorId) {
     return _db
         .collection('sensors')

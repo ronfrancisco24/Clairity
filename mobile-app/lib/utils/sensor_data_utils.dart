@@ -1,4 +1,4 @@
-import '../models/sensor_model.dart';
+import '../models/sensor_model_details.dart';
 
 double getProgress(double value, {required double max}) {
   if (max == 0) return 0.0;
@@ -56,8 +56,8 @@ List<Map<String, dynamic>> currentData(SensorDetails data) {
     },
     {
       'label': 'VOC',
-      'value': data.vocs,
-      'progress': getProgress(data.vocs, max: pollutantMaxValues['VOC']!),
+      'value': data.tvoc,
+      'progress': getProgress(data.tvoc, max: pollutantMaxValues['VOC']!),
     },
     {
       'label': 'CO',

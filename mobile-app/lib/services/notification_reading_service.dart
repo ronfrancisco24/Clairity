@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/notifications_model.dart';
-import '../models/sensor_model.dart';
+import '../models/sensor_model_details.dart';
 import '../utils/sensor_data_utils.dart';
 
 //TODO: use currentReading and forecastData under reading to determine notifications
@@ -25,10 +25,13 @@ class NotificationReadingService {
             .toList());
   }
 
+  //TODO: add type of notification
+  //TODO: notification should have a type whether its a forecast or current reading.
   Future<void> addNotification({
     required String title,
     required String message,
     required int warningLevel,
+    required String type,
   }) {
     return _notifications
         .collection('users')
@@ -38,6 +41,7 @@ class NotificationReadingService {
       'title': title,
       'message': message,
       'warningLevel': warningLevel,
+      'type': type,
       'timestamp': Timestamp.now(),
       'isRead': false,
     });
@@ -57,13 +61,13 @@ class NotificationReadingService {
       final value = item['value'] as double;
       final max = pollutantMaxValues[label]!;
 
-
       // if value is greater than threshold, notify user.
       if (value > max) {
         addNotification(
           title: '$label Alert',
           message: '$label value is $value, exceeding safe limit of $max.',
           warningLevel: aqiLevel,
+          type: 'asd', //TODO: change later
         );
       }
     }
@@ -73,8 +77,9 @@ class NotificationReadingService {
       addNotification(
         title: 'Air Quality Alert',
         message:
-        'AQI is ${data.aqi} (${data.aqiCategory}), which exceeds the safe limit.',
+            'AQI is ${data.aqi} (${data.aqiCategory}), which exceeds the safe limit.',
         warningLevel: aqiLevel,
+        type: 'asd', //TODO: change later
       );
     }
   }

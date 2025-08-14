@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../models/sensor_model.dart';
+import '../../../models/sensor_model_details.dart';
 import 'sensor_chart_header.dart';
 import 'sensor_line_chart.dart';
 

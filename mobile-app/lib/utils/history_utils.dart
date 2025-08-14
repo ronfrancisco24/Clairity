@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import '../models/record_timestampped_model.dart';
-import '../models/sensor_model.dart';
+import '../models/sensor_model_details.dart';
 
 List<T> filterRecordsByDate<T extends TimestampedRecord>(List<T> records, DateTime selectedDate) {
   return records.where((record) {
