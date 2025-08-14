@@ -10,6 +10,7 @@ import 'cleaner_tile_header.dart';
 import 'cleaner_tile_user.dart';
 import 'cleaner_tile_comment.dart';
 import 'cleaner_tile_rating.dart';
+import '../../../../constants.dart' as constants;
 
 class CleanerTile extends StatefulWidget {
   final CleaningRecord record;
@@ -36,7 +37,7 @@ class _CleanerTileState extends State<CleanerTile> {
     super.initState();
     iconColor = getRandomIconColor();
     _userDetails = Provider.of<UserProvider>(context, listen: false)
-        .getUserDetailsStreamById(widget.record.userId);
+        .userStreamById(widget.record.userId);
   }
 
   @override
@@ -44,85 +45,90 @@ class _CleanerTileState extends State<CleanerTile> {
     super.didChangeDependencies();
 
     _userDetails = Provider.of<UserProvider>(context, listen: false)
-        .getUserDetailsStreamById(widget.record.userId);
+        .userStreamById(widget.record.userId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        border: widget.record.acknowledged == true
-            ? Border.all(color: iconColor, width: 2.w)
-            : null,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 40.w,
-                height: 40.w,
-                decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Icon(
-                  Icons.person,
-                  color: iconColor,
-                  size: 20.sp,
-                ),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CleanerTileHeader(
-                      record: widget.record,
-                      onEdit: widget.onEdit,
-                      onDelete: widget.onDelete,
-                    ),
-                    SizedBox(height: 4.h),
-                    // Use FutureBuilder to handle the async data
-                    StreamBuilder<UserModel?>(
-                      stream: _userDetails, // The stream from your provider
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Text('Loading user...');
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return CleanerTileUser(record: snapshot.data);
-                        }
-                      },
-                    ),
-                    SizedBox(height: 6.h),
-                    CleanerTileComment(record: widget.record),
-                    SizedBox(height: 8.h),
-                    CleanerTileRating(record: widget.record),
-                  ],
-                ),
+    return StreamBuilder<UserModel?>(
+      stream: _userDetails, // The stream from your provider
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            margin: EdgeInsets.only(bottom: 12.h),
+            padding: EdgeInsets.all(16.w),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return Container(
+            margin: EdgeInsets.only(bottom: 12.h),
+            padding: EdgeInsets.all(16.w),
+            child: Text('Error: ${snapshot.error}'),
+          );
+        }
+
+        final user = snapshot.data;
+
+        return Container(
+          margin: EdgeInsets.only(bottom: 12.h),
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12.r),
+            border: widget.record.acknowledged == true
+                ? Border.all(color: iconColor, width: 2.w)
+                : null,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: Offset(0, 2),
               ),
             ],
           ),
-          if (widget.record.acknowledged == true) ...[
-            Divider(),
-            AdminMessageContainer(record: widget.record),
-          ],
-        ],
-      ),
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 20.r,
+                    backgroundImage: user != null
+                        ? AssetImage(constants.avatarImage[user.avatar ?? 0])
+                        : null,
+                    backgroundColor: Colors.grey[300],
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CleanerTileHeader(
+                          record: widget.record,
+                          onEdit: widget.onEdit,
+                          onDelete: widget.onDelete,
+                        ),
+                        SizedBox(height: 4.h),
+                        CleanerTileUser(record: user),
+                        SizedBox(height: 6.h),
+                        CleanerTileComment(record: widget.record),
+                        SizedBox(height: 8.h),
+                        CleanerTileRating(record: widget.record),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              if (widget.record.acknowledged == true) ...[
+                Divider(),
+                AdminMessageContainer(record: widget.record),
+              ],
+            ],
+          ),
+        );
+      },
     );
   }
 }

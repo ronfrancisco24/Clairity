@@ -9,6 +9,7 @@ class UserModel {
   final String username;
   final DateTime createdAt;
   final String? building;
+  final int? avatar;
 
   UserModel({
     required this.uid,
@@ -19,6 +20,7 @@ class UserModel {
     required this.username,
     required this.createdAt,
     this.building,
+    this.avatar
   });
 
   factory UserModel.fromMap(String uid, Map<String, dynamic> map) {
@@ -31,6 +33,7 @@ class UserModel {
       username: map['username'] ?? '',
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       building: map['building'],
+      avatar: map['avatar'],
     );
   }
 
@@ -44,6 +47,7 @@ class UserModel {
       'username': username,
       'createdAt': createdAt.toIso8601String(),
       'building': building ?? '',
+      'avatar': avatar ?? 0,
     };
   }
 }
