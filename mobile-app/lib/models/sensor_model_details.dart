@@ -8,7 +8,7 @@ class SensorDetails {
   final double h2s;
   final double ch4;
   final double co2;
-  final double vocs;
+  final double tvoc;
   final double temp;
   final double humidity;
   final double? aqi;               // NEW
@@ -22,7 +22,7 @@ class SensorDetails {
     required this.h2s,
     required this.ch4,
     required this.co2,
-    required this.vocs,
+    required this.tvoc,
     required this.temp,
     required this.humidity,
     this.aqi,
@@ -39,7 +39,7 @@ class SensorDetails {
       h2s: (map['h2s'] as num?)?.toDouble() ?? 0.0,
       ch4: (map['ch4'] as num?)?.toDouble() ?? 0.0,
       co2: (map['co2'] as num?)?.toDouble() ?? 0.0,
-      vocs: (map['tvoc'] as num?)?.toDouble() ?? 0.0,
+      tvoc: (map['tvoc'] as num?)?.toDouble() ?? 0.0,
       temp: (map['temp'] as num?)?.toDouble() ?? 0.0,
       humidity: (map['humidity'] as num?)?.toDouble() ?? 0.0,
       aqi: (map['aqi'] as num?)?.toDouble() ?? 0.0,
