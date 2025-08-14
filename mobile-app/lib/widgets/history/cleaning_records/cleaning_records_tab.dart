@@ -93,45 +93,41 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
           SizedBox(height: 12.h),
           Expanded(
             child: filteredLogs.isEmpty
-                ? Padding(
-              padding: const EdgeInsets.only(bottom: 130),
-              child: Center(
-                child: Text(
-                  "No cleaning records for this day.",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: Colors.grey[700],
+                ? Center(
+                  child: Text(
+                    "No cleaning records for this day.",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey[700],
+                    ),
                   ),
-                ),
-              ),
-            )
-                : SafeArea(
-              bottom: false,
-              child: Padding(
-                padding: EdgeInsets.only(
-                    bottom: constants.bottomOffset.h + 100),
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  itemCount: filteredLogs.length,
-                  itemBuilder: (context, index) {
-                    final record = filteredLogs[index];
-                    return CleanerTile(
-                      record: record,
-                      onEdit: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (_) => LogBottomsheet(recordToEdit: record),
+                )
+                : ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    itemCount: filteredLogs.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == filteredLogs.length) {
+                        return SizedBox(
+                          height: constants.bottomOffset.h + constants.navBarHeight.h,
                         );
-                      },
-                      onDelete: () {
-                        context.read<LogProvider>().removeLog(record.cleaningId);
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
+                      }
+
+                      final record = filteredLogs[index];
+                      return CleanerTile(
+                        record: record,
+                        onEdit: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) => LogBottomsheet(recordToEdit: record),
+                          );
+                        },
+                        onDelete: () {
+                          context.read<LogProvider>().removeLog(record.cleaningId);
+                        },
+                      );
+                    },
+                  )
           ),
         ],
       ),

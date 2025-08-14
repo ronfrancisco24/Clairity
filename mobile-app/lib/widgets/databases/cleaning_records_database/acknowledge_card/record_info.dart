@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../models/cleaning_log_model.dart';
+import '../../../../models/user_model.dart';
 import 'delete_button.dart';
 import 'acknowledge_button.dart';
 
@@ -8,11 +9,13 @@ class RecordInfo extends StatelessWidget {
   final CleaningRecord record;
   final VoidCallback onAcknowledge;
   final VoidCallback onDelete;
+  final UserModel? user;
 
   const RecordInfo({
     required this.record,
     required this.onAcknowledge,
     required this.onDelete,
+    required this.user
   });
 
   String formatTime(DateTime dateTime) {
@@ -32,7 +35,7 @@ class RecordInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${record.userId}',
+                '${user!.username}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 12.sp,

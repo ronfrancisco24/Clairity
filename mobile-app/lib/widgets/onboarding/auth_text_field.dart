@@ -32,7 +32,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final String countryCode = "+63";
+    const String countryCode = "+63";
 
     return Container(
       decoration: BoxDecoration(
@@ -46,15 +46,19 @@ class _AuthTextFieldState extends State<AuthTextField> {
         style: const TextStyle(color: Colors.white),
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
-          prefix: Padding(
+          prefixIcon: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.w),
             child: Text(
-              widget.type == "phone" ? countryCode : "",
+              widget.type == 'phone' ? countryCode : '',
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
+          ),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 0,
+            minHeight: 0,
           ),
           hintText: widget.hint,
           hintStyle: const TextStyle(color: Colors.white54),
@@ -76,7 +80,8 @@ class _AuthTextFieldState extends State<AuthTextField> {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 16),
         ),
-        keyboardType: TextInputType.phone,
+        keyboardType:
+        widget.type == 'phone' ? TextInputType.phone : TextInputType.text,
       ),
     );
   }
