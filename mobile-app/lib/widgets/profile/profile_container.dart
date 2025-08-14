@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
-import '../../constants.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../constants.dart' as constants;
 
 class ProfileContainer extends StatelessWidget {
   final String name;
   final String email;
   final String building;
+  final int avatarIndex;
+  final VoidCallback onAvatarTap;
 
-  const ProfileContainer(
-      {required this.name, required this.email, required this.building});
+  const ProfileContainer({
+    required this.name,
+    required this.email,
+    required this.building,
+    required this.avatarIndex,
+    required this.onAvatarTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,52 +23,27 @@ class ProfileContainer extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.9,
       height: MediaQuery.of(context).size.height * 0.15,
       decoration: BoxDecoration(
-          gradient: AppGradients.primaryGradient,
-          borderRadius: BorderRadius.circular(20)),
+        gradient: constants.AppGradients.primaryGradient,
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          GestureDetector( //TODO: add the ability to change profile here.
-            child: Stack(
-              children: [
-                SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: CircleAvatar()),
-                Positioned(
-                  top: 95,
-                  left: 54,
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.black)),
-                    child: Center(
-                      child: Icon(Icons.add),
-                    ),
-                  ),
-                ),
-              ],
+          SizedBox(width: 40.w),
+          GestureDetector(
+            onTap: onAvatarTap,
+            child: CircleAvatar(
+              radius: MediaQuery.of(context).size.width * 0.1,
+              backgroundImage: AssetImage(constants.avatarImage[avatarIndex]),
             ),
           ),
+          SizedBox(width: 40.w),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                name,
-                style: kTitleMedium.copyWith(color: Colors.white),
-              ),
-              Text(
-                email,
-                style: kTitleSmall.copyWith(color: Colors.white),
-              ),
-              Text(
-                building,
-                style: kTitleSmall.copyWith(color: Colors.white),
-              )
+              Text(name, style: constants.kTitleMedium.copyWith(color: Colors.white)),
+              Text(email, style: constants.kTitleSmall.copyWith(color: Colors.white)),
+              Text(building, style: constants.kTitleSmall.copyWith(color: Colors.white)),
             ],
           )
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants.dart';
+import '../../widgets/profile/popups/avatar_selection_dialog.dart';
 import '../../widgets/profile/profile_container.dart';
 import '../../widgets/profile/settings_tile.dart';
 import '../../widgets/profile/popups/help_popup.dart';
@@ -58,9 +59,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 10,
               ),
               ProfileContainer(
-                name: '$firstName $lastName',
+                name: '${firstName} ${lastName}',
                 email: phoneNo,
-                building: 'PGN',
+                building: userProvider.user?.building ?? 'PGN',
+                avatarIndex: userProvider.user?.avatar ?? 0,
+                onAvatarTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AvatarSelectionDialog(
+                      currentAvatarIndex: userProvider.user?.avatar,
+                      onSave: (index) async {
+                        await userProvider.changeAvatar(index);
+                      },
+                    ),
+                  );
+                },
               ),
               SizedBox(
                 height: 15,
