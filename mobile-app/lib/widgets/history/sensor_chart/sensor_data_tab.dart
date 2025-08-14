@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../models/sensor_model.dart';
+import '../../../models/sensor_model_details.dart';
 import '../../../services/sensor_reading_service.dart';
 import '../../../utils/history_utils.dart';
 import '../cleaner_calendar.dart';
@@ -97,7 +97,7 @@ class _SensorDataTabState extends State<SensorDataTab> {
                     label: "TVOC",
                     color: Colors.cyan,
                     data: filteredSensorDetails,
-                    valueSelector: (s) => s.vocs,
+                    valueSelector: (s) => s.tvoc,
                   ),
                   SensorChart(
                     label: "Temperature",

@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../models/sensor_model.dart';
+import '../../../models/sensor_model_details.dart';
 
 class SensorLineChart extends StatelessWidget {
   final String label;

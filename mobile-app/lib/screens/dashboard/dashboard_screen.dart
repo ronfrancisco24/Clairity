@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../models/sensor_model.dart';
+import '../../models/sensor_model_details.dart';
 import '../../utils/sensor_data_utils.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/sensor/notifications/notifications_button.dart';
@@ -42,7 +42,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (readingId != null) {
       Provider.of<SensorProvider>(context, listen: false)
-          .listenToSensor(sensorId);
+          .listenToCurrentAndForecastReadings(sensorId);
     } else {
       debugPrint("No latest reading found for sensor $sensorId");
     }
