@@ -42,6 +42,21 @@ final legendColors = [
   Color(0xFF4D4E6D),
 ];
 
+final avatarImage = [
+  'images/profile_avatars/avatar-1.png',
+  'images/profile_avatars/avatar-2.png',
+  'images/profile_avatars/avatar-3.png',
+  'images/profile_avatars/avatar-4.png',
+  'images/profile_avatars/avatar-5.png',
+  'images/profile_avatars/avatar-6.png',
+  'images/profile_avatars/avatar-7.png',
+  'images/profile_avatars/avatar-8.png',
+  'images/profile_avatars/avatar-9.png',
+  'images/profile_avatars/avatar-10.png',
+  'images/profile_avatars/avatar-11.png',
+  'images/profile_avatars/avatar-12.png',
+];
+
 class AppGradients {
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.bottomCenter,
