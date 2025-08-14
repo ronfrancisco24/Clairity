@@ -16,9 +16,22 @@ class GenderButtonWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Male button
+        // Unisex button
         GestureDetector(
-          onTap: () => onGenderSelected('male'),
+          onTap: () => onGenderSelected('unisex'),
+          child: Text(
+            "UNISEX",
+            style: TextStyle(
+              fontWeight: selectedGender == 'unisex' ? FontWeight.bold : FontWeight.normal,
+              fontSize: 18.sp,
+              color: selectedGender == 'unisex' ? Colors.black : Colors.grey,
+            ),
+          ),
+        ),
+        SizedBox(width: 20.w),
+        // Female button
+        GestureDetector(
+          onTap: () => onGenderSelected('female'),
           child: Text(
             "MALE",
             style: TextStyle(
@@ -28,7 +41,7 @@ class GenderButtonWidget extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 40.w),
+        SizedBox(width: 20.w),
         // Female button
         GestureDetector(
           onTap: () => onGenderSelected('female'),

@@ -11,8 +11,8 @@ class SensorDetails {
   final double tvoc;
   final double temp;
   final double humidity;
-  final double? aqi;               // NEW
-  final String? aqiCategory;       // NEW
+  final double? aqi;
+  final String? aqiCategory;
 
   SensorDetails({
     required this.timestamp,

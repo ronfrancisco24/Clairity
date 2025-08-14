@@ -21,7 +21,8 @@ const Color mossGreen = Color(0xFF477023);
 const Color forestGreen = Color(0xFF2D531A);
 const Color greenAccent = Color(0xFF37964E);
 const Color vividGreen = Color(0xFF10e84a);
-const double bottomOffset = 30.0;
+const double bottomOffset = 30.0; // nav bar height
+const double navBarHeight = 50; // nav bar height
 
 final legendColors = [
   Color(0xFF547327),
@@ -39,6 +40,21 @@ final legendColors = [
   Color(0xFFD07C82),
   Color(0xFF9796B8),
   Color(0xFF4D4E6D),
+];
+
+final avatarImage = [
+  'images/profile_avatars/avatar-1.png',
+  'images/profile_avatars/avatar-2.png',
+  'images/profile_avatars/avatar-3.png',
+  'images/profile_avatars/avatar-4.png',
+  'images/profile_avatars/avatar-5.png',
+  'images/profile_avatars/avatar-6.png',
+  'images/profile_avatars/avatar-7.png',
+  'images/profile_avatars/avatar-8.png',
+  'images/profile_avatars/avatar-9.png',
+  'images/profile_avatars/avatar-10.png',
+  'images/profile_avatars/avatar-11.png',
+  'images/profile_avatars/avatar-12.png',
 ];
 
 class AppGradients {
