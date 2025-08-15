@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import '../../widgets/sensor/notifications_button.dart';
+import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../../widgets/sensor/sensor_card.dart';
 import '../../widgets/sensor/circular_indicator.dart';
 import '../../widgets/sensor/time_info_tile.dart';
@@ -124,42 +124,7 @@ class _SensorScreenState extends State<SensorScreen> {
               ),
               SizedBox(height: 16.h), // Spacing below the header
               // Date Selector
-              GestureDetector(
-                onTap: () async {
-                  // Use the utility function to select date
-                  final DateTime? picked = await SensorUtils.selectDate(
-                    context,
-                    _selectedDate,
-                  );
-                  if (picked != null && picked != _selectedDate) {
-                    setState(() {
-                      _selectedDate = picked;
-                    });
-                  }
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(color: Colors.grey[300]!, width: 1),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        DateFormat('d MMM yyyy').format(_selectedDate),
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      Icon(Icons.calendar_today, size: 20.sp, color: Colors.grey[600]),
-                    ],
-                  ),
-                ),
-              ),
+
               SizedBox(height: 20.h), // Spacing after the date selector
               const CircularIndicator(percentage: 38, label: "Good"),
               SizedBox(height: 20.h),

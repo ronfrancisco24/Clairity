@@ -24,37 +24,16 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    userProvider.loadUserData();
-    _initializeSensorData();
-  }
-
-  void _initializeSensorData() async {
-    final sensors = await SensorReadingService().fetchAllSensorIds();
-
-    String sensorId = sensors[0]; // fetch the first sensor
-
-    String? readingId = await SensorReadingService().fetchLatestReadingId(
-        sensorId);
-
-    if (readingId != null) {
-      Provider.of<SensorProvider>(context, listen: false)
-          .listenToCurrentAndForecastReadings(sensorId);
-    } else {
-      debugPrint("No latest reading found for sensor $sensorId");
-    }
-  }
-
   int selectedTimeIndex = 0;
   final List<String> times = generateTimeSlots();
 
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
+    final sensorProvider = context.watch<SensorProvider>();
+    final current = sensorProvider.currentData;
+    final forecastList = sensorProvider.forecastReadingData;
+    final readingId = sensorProvider.readingId;
 
     final firstName =
         (userProvider.user?.firstName ?? 'No name').toString();
@@ -126,9 +105,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Expanded(
                       child: Consumer<SensorProvider>(
                         builder: (context, provider, _) {
-                          final current = provider.currentData;
-                          final forecastList = provider.forecastReadingData;
-
                           SensorDetails? selectedReading;
                           if (selectedTimeIndex == 0) {
                             selectedReading = current;
@@ -190,11 +166,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // Pollutant Cards
 
                 Consumer<SensorProvider>(builder: (context, provider, _) {
-                  final current = provider.currentData;
-                  final forecastList = provider.forecastReadingData;
-
                   SensorDetails? selectedReading;
-
                   if (selectedTimeIndex == 0) {
                     selectedReading = current;
                   } else if (selectedTimeIndex - 1 < forecastList.length) {
