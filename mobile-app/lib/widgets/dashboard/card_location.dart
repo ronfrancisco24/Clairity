@@ -30,6 +30,7 @@ class _CardLocationState extends State<CardLocation> {
     }
   }
 
+  //TODO: show sensors here.
   Future<void> _pickBathroom() async {
     final picked = await showDialog<BathroomType>(
       context: context,

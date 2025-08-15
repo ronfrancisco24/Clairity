@@ -8,6 +8,7 @@ import 'screens/onboarding/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/log_provider.dart';
 import 'utils/navbar_utils.dart';
+import 'services/sensor_reading_service.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,9 @@ void main() async{
     ),
   );
 }
+
+// initialize sensor data throughout the app.
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

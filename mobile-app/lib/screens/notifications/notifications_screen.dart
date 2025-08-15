@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../widgets/sensor/notifications/notification_card.dart';
 import '../../utils/notif_utils.dart';
 
+//TODO: integrate notifications in here instead of placeholders.
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
 

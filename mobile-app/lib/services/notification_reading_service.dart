@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import '../repositories/notification_repository.dart';
+import '../utils/notif_utils.dart';
 import '../models/notifications_model.dart';
 import '../models/sensor_model_details.dart';
 import '../utils/sensor_data_utils.dart';
 
 //TODO: use currentReading and forecastData under reading to determine notifications
-//TODO: integrate into notifications page
-//TODO: create test variables to see if notifications work.
+//TODO: integrate services across app and reflect on notifications page.
+
 class NotificationReadingService {
   final FirebaseFirestore _notifications = FirebaseFirestore.instance;
   final String userId;
@@ -18,72 +19,84 @@ class NotificationReadingService {
         .collection('users')
         .doc(userId)
         .collection('notifications')
-        .orderBy('timestamp', descending: true)
+        .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => NotificationsModel.fromMap(doc.data(), doc.id))
             .toList());
   }
 
-  //TODO: add type of notification
-  //TODO: notification should have a type whether its a forecast or current reading.
   Future<void> addNotification({
     required String title,
     required String message,
     required int warningLevel,
     required String type,
   }) {
+
+    // determines title based on type
+    String finalTitle = type == 'forecast'
+      ? 'Forecast Alert: $title' : 'Current Reading Alert: $title';
+
+    // determines message based on type
+    String finalMessage = type == 'forecast'
+    ? 'This is a forecasted alert: $message' : message;
+
     return _notifications
         .collection('users')
         .doc(userId)
         .collection('notifications')
         .add({
-      'title': title,
-      'message': message,
+      'title': finalTitle,
+      'message': finalMessage,
       'warningLevel': warningLevel,
       'type': type,
-      'timestamp': Timestamp.now(),
+      'createdAt': Timestamp.now(),
       'isRead': false,
     });
   }
 
-  //  TODO: base off the reading from sensorId. use this for forecast and current reading
-  //   , however for now use current reading.
-  //   also generate a different notification if its from a forecast reading.
-
   //TODO: make this persist when app is closed or restarted, add persistence and background checks.
-  Future<void> checkThresholdsAndNotify(SensorDetails data) async {
+  //TODO: make sure to generate a different notifications card based on type.
+
+  Future<void> checkThresholdsAndNotify(SensorDetails data, {required String type}) async {
     final dataList = currentData(data);
     final aqiLevel = getAqiWarningLevel(data.aqiCategory!);
+
 
     for (var item in dataList) {
       final label = item['label'] as String;
       final value = item['value'] as double;
       final max = pollutantMaxValues[label]!;
+      // store last value.
+      final lastValue = await getLastNotifiedValue(label);
 
       // if value is greater than threshold, notify user.
-      if (value > max) {
+      if (value > max && (lastValue == null || value != lastValue)) {
         addNotification(
           title: '$label Alert',
           message: '$label value is $value, exceeding safe limit of $max.',
           warningLevel: aqiLevel,
-          type: 'asd', //TODO: change later
+          type: type,
         );
+        await saveLastNotifiedValue(label, value);
       }
     }
 
+    final lastAqi = await getLastNotifiedAqi();
     // if aqi value is higher than threshold, create notification.
-    if (['At Risk', 'Unhealthy', 'Hazardous'].contains(data.aqiCategory)) {
+    if (['At Risk', 'Unhealthy', 'Hazardous'].contains(data.aqiCategory) && (lastAqi == null || data.aqi != lastAqi)) {
       addNotification(
         title: 'Air Quality Alert',
         message:
             'AQI is ${data.aqi} (${data.aqiCategory}), which exceeds the safe limit.',
         warningLevel: aqiLevel,
-        type: 'asd', //TODO: change later
+        type: type,
       );
+      await saveLastNotifiedAqi(data.aqi!);
     }
   }
 
+  // update isRead.
   Future<void> updateIsRead(String notificationId, bool isRead) {
     return _notifications
         .collection('users')
@@ -104,8 +117,7 @@ class NotificationReadingService {
   }
 
   // CURRENTLY NOT USED
-  // NOTE: batches have a limit of 500 write operations,
-  // deleting is a write operation
+  // NOTE: batches have a limit of 500 write operations, deleting is a write operation
 
   Future<void> deleteAllNotifications() async {
     final collectionRef = _notifications
