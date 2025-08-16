@@ -17,29 +17,28 @@ class SensorProvider extends ChangeNotifier {
   String? readingId;
 
   SensorProvider(){
-    _initializeSensorListener(); // initialize sensor data across screen.
+    initializeSensorListener(); // initialize sensor data across screen.
   }
 
-  Future<void> _initializeSensorListener() async {
+  Future<void> initializeSensorListener() async {
     final userProvider = UserProvider();
     await userProvider.loadUserData();
 
-    final userId = userProvider.user!.uid;
     final sensors = await SensorReadingService().fetchAllSensorIds();
 
     if (sensors.isNotEmpty) {
-      final sensorId = sensors[0]; // change later to sensorOfChoice, just make it a parameter
+      final sensorId = 'YDTdkdd2dSFsw6dtyvjd'; //TODO: change later to sensorOfChoice, just make it a parameter
       readingId = await SensorReadingService().fetchLatestReadingId(sensorId);
 
       if (readingId != null) {
-        listenToCurrentAndForecastReadings(sensorId, userId);
+        listenToCurrentAndForecastReadings(sensorId);
       } else {
         debugPrint("No latest reading found for sensor $sensorId");
       }
     }
   }
 
-  void listenToCurrentAndForecastReadings(String sensorId, String uid) {
+  void listenToCurrentAndForecastReadings(String sensorId) {
     _currentDataSubscription?.cancel();
     _forecastDataSubscription?.cancel();
 
@@ -51,7 +50,7 @@ class SensorProvider extends ChangeNotifier {
         notifyListeners();
 
         // listen to current Data and notify if data exceeds threshold.
-        NotificationReadingService(uid)
+        NotificationReadingService(sensorId)
             .checkThresholdsAndNotify(currentData!, type: 'current');
 
         // Always listen to forecast from the latest reading
@@ -70,8 +69,9 @@ class SensorProvider extends ChangeNotifier {
           notifyListeners();
 
           // listen to thresholds in forecast.
+          print(forecastReadingData);
           for (var forecast in forecastReadingData) {
-            NotificationReadingService(uid)
+            NotificationReadingService(sensorId)
                 .checkThresholdsAndNotify(forecast, type: 'forecast');
           }
         });
@@ -80,11 +80,5 @@ class SensorProvider extends ChangeNotifier {
       }
     });
 
-    @override
-    void dispose() {
-      _currentDataSubscription?.cancel();
-      _forecastDataSubscription?.cancel();
-      super.dispose();
-    }
   }
 }

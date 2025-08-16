@@ -7,18 +7,22 @@ import '../utils/sensor_data_utils.dart';
 
 //TODO: use currentReading and forecastData under reading to determine notifications
 //TODO: integrate services across app and reflect on notifications page.
+//TODO: make this persist when app is closed or restarted, add persistence and background checks.
+//TODO: make sure to generate a different notifications card based on type.
+//TODO: make sure to check last time stamp generated to avoid duplicates
 
 class NotificationReadingService {
   final FirebaseFirestore _notifications = FirebaseFirestore.instance;
-  final String userId;
+  final String sensorId;
 
-  NotificationReadingService(this.userId); // use userId to read notification.
+  NotificationReadingService(this.sensorId);
 
-  Stream<List<NotificationsModel>> streamNotifications() {
+  //TODO: Take into account for all notifs
+  Stream<List<NotificationsModel>> streamNotifications(String type) {
     return _notifications
-        .collection('users')
-        .doc(userId)
-        .collection('notifications')
+        .collection('sensors')
+        .doc(sensorId)
+        .collection('${type}_notifications')
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
@@ -26,25 +30,24 @@ class NotificationReadingService {
             .toList());
   }
 
-  Future<void> addNotification({
-    required String title,
-    required String message,
-    required int warningLevel,
-    required String type,
-  }) {
-
+  Future<void> addNotification(
+      {required String title,
+      required String message,
+      required int warningLevel,
+      required String type}) {
     // determines title based on type
     String finalTitle = type == 'forecast'
-      ? 'Forecast Alert: $title' : 'Current Reading Alert: $title';
+        ? 'Forecast Alert: $title'
+        : 'Current Reading Alert: $title';
 
     // determines message based on type
-    String finalMessage = type == 'forecast'
-    ? 'This is a forecasted alert: $message' : message;
+    String finalMessage =
+        type == 'forecast' ? 'This is a forecasted alert: $message' : message;
 
     return _notifications
-        .collection('users')
-        .doc(userId)
-        .collection('notifications')
+        .collection('sensors')
+        .doc(sensorId)
+        .collection('${type}_notifications')
         .add({
       'title': finalTitle,
       'message': finalMessage,
@@ -55,13 +58,10 @@ class NotificationReadingService {
     });
   }
 
-  //TODO: make this persist when app is closed or restarted, add persistence and background checks.
-  //TODO: make sure to generate a different notifications card based on type.
-
-  Future<void> checkThresholdsAndNotify(SensorDetails data, {required String type}) async {
+  Future<void> checkThresholdsAndNotify(SensorDetails data,
+      {required String type}) async {
     final dataList = currentData(data);
     final aqiLevel = getAqiWarningLevel(data.aqiCategory!);
-
 
     for (var item in dataList) {
       final label = item['label'] as String;
@@ -84,7 +84,8 @@ class NotificationReadingService {
 
     final lastAqi = await getLastNotifiedAqi();
     // if aqi value is higher than threshold, create notification.
-    if (['At Risk', 'Unhealthy', 'Hazardous'].contains(data.aqiCategory) && (lastAqi == null || data.aqi != lastAqi)) {
+    if (['At Risk', 'Unhealthy', 'Hazardous'].contains(data.aqiCategory) &&
+        (lastAqi == null || data.aqi != lastAqi)) {
       addNotification(
         title: 'Air Quality Alert',
         message:
@@ -97,21 +98,25 @@ class NotificationReadingService {
   }
 
   // update isRead.
-  Future<void> updateIsRead(String notificationId, bool isRead) {
+  Future<void> updateIsRead(
+      {required String notificationId,
+      required bool isRead,
+      required String type}) {
     return _notifications
-        .collection('users')
-        .doc(userId)
-        .collection('notifications')
+        .collection('sensors')
+        .doc(sensorId)
+        .collection('${type}_notifications')
         .doc(notificationId)
         .update({'isRead': isRead});
   }
 
   // delete notification
-  Future<void> deleteNotification(String notificationId) {
+  Future<void> deleteNotification(
+      {required String notificationId, required String type}) {
     return _notifications
-        .collection('users')
-        .doc(userId)
-        .collection('notifications')
+        .collection('sensors')
+        .doc(sensorId)
+        .collection('${type}_notifications')
         .doc(notificationId)
         .delete();
   }
@@ -119,11 +124,12 @@ class NotificationReadingService {
   // CURRENTLY NOT USED
   // NOTE: batches have a limit of 500 write operations, deleting is a write operation
 
-  Future<void> deleteAllNotifications() async {
+  Future<void> deleteAllNotifications(
+      {required String notificationId, required String type}) async {
     final collectionRef = _notifications
-        .collection('users')
-        .doc(userId)
-        .collection('notifications');
+        .collection('sensors')
+        .doc(sensorId)
+        .collection('${type}_notifications');
 
     final snapshot = await collectionRef.get();
 

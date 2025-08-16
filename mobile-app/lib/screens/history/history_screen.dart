@@ -6,7 +6,8 @@ import '../../widgets/history/cleaning_records/cleaning_records_tab.dart';
 import '../../widgets/history/sensor_chart/sensor_data_tab.dart';
 import '../../widgets/sensor/notifications/notifications_button.dart';
 
-//TODO: Make the selected gender filter the data
+//TODO: change sensor data pollutants to use thresholds
+//TODO: connect past alerts with notifications.
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
