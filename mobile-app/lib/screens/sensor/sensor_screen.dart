@@ -116,7 +116,7 @@ class _SensorScreenState extends State<SensorScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Sensors",
+                    "Sensor",
                     style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold),
                   ),
                   const NotificationsButton(),
@@ -132,15 +132,6 @@ class _SensorScreenState extends State<SensorScreen> {
                 "Lorem ipsum dolor sit amet consectetur. Faucibus mattis volutpat pellentesque et enim lectus sed integer in.",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16.sp, height: 1.4),
-              ),
-              SizedBox(height: 24.h),
-              GenderButtonWidget(
-                selectedGender: _selectedGender,
-                onGenderSelected: (gender) {
-                  setState(() {
-                    _selectedGender = gender;
-                  });
-                },
               ),
               SizedBox(height: 10.h),
               Divider(

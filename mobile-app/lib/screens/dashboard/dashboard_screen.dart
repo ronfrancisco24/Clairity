@@ -16,6 +16,8 @@ import '../../providers/user_provider.dart';
 import '../../services/sensor_reading_service.dart';
 import '../../constants.dart' as constants;
 
+//TODO: change card current to select sensors
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -33,7 +35,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final sensorProvider = context.watch<SensorProvider>();
     final current = sensorProvider.currentData;
     final forecastList = sensorProvider.forecastReadingData;
-    final readingId = sensorProvider.readingId;
 
     final firstName =
         (userProvider.user?.firstName ?? 'No name').toString();
@@ -156,15 +157,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 SizedBox(height: 16.h),
                 // Warning
-                //TODO: show recommendation based on pollutant values.
-                //TODO: base on the current selected index.
+                //TODO: show alert from sensor page here instead.
                 CardMessage(
                   message:
                       'Air quality in NH3 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
                 ),
                 SizedBox(height: 16.h),
                 // Pollutant Cards
-
                 Consumer<SensorProvider>(builder: (context, provider, _) {
                   SensorDetails? selectedReading;
                   if (selectedTimeIndex == 0) {

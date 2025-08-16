@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class NotificationCard extends StatelessWidget {
   final int warningLevel;
   final String title;
   final String message;
-  final String time;
+  final DateTime time;
   final bool isUnread;
   final VoidCallback? onTap;
   final void Function(DismissDirection)? onDismiss;
@@ -104,7 +106,7 @@ class NotificationCard extends StatelessWidget {
                   Icon(Icons.access_time, size: 14.sp, color: Colors.grey),
                   SizedBox(width: 4.w),
                   Text(
-                    time,
+                    DateFormat('MMM d, hh:mm a').format(time),
                     style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                   ),
                   if (isUnread) ...[
