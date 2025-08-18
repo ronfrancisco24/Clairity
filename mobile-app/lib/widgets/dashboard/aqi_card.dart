@@ -5,14 +5,10 @@ class CardCurrents extends StatelessWidget {
   const CardCurrents({
     super.key,
     required this.value,
-    required this.low,
-    required this.high,
     required this.status,
   });
 
   final double value;
-  final double low;
-  final double high;
   final String status;
 
   @override
@@ -37,8 +33,8 @@ class CardCurrents extends StatelessWidget {
                 radius: 100,
                 value: value,
                 axis: GaugeAxis(
-                  min: low,
-                  max: high,
+                  min: 0,
+                  max: 250,
                   degrees: 240,
                   style: GaugeAxisStyle(
                     thickness: 20,
