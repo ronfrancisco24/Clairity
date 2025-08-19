@@ -6,7 +6,6 @@ import '../providers/log_provider.dart';
 import '../providers/user_provider.dart';
 import '../widgets/navbar/navbar.dart';
 import '../screens/dashboard/dashboard_screen.dart';
-import '../screens/sensor/sensor_screen.dart';
 import '../screens/history/history_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/databases/databases_screen.dart';
@@ -26,8 +25,6 @@ class _NavControllerState extends State<NavController> {
     switch (route) {
       case constants.NavRoute.home:
         return const DashboardScreen();
-      case constants.NavRoute.sensor:
-        return const SensorScreen();
       case constants.NavRoute.history:
         return  role == 'admin'
             ? const DatabasesScreen()

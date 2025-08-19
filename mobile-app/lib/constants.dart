@@ -4,7 +4,6 @@ import 'models/cleaning_log_model.dart';
 
 enum NavRoute {
   home,
-  sensor,
   history,
   profile,
 }

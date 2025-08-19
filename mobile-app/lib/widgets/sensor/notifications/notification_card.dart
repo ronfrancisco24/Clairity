@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
+//TODO: implement update isRead onTap
+//TODO: implement delete onDismiss.
 class NotificationCard extends StatelessWidget {
   final int warningLevel;
   final String title;
@@ -11,9 +13,6 @@ class NotificationCard extends StatelessWidget {
   final bool isUnread;
   final VoidCallback? onTap;
   final void Function(DismissDirection)? onDismiss;
-
-  //TODO: implement update isRead onTap
-  //TODO: implement delete onDismiss.
 
   const NotificationCard({
     super.key,

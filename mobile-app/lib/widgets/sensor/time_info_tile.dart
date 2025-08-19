@@ -5,8 +5,10 @@ class TimeInfoTile extends StatelessWidget {
   final String time;
   final String label;
   final IconData? icon;
+  final Color? iconColor;
 
-  const TimeInfoTile({super.key, required this.time, required this.label, this.icon});
+  const TimeInfoTile(
+      {super.key, required this.time, required this.label, this.icon, this.iconColor});
 
   @override
   Widget build(BuildContext context) {
@@ -14,15 +16,26 @@ class TimeInfoTile extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: const Color(0xFFF3E1C3),
+          color: Colors.black,
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
           children: [
-            if (icon != null) Icon(icon, size: 20.sp),
-            Text(time, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp)),
+            if (icon != null)
+              Icon(
+                icon,
+                size: 20.sp,
+                color: Colors.white,
+              ),
+            Text(time,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.sp,
+                    color: Colors.white)),
             SizedBox(height: 4.h),
-            Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 12.sp)),
+            Text(label,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12.sp, color: Colors.white)),
           ],
         ),
       ),

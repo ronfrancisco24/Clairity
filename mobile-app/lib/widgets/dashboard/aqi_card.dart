@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gauge_indicator/gauge_indicator.dart';
 
-class CardCurrents extends StatelessWidget {
-  const CardCurrents({
+class AqiCard extends StatelessWidget {
+  const AqiCard({
     super.key,
     required this.value,
     required this.status,

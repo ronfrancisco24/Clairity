@@ -119,6 +119,8 @@ class SensorReadingService {
 
   // generate random sensor values
   Map<String, dynamic> generateSensorValues(DateTime time) {
+    final aqiValue = random.nextInt(500);
+
     return {
       'timestamp': Timestamp.fromDate(time),
       'temp': double.parse((20 + random.nextDouble() * 10).toStringAsFixed(1)),
@@ -127,8 +129,8 @@ class SensorReadingService {
       'co2': double.parse((400 + random.nextDouble() * 600).toStringAsFixed(1)),
       'ch4': double.parse((random.nextDouble() * 1000).toStringAsFixed(1)),
       'tvoc': double.parse((random.nextDouble() * 600).toStringAsFixed(1)),
-      'aqi': random.nextInt(500),
-      'aqiCategory': getAqiCategory(random.nextInt(500)),
+      'aqi': aqiValue,
+      'aqiCategory': getAqiCategory(aqiValue),
       'pm25': double.parse((random.nextDouble() * 100).toStringAsFixed(1)),
       'h2s': double.parse((random.nextDouble() * 10).toStringAsFixed(1)),
       'nh3': double.parse((random.nextDouble() * 50).toStringAsFixed(1)),

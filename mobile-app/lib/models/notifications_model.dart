@@ -21,7 +21,7 @@ class NotificationsModel {
   factory NotificationsModel.fromMap(Map<String, dynamic> map, String id) {
     return NotificationsModel(
         id: id,
-        timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        timestamp: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         title: map['title'] ?? '',
         message: map['message'] ?? '',
         warningLevel: (map['warningLevel'] as num?)?.toInt() ?? 0,

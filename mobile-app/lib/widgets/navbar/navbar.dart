@@ -48,13 +48,6 @@ class MainNavigationBar extends StatelessWidget {
             isSelected: (activeRoute == NavRoute.home),
             onSelect: () => onSelect(NavRoute.home),
           ),
-          NavigationItem(
-            label: 'Sensor',
-            iconData: Icons.wifi, // Use sensor door icon for demo
-            isSelected: (activeRoute == NavRoute.sensor),
-            onSelect: () => onSelect(NavRoute.sensor),
-            spotlight: true, // Custom property for spotlight effect
-          ),
           if (role == 'user') ...[
             NavigationItem(
               label: 'Add',
