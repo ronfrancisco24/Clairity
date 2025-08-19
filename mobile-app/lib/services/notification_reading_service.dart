@@ -1,23 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../repositories/notification_repository.dart';
+import 'package:flutter/cupertino.dart';
 import '../utils/notif_utils.dart';
 import '../models/notifications_model.dart';
 import '../models/sensor_model_details.dart';
 import '../utils/sensor_data_utils.dart';
 
-//TODO: use currentReading and forecastData under reading to determine notifications
-//TODO: integrate services across app and reflect on notifications page.
 //TODO: make this persist when app is closed or restarted, add persistence and background checks.
-//TODO: make sure to generate a different notifications card based on type.
 //TODO: make sure to check last time stamp generated to avoid duplicates
 
 class NotificationReadingService {
   final FirebaseFirestore _notifications = FirebaseFirestore.instance;
   final String sensorId;
 
+  // use to send notifications for every 10 minutes
+  static final Map<String, DateTime> _lastNotified = {};
+
   NotificationReadingService(this.sensorId);
 
-  //TODO: Take into account for all notifs
   Stream<List<NotificationsModel>> streamNotifications(String type) {
     return _notifications
         .collection('sensors')
@@ -30,11 +29,39 @@ class NotificationReadingService {
             .toList());
   }
 
+  //TODO: use for fetching 30 and 60 minute sensor forecasts
+  Future<List<Map<String, dynamic>>> fetchFilteredForecasts(String sensorId) async {
+    final snapshot = await _notifications
+        .collection('sensors')
+        .doc(sensorId)
+        .collection('cleanedReadingData')
+        .get();
+
+    List<Map<String, dynamic>> results = [];
+
+    for (final cleanedDoc in snapshot.docs) {
+      final forecastSnapshot = await cleanedDoc.reference
+          .collection('forecast')
+          .get();
+
+      // Keep only 30 and 60 minute forecasts
+      for (final doc in forecastSnapshot.docs) {
+        if (doc.id.contains('30mins') || doc.id.contains('60mins')) {
+          results.add(doc.data());
+        }
+      }
+    }
+
+    return results;
+  }
+
   Future<void> addNotification(
       {required String title,
       required String message,
       required int warningLevel,
-      required String type}) {
+      required String type,
+      required String dedupId}) async {
+
     // determines title based on type
     String finalTitle = type == 'forecast'
         ? 'Forecast Alert: $title'
@@ -44,7 +71,20 @@ class NotificationReadingService {
     String finalMessage =
         type == 'forecast' ? 'This is a forecasted alert: $message' : message;
 
-    return _notifications
+    final exists = await _notifications
+        .collection('sensors')
+        .doc(sensorId)
+        .collection('${type}_notifications')
+        .where('dedupId', isEqualTo: dedupId)
+        .limit(1)
+        .get();
+
+    if (exists.docs.isNotEmpty) {
+      debugPrint("Duplicate notification skipped: $dedupId");
+      return;
+    }
+
+    await _notifications
         .collection('sensors')
         .doc(sensorId)
         .collection('${type}_notifications')
@@ -55,7 +95,18 @@ class NotificationReadingService {
       'type': type,
       'createdAt': Timestamp.now(),
       'isRead': false,
+      'dedupId': dedupId
     });
+  }
+
+  // notify every 15 minutes.
+  bool _shouldNotify(String key, {Duration cooldown = const Duration(seconds: 20)}) {
+    final last = _lastNotified[key];
+    if (last == null || DateTime.now().difference(last) > cooldown) {
+      _lastNotified[key] = DateTime.now();
+      return true;
+    }
+    return false;
   }
 
   Future<void> checkThresholdsAndNotify(SensorDetails data,
@@ -63,37 +114,39 @@ class NotificationReadingService {
     final dataList = currentData(data);
     final aqiLevel = getAqiWarningLevel(data.aqiCategory!);
 
-    for (var item in dataList) {
+    for (int i = 0; i < dataList.length; i++) {
+      final item = dataList[i];
       final label = item['label'] as String;
       final value = item['value'] as double;
       final max = pollutantMaxValues[label]!;
-      // store last value.
-      final lastValue = await getLastNotifiedValue(label);
 
-      // if value is greater than threshold, notify user.
-      if (value > max && (lastValue == null || value != lastValue)) {
+      // generate a unique key per reading
+      final pollutantKey = "$sensorId-$type-$label-$i";
+
+      if (value > max && _shouldNotify(pollutantKey, cooldown: const Duration(seconds: 20))) {
         addNotification(
-          title: '$label Alert',
-          message: '$label value is $value, exceeding safe limit of $max.',
-          warningLevel: aqiLevel,
-          type: type,
+            title: '$label Alert',
+            message: '$label value is $value, exceeding safe limit of $max.',
+            warningLevel: aqiLevel,
+            type: type,
+            dedupId: pollutantKey
         );
-        await saveLastNotifiedValue(label, value);
       }
     }
 
-    final lastAqi = await getLastNotifiedAqi();
-    // if aqi value is higher than threshold, create notification.
+    // AQI notification
+    // AQI notification (FIXED)
+    final aqiKey = "$sensorId-$type-aqi-${data.timestamp.millisecondsSinceEpoch}";
+
     if (['At Risk', 'Unhealthy', 'Hazardous'].contains(data.aqiCategory) &&
-        (lastAqi == null || data.aqi != lastAqi)) {
+        _shouldNotify(aqiKey, cooldown: Duration(minutes: 10))) {
       addNotification(
-        title: 'Air Quality Alert',
-        message:
-            'AQI is ${data.aqi} (${data.aqiCategory}), which exceeds the safe limit.',
-        warningLevel: aqiLevel,
-        type: type,
+          title: 'Air Quality Alert',
+          message: 'AQI is ${data.aqi} (${data.aqiCategory})',
+          warningLevel: aqiLevel,
+          type: type,
+          dedupId: aqiKey
       );
-      await saveLastNotifiedAqi(data.aqi!);
     }
   }
 
@@ -107,41 +160,7 @@ class NotificationReadingService {
         .doc(sensorId)
         .collection('${type}_notifications')
         .doc(notificationId)
-        .update({'isRead': isRead});
+        .update({'isRead': true});
   }
 
-  // delete notification
-  Future<void> deleteNotification(
-      {required String notificationId, required String type}) {
-    return _notifications
-        .collection('sensors')
-        .doc(sensorId)
-        .collection('${type}_notifications')
-        .doc(notificationId)
-        .delete();
-  }
-
-  // CURRENTLY NOT USED
-  // NOTE: batches have a limit of 500 write operations, deleting is a write operation
-
-  Future<void> deleteAllNotifications(
-      {required String notificationId, required String type}) async {
-    final collectionRef = _notifications
-        .collection('sensors')
-        .doc(sensorId)
-        .collection('${type}_notifications');
-
-    final snapshot = await collectionRef.get();
-
-    // store the batch
-    final batch = _notifications.batch();
-
-    // for every doc delete in batch
-    for (final doc in snapshot.docs) {
-      batch.delete(doc.reference);
-    }
-
-    // once batch is filled, call commit.
-    await batch.commit();
-  }
 }

@@ -47,7 +47,7 @@ int getAqiWarningLevel(String category) {
   }
 }
 
-List<Map<String, dynamic>> currentData(SensorDetails data) {
+List<Map<String, dynamic>> currentData(SensorDetails data, {String? forecastId}) {
   return [
     {
       'label': 'PM2.5',

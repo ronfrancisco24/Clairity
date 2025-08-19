@@ -5,7 +5,7 @@ import '../../utils/sensor_data_utils.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../../widgets/dashboard/card_location.dart';
-import '../../widgets/dashboard/card_currents.dart';
+import '../../widgets/dashboard/aqi_card.dart';
 import '../../widgets/dashboard/card_quality.dart';
 import '../../widgets/dashboard/pollutant_grid.dart';
 import '../../widgets/dashboard/time_selector.dart';
@@ -15,6 +15,7 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../services/sensor_reading_service.dart';
 import '../../constants.dart' as constants;
+import '../../widgets/sensor/time_info_tile.dart';
 
 //TODO: change card current to select sensors
 
@@ -25,9 +26,21 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
+
 class _DashboardScreenState extends State<DashboardScreen> {
+
   int selectedTimeIndex = 0;
   final List<String> times = generateTimeSlots();
+
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final sensorProvider = Provider.of<SensorProvider>(context, listen: false);
+      sensorProvider.initializeSensorListener();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,15 +130,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                           // You can adjust how you calculate these
                           final value = (selectedReading?.aqi ?? 0);
-                          final low = 23.0;
+                          final low = 100.0;
                           final high = 100.0;
                           final status =
                               selectedReading?.aqiCategory ?? 'Unknown';
 
-                          return CardCurrents(
-                            value: value, // If CardCurrents needs int
-                            low: low,
-                            high: high,
+                          return AqiCard(
+                            value: value,
                             status: status,
                           );
                         },
@@ -155,14 +166,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: 16),
                 // Warning
                 //TODO: show alert from sensor page here instead.
                 CardMessage(
                   message:
                       'Air quality in NH3 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: 16),
+                const Row(
+                  children: [
+                    TimeInfoTile(time: "10:30", label: "Last Cleaned", icon: Icons.wb_sunny_outlined),
+                    SizedBox(width: 12),
+                    TimeInfoTile(time: "2:00", label: "Clean Again By", icon: Icons.dark_mode_outlined),
+                  ],
+                ),
+                SizedBox(height: 16),
                 // Pollutant Cards
                 Consumer<SensorProvider>(builder: (context, provider, _) {
                   SensorDetails? selectedReading;

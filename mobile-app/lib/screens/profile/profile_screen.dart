@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants.dart';
+import '../../providers/sensor_provider.dart';
 import '../../widgets/profile/popups/avatar_selection_dialog.dart';
 import '../../widgets/profile/profile_container.dart';
 import '../../widgets/profile/settings_tile.dart';
@@ -121,6 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 iconContainerColor: Colors.red,
                 icon: Icons.logout,
                 onTap: () {
+                  SensorProvider().disposeListeners();
                   Navigator.push(
                     context,
                     MaterialPageRoute(

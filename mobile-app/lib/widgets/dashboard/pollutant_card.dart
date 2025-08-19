@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_progress_bar/gradient_progress_bar.dart';
 
-class CardStatusSensor extends StatelessWidget {
-  const CardStatusSensor({
+import '../../constants.dart';
+
+class PollutantCard extends StatelessWidget {
+  const PollutantCard({
     super.key,
     required this.value,
     required this.maxValue,
@@ -52,12 +54,16 @@ class CardStatusSensor extends StatelessWidget {
             height: 16,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: GradientProgressIndicator(
-                  [
-                    Color(0xffF68270),
-                    Color(0xffF1C358),
-                    Color(0xffEFDE62),
-                  ], progress),
+              child: Container(
+                color: Colors.white10,
+                child: GradientProgressIndicator(
+                    [
+                      Color(0xFFA0C878),
+                      Color(0xFF27667B),
+                      Color(0xFF143D60),
+                      Color(0xFFDDEB9D),
+                    ], progress),
+              ),
             ),
           ),
         ],
