@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../models/sensor_model_details.dart';
-import '../../utils/sensor_data_utils.dart';
+import '../../utils/sensor_utils.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../../widgets/dashboard/card_location.dart';
@@ -130,8 +130,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                           // You can adjust how you calculate these
                           final value = (selectedReading?.aqi ?? 0);
-                          final low = 100.0;
-                          final high = 100.0;
                           final status =
                               selectedReading?.aqiCategory ?? 'Unknown';
 
@@ -174,6 +172,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       'Air quality in NH3 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
                 ),
                 SizedBox(height: 16),
+                //TODO: input last cleaned time from user logs (use fetchLastCleanedTime).
                 const Row(
                   children: [
                     TimeInfoTile(time: "10:30", label: "Last Cleaned", icon: Icons.wb_sunny_outlined),

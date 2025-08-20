@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../models/notifications_model.dart';
+import '../../../services/history_reading_service.dart';
 import '../../../utils/history_utils.dart';
 import '../../../models/alert_model.dart';
 import 'alert_tile.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
+import '../../../utils/sensor_utils.dart';
 
 class PastAlertsTab extends StatefulWidget {
   const PastAlertsTab({super.key});
@@ -103,48 +106,70 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
           ),
           SizedBox(height: 16.h),
           Expanded(
-            child: filteredRecords.isEmpty
-                ? Padding(
-              padding: const EdgeInsets.only(bottom: 130),
-              child: Center(
-                child: Text(
-                  "No alerts for this day.",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: Colors.grey[700],
-                  ),
-                ),
-              ),
-            )
-                : ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    itemCount: filteredRecords.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == filteredRecords.length) {
-                        return SizedBox(
-                          height: constants.bottomOffset.h + constants.navBarHeight.h,
-                        );
-                      }
+            child: StreamBuilder<List<NotificationsModel>>(
+                  stream: streamAlertData("YDTdkdd2dSFsw6dtyvjd", selectedDate),
+                  builder: (context, snapshot) {
 
-                      final alert = filteredRecords[index];
-                      return AlertTile(
-                        date: alert.timestamp,
-                        alert: getAlertLabel(alert.description),
-                        status: alert.level == 1 ? "In Progress" : "Resolved",
-                        level: alert.level,
+                    if (snapshot.connectionState == ConnectionState.waiting){
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (snapshot.hasError){
+                      return Center(
+                        child: Text(
+                          "Error: ${snapshot.error}.",
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.grey[700],
+                          ),
+                        )
                       );
-                    },
-                  ),
+                    }
+
+                    if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 130),
+                        child: Center(
+                          child: Text(
+                            "No alerts for this day.",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+
+                    final records = snapshot.data!;
+
+                    return ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      itemCount: records.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == records.length) {
+                          return SizedBox(
+                            height: constants.bottomOffset.h + constants.navBarHeight.h,
+                          );
+                        }
+
+
+                        final alert = records[index];
+
+                        return AlertTile(
+                          date: alert.timestamp,
+                          alert: getAlertLabel(alert.warningLevel),
+                          level: alert.warningLevel,
+                        );
+                      },
+                    );
+                  },
+                ),
           ),
         ],
       ),
     );
   }
 
-  // TODO: Need to include AQI and specific pollutant
-  String getAlertLabel(double value) {
-    if (value >= 1.0) return "High Gas Levels";
-    if (value >= 0.5) return "Moderate Gas Levels";
-    return "Low Gas Levels";
-  }
 }

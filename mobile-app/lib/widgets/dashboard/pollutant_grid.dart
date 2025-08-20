@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../utils/sensor_data_utils.dart';
+import '../../utils/sensor_utils.dart';
 import 'pollutant_card.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'dart:math';

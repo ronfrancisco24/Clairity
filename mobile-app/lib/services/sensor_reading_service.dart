@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
-import '../utils/sensor_data_utils.dart';
+import '../utils/sensor_utils.dart';
 import '../models/sensor_model_details.dart';
 
 class SensorReadingService {
@@ -64,7 +64,7 @@ class SensorReadingService {
       final testData = generateSensorValues(readingTime);
 
       // Raw Data
-      //TODO: for raw data, remove aqi and aqiCategory field, that will be stored in cleaned data.
+
       final rawRef = await _db
           .collection('sensors')
           .doc(sensorId)
@@ -98,23 +98,6 @@ class SensorReadingService {
       }
     }
     print('Test data generated successfully');
-  }
-
-  Stream<List<SensorDetails>> streamSensorHistoryData(String sensorId, DateTime selectedDate) {
-    final startOfDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
-    final endOfDay = startOfDay.add(Duration(days: 1));
-
-    return _db
-        .collection('sensors')
-        .doc(sensorId)
-        .collection('cleanedReadingData')
-        .where('timestamp', isGreaterThanOrEqualTo: startOfDay)
-        .where('timestamp', isLessThan: endOfDay)
-        .orderBy('timestamp')
-        .snapshots()
-        .map((querySnapshot) => querySnapshot.docs
-        .map((doc) => SensorDetails.fromMap(doc.data()))
-        .toList());
   }
 
   // generate random sensor values

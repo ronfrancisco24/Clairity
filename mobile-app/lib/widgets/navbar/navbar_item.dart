@@ -8,7 +8,7 @@ class NavigationItem extends StatelessWidget {
     required this.label,
     required this.isSelected,
     required this.onSelect,
-    this.spotlight = false,
+    this.spotlight = true,
   });
 
   final IconData iconData;
