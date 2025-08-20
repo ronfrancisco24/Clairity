@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../models/sensor_model_details.dart';
 import '../../../services/sensor_reading_service.dart';
-import '../../../utils/history_utils.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
 import 'sensor_chart.dart';
+import '../../../services/history_reading_service.dart';
 
 class SensorDataTab extends StatefulWidget {
   const SensorDataTab({super.key});
@@ -14,12 +14,11 @@ class SensorDataTab extends StatefulWidget {
   State<SensorDataTab> createState() => _SensorDataTabState();
 }
 
+//TODO: if sensor changed from dashboard make sure to let whole app know.
+
 class _SensorDataTabState extends State<SensorDataTab> {
   DateTime selectedDate = DateTime.now();
   final PageController _pageController = PageController(viewportFraction: 0.95);
-
-  //TODO: use firestore history
-  // if timestamp == current day, fill values.
 
   @override
   void dispose() {
@@ -43,8 +42,8 @@ class _SensorDataTabState extends State<SensorDataTab> {
         Expanded(
           // Chart list with snapping effect
           child: StreamBuilder<List<SensorDetails>>(
-              stream: SensorReadingService().streamSensorHistoryData(
-                  "YDTdkdd2dSFsw6dtyvjd", selectedDate), // static id for now
+              stream: streamSensorHistoryData(
+                  "YDTdkdd2dSFsw6dtyvjd", selectedDate),
               builder: (context, snapshot) {
 
                 if (snapshot.hasError) {

@@ -5,23 +5,25 @@ import 'package:intl/intl.dart';
 class AlertTile extends StatelessWidget {
   final DateTime date;
   final String alert;
-  final String status;
   final int level;
 
   const AlertTile({
     super.key,
     required this.date,
     required this.alert,
-    required this.status,
     required this.level,
   });
 
   Color get levelColor {
     switch (level) {
       case 1:
-        return Colors.amber; // Yellow
+        return Colors.yellow;
       case 2:
+        return Colors.orange; // Yellow
+      case 3:
         return Colors.red;   // Red
+      case 4:
+        return Color(0xFF800000);
       default:
         return Colors.grey;  // Default/fallback
     }
@@ -101,25 +103,7 @@ class AlertTile extends StatelessWidget {
                     color: Colors.black87,
                   ),
                 ),
-                SizedBox(height: 6.h),
                 // Status
-                Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      size: 14.sp,
-                      color: Colors.grey[700],
-                    ),
-                    SizedBox(width: 6.w),
-                    Text(
-                      status,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),

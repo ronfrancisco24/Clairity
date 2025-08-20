@@ -12,6 +12,19 @@ class LogRecordsService {
         .toList();
   }
 
+  Stream<CleaningRecord> fetchLastCleanedTime(String sensorId) {
+    return _firestore
+        .collection('cleaning_records')
+        .orderBy('timestamp', descending: true)
+        .where('sensorId', isEqualTo: sensorId)
+        .limit(1)
+        .snapshots()
+        .map((snapshot) {
+      final doc = snapshot.docs.first;
+      return CleaningRecord.fromFirestore(doc.data(), doc.id);
+    });
+  }
+
   Future<CleaningRecord> addLog(CleaningRecord record) async {
     final docRef = await _firestore.collection(_collection).add(record.toFirestore());
     return record.copyWith(cleaningId: docRef.id);

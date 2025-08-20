@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../utils/notif_utils.dart';
 import '../models/notifications_model.dart';
 import '../models/sensor_model_details.dart';
-import '../utils/sensor_data_utils.dart';
+import '../utils/sensor_utils.dart';
 
 //TODO: make this persist when app is closed or restarted, add persistence and background checks.
 //TODO: make sure to check last time stamp generated to avoid duplicates
@@ -71,6 +71,8 @@ class NotificationReadingService {
     String finalMessage =
         type == 'forecast' ? 'This is a forecasted alert: $message' : message;
 
+    final dateTimeUtc8 = DateTime.now().toUtc().add(const Duration(hours: 8));
+
     final exists = await _notifications
         .collection('sensors')
         .doc(sensorId)
@@ -93,7 +95,7 @@ class NotificationReadingService {
       'message': finalMessage,
       'warningLevel': warningLevel,
       'type': type,
-      'createdAt': Timestamp.now(),
+      'createdAt': dateTimeUtc8,
       'isRead': false,
       'dedupId': dedupId
     });
