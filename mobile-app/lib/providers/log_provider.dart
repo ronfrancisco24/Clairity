@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../models/cleaning_log_model.dart';
 import '../services/log_records_service.dart';
@@ -5,8 +8,12 @@ import '../services/log_records_service.dart';
 class LogProvider with ChangeNotifier {
   final List<CleaningRecord> _logs = [];
   final LogRecordsService _service = LogRecordsService();
+  DateTime? _lastCleanedTime;
 
+  DateTime? get lastCleanedTime => _lastCleanedTime;
   List<CleaningRecord> get logs => List.unmodifiable(_logs);
+
+  StreamSubscription<CleaningRecord>? _subscription;
 
   Future<void> fetchLogs() async {
     try {
@@ -15,6 +22,19 @@ class LogProvider with ChangeNotifier {
         ..clear()
         ..addAll(fetchedLogs);
       notifyListeners();
+    } catch (e) {
+      if (kDebugMode) print("Error fetching logs: $e");
+    }
+  }
+
+  void listenToLatestCleanedTime(String sensorId) {
+    try {
+      _subscription?.cancel();
+
+      _subscription = _service.fetchLastCleanedTime(sensorId).listen((record) {
+        _lastCleanedTime = record.timestamp;
+        notifyListeners();
+      });
     } catch (e) {
       if (kDebugMode) print("Error fetching logs: $e");
     }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import '../../models/sensor_model_details.dart';
+import '../../providers/log_provider.dart';
 import '../../utils/sensor_utils.dart';
 import 'package:provider/provider.dart';
+import '../../widgets/history/sensor_chart/sensor_data_tab.dart';
 import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../../widgets/dashboard/card_location.dart';
 import '../../widgets/dashboard/aqi_card.dart';
@@ -10,7 +13,7 @@ import '../../widgets/dashboard/card_quality.dart';
 import '../../widgets/dashboard/pollutant_grid.dart';
 import '../../widgets/dashboard/time_selector.dart';
 import '../../widgets/dashboard/card_message.dart';
-import '../../utils/dashboard_time_utils.dart';
+import '../../utils/dashboard_utils.dart';
 import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../services/sensor_reading_service.dart';
@@ -18,6 +21,7 @@ import '../../constants.dart' as constants;
 import '../../widgets/sensor/time_info_tile.dart';
 
 //TODO: change card current to select sensors
+//TODO: modularize code.
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -26,31 +30,44 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
-
 class _DashboardScreenState extends State<DashboardScreen> {
-
   int selectedTimeIndex = 0;
   final List<String> times = generateTimeSlots();
-
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final sensorProvider = Provider.of<SensorProvider>(context, listen: false);
+      final sensorProvider =
+          Provider.of<SensorProvider>(context, listen: false);
       sensorProvider.initializeSensorListener();
+
+      final logProvider = Provider.of<LogProvider>(context, listen: false);
+      logProvider.listenToLatestCleanedTime("YDTdkdd2dSFsw6dtyvjd");
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
     final userProvider = Provider.of<UserProvider>(context);
-    final sensorProvider = context.watch<SensorProvider>();
-    final current = sensorProvider.currentData;
-    final forecastList = sensorProvider.forecastReadingData;
+    final current = context.watch<SensorProvider>().currentData;
+    final forecastList = context.watch<SensorProvider>().forecastReadingData;
+    final lastCurrentCleanedTime = context.watch<LogProvider>().lastCleanedTime;
+    final formattedTime =
+        lastCurrentCleanedTime != null ? getFormattedTime(lastCurrentCleanedTime) : "No record yet";
 
-    final firstName =
-        (userProvider.user?.firstName ?? 'No name').toString();
+    final firstName = (userProvider.user?.firstName ?? 'No name').toString();
+
+    SensorDetails? selectedReading;
+    if (selectedTimeIndex == 0) {
+      selectedReading = current;
+    } else if (selectedTimeIndex - 1 < forecastList.length) {
+      selectedReading = forecastList[selectedTimeIndex - 1];
+    }
+
+    final nextCleaningTime= getNextCleaningTime(selectedReading, forecastList);
+    final formattedNextCleanedTime = getFormattedTime(nextCleaningTime!);
 
     ScreenUtil.init(context, designSize: const Size(360, 690));
 
@@ -78,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          'Monday, June 1',
+                          '$formattedDate',
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 14,
@@ -94,7 +111,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const CardLocation(
                   imageUrl:
                       'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-                  title: 'PGN 1st Floor',
+                  title: '1st Restroom',
                   subtitle: 'Near Printing Station',
                 ),
                 SizedBox(height: 16.h),
@@ -119,15 +136,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Expanded(
                       child: Consumer<SensorProvider>(
                         builder: (context, provider, _) {
-                          SensorDetails? selectedReading;
-                          if (selectedTimeIndex == 0) {
-                            selectedReading = current;
-                          } else if (selectedTimeIndex - 1 <
-                              forecastList.length) {
-                            selectedReading =
-                                forecastList[selectedTimeIndex - 1];
-                          }
-
                           // You can adjust how you calculate these
                           final value = (selectedReading?.aqi ?? 0);
                           final status =
@@ -146,17 +154,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CardQuality(
-                            onTap: () async {
-                              // TODO: show highest pollutant,
-                              // fir testing
-                              await SensorReadingService()
-                                  .generateRawTestData(
-                                      'YDTdkdd2dSFsw6dtyvjd');
+                          Consumer<SensorProvider>(
+                            builder: (context, provider, _) {
+                              final highest = selectedReading != null ? getHighestPollutant(selectedReading) : null;
+                              final level = highest != null ? getPollutantLevel(highest.value) : null;
+
+                              return CardQuality(
+                                onTap: () async {
+                                  await SensorReadingService().generateRawTestData('YDTdkdd2dSFsw6dtyvjd');
+                                },
+                                trendLabel: 'Air Quality Trend',
+                                trendValue: highest?.key ?? '--',
+                                trendLevel: level ?? 'No Data',
+                              );
                             },
-                            trendLabel: 'Air Quality Trend',
-                            trendValue: 'Ammonia',
-                            trendLevel: 'Moderate',
                           ),
                           const SizedBox(height: 8),
                         ],
@@ -166,33 +177,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 SizedBox(height: 16),
                 // Warning
-                //TODO: show alert from sensor page here instead.
+                //TODO: show warning message
                 CardMessage(
-                  message:
-                      'Air quality in NH3 is unhealthy.\nRecommend airing out the room or limiting occupancy.',
+                  message: selectedReading == null
+                      ? 'No air quality data available.'
+                      : getAqiMessage(selectedReading!.aqiCategory ?? 'Unknown'),
                 ),
                 SizedBox(height: 16),
-                //TODO: input last cleaned time from user logs (use fetchLastCleanedTime).
-                const Row(
+                Row(
                   children: [
-                    TimeInfoTile(time: "10:30", label: "Last Cleaned", icon: Icons.wb_sunny_outlined),
-                    SizedBox(width: 12),
-                    TimeInfoTile(time: "2:00", label: "Clean Again By", icon: Icons.dark_mode_outlined),
+                    TimeInfoTile(
+                      time: "$formattedTime", // readable format
+                      label: "Last Cleaned",
+                      icon: lastCurrentCleanedTime != null
+                          ? getTimeIcon(lastCurrentCleanedTime)
+                          : Icons.help_outline,
+                    ),
+                    const SizedBox(width: 12),
+                    TimeInfoTile(
+                        time: "$formattedNextCleanedTime",
+                        label: "Clean Again By",
+                        icon: lastCurrentCleanedTime != null
+                            ? getTimeIcon(nextCleaningTime)
+                            : Icons.help_outline,),
                   ],
                 ),
                 SizedBox(height: 16),
                 // Pollutant Cards
                 Consumer<SensorProvider>(builder: (context, provider, _) {
-                  SensorDetails? selectedReading;
-                  if (selectedTimeIndex == 0) {
-                    selectedReading = current;
-                  } else if (selectedTimeIndex - 1 < forecastList.length) {
-                    selectedReading = forecastList[selectedTimeIndex - 1];
-                  }
-
                   final List<Map<String, dynamic>> pollutants =
                       selectedReading != null
-                          ? currentData(selectedReading)
+                          ? getCurrentData(selectedReading)
                           : [];
 
                   return LayoutBuilder(
@@ -203,7 +218,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                   );
                 }),
-                SizedBox(height: constants.bottomOffset.h + constants.navBarHeight.h),
+                SizedBox(
+                    height:
+                        constants.bottomOffset.h + constants.navBarHeight.h),
               ],
             ),
           ),

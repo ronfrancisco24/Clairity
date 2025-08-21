@@ -7,7 +7,7 @@ import '../../../models/alert_model.dart';
 import 'alert_tile.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
-import '../../../utils/sensor_utils.dart';
+import '../../../utils/dashboard_utils.dart';
 
 class PastAlertsTab extends StatefulWidget {
   const PastAlertsTab({super.key});

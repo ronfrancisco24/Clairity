@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../services/sensor_reading_service.dart';
+
 enum BathroomType { women, men }
 
 class CardLocation extends StatefulWidget {
@@ -20,49 +22,57 @@ class CardLocation extends StatefulWidget {
 
 class _CardLocationState extends State<CardLocation> {
   BathroomType _selectedBathroom = BathroomType.women;
+  final _service = SensorReadingService();
+  List<String> _sensorIds = [];
+  String? _selectedSensorId;
+  bool _loading = false;
 
-  Icon get _bathroomIcon {
-    switch (_selectedBathroom) {
-      case BathroomType.women:
-        return const Icon(Icons.woman, color: Colors.red, size: 20);
-      case BathroomType.men:
-        return const Icon(Icons.man, color: Colors.blue, size: 20);
-    }
-  }
 
   //TODO: show sensors here.
-  Future<void> _pickBathroom() async {
-    final picked = await showDialog<BathroomType>(
+  Future<void> _pickSensor() async {
+    setState(() => _loading = true);
+
+    // Fetch the sensor IDs
+    final sensors = await _service.fetchAllSensorIds();
+
+    setState(() {
+      _sensorIds = sensors;
+      _loading = false;
+    });
+
+    // Show dialog only if there are sensors
+    if (_sensorIds.isEmpty) return;
+
+    final picked = await showDialog<String>(
       context: context,
       builder: (context) => SimpleDialog(
-        title: const Text('Which bathroom to clean?'),
+        title: const Text('Select a sensor'),
         children: [
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context, BathroomType.women),
-            child: Row(
-              children: const [
-                Icon(Icons.woman, color: Colors.red, size: 20),
-                SizedBox(width: 8),
-                Text('Women'),
-              ],
+          SizedBox(
+            height: 300,
+            child: SingleChildScrollView(
+              child: Column(
+                children: _sensorIds.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final id = entry.value;
+                  return SimpleDialogOption(
+                    onPressed: () {
+                      print('Selected index: $index');
+                      Navigator.pop(context, id);
+                    },
+                    child: Text('Sensor ${index + 1} - id: $id'),
+                  );
+                }).toList(),
+              ),
             ),
-          ),
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(context, BathroomType.men),
-            child: Row(
-              children: const [
-                Icon(Icons.man, color: Colors.blue, size: 20),
-                SizedBox(width: 8),
-                Text('Men'),
-              ],
-            ),
-          ),
-        ],
+          )
+        ]
       ),
     );
+
     if (picked != null) {
       setState(() {
-        _selectedBathroom = picked;
+        _selectedSensorId = picked;
       });
     }
   }
@@ -70,7 +80,7 @@ class _CardLocationState extends State<CardLocation> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _pickBathroom,
+      onTap: _pickSensor,
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black, width: 2),
@@ -105,8 +115,6 @@ class _CardLocationState extends State<CardLocation> {
                               fontSize: 16,
                             ),
                           ),
-                          const SizedBox(width: 6),
-                          _bathroomIcon,
                         ],
                       ),
                       Text(
