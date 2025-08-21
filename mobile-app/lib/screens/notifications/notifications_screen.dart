@@ -3,15 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../models/notifications_model.dart';
-import '../../providers/user_provider.dart';
+import '../../providers/sensor_provider.dart';
 import '../../services/notification_reading_service.dart';
 import '../../widgets/sensor/notifications/notification_card.dart';
-import '../../utils/notif_utils.dart';
 import '../../widgets/sensor/notifications/notification_filter.dart';
-
-//TODO: create a current and forecast section
-//TODO: use sensorId based on selection
-//TODO: use current_notifications for current tab
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -22,12 +17,15 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   String selectedFilter = "current"; // default filter
+
+
   @override
   Widget build(BuildContext context) {
-    const String sensorId = 'YDTdkdd2dSFsw6dtyvjd';
+    final sensorProvider = Provider.of<SensorProvider>(context);
+    final sensorId = sensorProvider.sensorId;
 
     final currentNotifications =
-        NotificationReadingService(sensorId).streamNotifications('current');
+        NotificationReadingService(sensorId!).streamNotifications('current');
     final forecastNotifications =
         NotificationReadingService(sensorId).streamNotifications('forecast');
 

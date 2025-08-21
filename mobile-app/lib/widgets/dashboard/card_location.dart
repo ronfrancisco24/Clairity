@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import '../../providers/sensor_provider.dart';
 import '../../services/sensor_reading_service.dart';
 
 enum BathroomType { women, men }
@@ -10,38 +11,26 @@ class CardLocation extends StatefulWidget {
     required this.imageUrl,
     required this.title,
     required this.subtitle,
+    required this.sensors,
+    required this.onSensorPicked,
   });
 
   final String imageUrl;
   final String title;
   final String subtitle;
+  final List<String> sensors;
+  final ValueChanged<String> onSensorPicked;
 
   @override
   State<CardLocation> createState() => _CardLocationState();
 }
 
 class _CardLocationState extends State<CardLocation> {
-  BathroomType _selectedBathroom = BathroomType.women;
-  final _service = SensorReadingService();
-  List<String> _sensorIds = [];
-  String? _selectedSensorId;
-  bool _loading = false;
 
 
-  //TODO: show sensors here.
-  Future<void> _pickSensor() async {
-    setState(() => _loading = true);
-
-    // Fetch the sensor IDs
-    final sensors = await _service.fetchAllSensorIds();
-
-    setState(() {
-      _sensorIds = sensors;
-      _loading = false;
-    });
-
-    // Show dialog only if there are sensors
-    if (_sensorIds.isEmpty) return;
+  Future<void> _pickSensor(BuildContext context) async {
+    print('i was tapped');
+    if (widget.sensors.isEmpty) return;
 
     final picked = await showDialog<String>(
       context: context,
@@ -52,35 +41,33 @@ class _CardLocationState extends State<CardLocation> {
             height: 300,
             child: SingleChildScrollView(
               child: Column(
-                children: _sensorIds.asMap().entries.map((entry) {
+                children: widget.sensors.asMap().entries.map((entry) {
                   final index = entry.key;
-                  final id = entry.value;
+                  final sensor = entry.value;
                   return SimpleDialogOption(
                     onPressed: () {
-                      print('Selected index: $index');
-                      Navigator.pop(context, id);
+                      Navigator.pop(context, sensor);
                     },
-                    child: Text('Sensor ${index + 1} - id: $id'),
+                    child: Text('Sensor ${index + 1}: $sensor'),
                   );
                 }).toList(),
               ),
             ),
           )
-        ]
+        ],
       ),
     );
 
     if (picked != null) {
-      setState(() {
-        _selectedSensorId = picked;
-      });
+      widget.onSensorPicked(picked); // ✅ notify DashboardScreen
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _pickSensor,
+      onTap: () => _pickSensor(context),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black, width: 2),

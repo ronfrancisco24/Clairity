@@ -16,8 +16,8 @@ List<String> generateTimeSlots() {
   return times;
 }
 
-IconData getTimeIcon(DateTime time) {
-  if (time.hour >= 6 && time.hour <= 18) {
+IconData getTimeIcon(DateTime? time) {
+  if (time!.hour >= 6 && time.hour <= 18) {
     return Icons.wb_sunny_outlined;
   } else {
     return Icons.dark_mode_outlined;

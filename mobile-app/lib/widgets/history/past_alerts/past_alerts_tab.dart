@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import '../../../models/notifications_model.dart';
+import '../../../providers/sensor_provider.dart';
 import '../../../services/history_reading_service.dart';
 import '../../../utils/history_utils.dart';
 import '../../../models/alert_model.dart';
@@ -19,55 +21,15 @@ class PastAlertsTab extends StatefulWidget {
 class _PastAlertsTabState extends State<PastAlertsTab> {
   DateTime selectedDate = DateTime.now();
 
-  // Dummy AlertLog model records
-  final List<AlertLog> alertRecords = [
-    AlertLog(
-      alertId: 1,
-      restroomId: 101,
-      description: 0.95,
-      level: 2,
-      timestamp: DateTime(2025, 7, 14, 7, 34),
-    ),
-    AlertLog(
-      alertId: 2,
-      restroomId: 101,
-      description: 0.45,
-      level: 1,
-      timestamp: DateTime(2025, 7, 14, 11, 33),
-    ),
-    AlertLog(
-      alertId: 3,
-      restroomId: 101,
-      description: 1.15,
-      level: 2,
-      timestamp: DateTime(2025, 7, 14, 14, 21),
-    ),
-    AlertLog(
-      alertId: 4,
-      restroomId: 101,
-      description: 1.30,
-      level: 2,
-      timestamp: DateTime(2025, 7, 15, 3, 33),
-    ),
-    AlertLog(
-      alertId: 5,
-      restroomId: 101,
-      description: 0.55,
-      level: 1,
-      timestamp: DateTime(2025, 7, 15, 7, 12),
-    ),
-  ];
-
-  List<AlertLog> get filteredRecords {
-    return filterRecordsByDate(alertRecords, selectedDate);
-  }
-
   String get formattedDate {
     return formatSelectedDate(selectedDate);
   }
 
   @override
   Widget build(BuildContext context) {
+    final sensorProvider = Provider.of<SensorProvider>(context);
+    final sensorId = sensorProvider.sensorId;
+
     return Container(
       color: Colors.grey[50],
       child: Column(
@@ -107,7 +69,7 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
           SizedBox(height: 16.h),
           Expanded(
             child: StreamBuilder<List<NotificationsModel>>(
-                  stream: streamAlertData("YDTdkdd2dSFsw6dtyvjd", selectedDate),
+                  stream: streamAlertData('$sensorId', selectedDate),
                   builder: (context, snapshot) {
 
                     if (snapshot.connectionState == ConnectionState.waiting){
@@ -155,7 +117,7 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
                         }
 
 
-                        final alert = records[index];
+                        final alert = records[records.length - 1 - index];
 
                         return AlertTile(
                           date: alert.timestamp,
