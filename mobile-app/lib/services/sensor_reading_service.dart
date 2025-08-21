@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
-import '../utils/sensor_utils.dart';
-import '../models/sensor_model_details.dart';
+import '../utils/dashboard_utils.dart';
+
+//TODO: use this function to switch in between sensors.
 
 class SensorReadingService {
   final _db = FirebaseFirestore.instance;
@@ -48,7 +49,6 @@ class SensorReadingService {
     return null;
   }
 
-  //TODO: use this function to switch in between sensors.
   Future<List<String>> fetchAllSensorIds() async {
     final snapshot = await _db.collection('sensors').get();
 
@@ -57,7 +57,6 @@ class SensorReadingService {
   }
 
   // for testing purposes, generate 8 documents under readings
-  // populate raw, clean, and forecast data.
   Future<void> generateRawTestData(String sensorId) async {
     for (int i = 0; i < 8; i++) {
       final readingTime = _now.subtract(Duration(hours: i * 3));
@@ -82,10 +81,7 @@ class SensorReadingService {
           .collection('cleanedReadingData')
           .doc(cleanedDocId);
 
-      await cleanedRef.set(testData); // for now use the same test data from raw data
-
-    // Add 4 forecast documents
-
+      await cleanedRef.set(testData);
       for (int j = 1; j <= 4; j++) {
         final forecastTime = readingTime.add(Duration(minutes: j * 30));
         final forecastData = generateSensorValues(forecastTime);

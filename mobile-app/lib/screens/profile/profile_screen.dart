@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ProfileContainer(
                 name: '${firstName} ${lastName}',
                 email: phoneNo,
-                building: userProvider.user?.building ?? 'PGN',
+                building: userProvider.user?.building ?? 'Building 1',
                 avatarIndex: userProvider.user?.avatar ?? 0,
                 onAvatarTap: () {
                   showDialog(

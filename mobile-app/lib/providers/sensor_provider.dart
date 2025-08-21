@@ -7,8 +7,6 @@ import '../services/sensor_reading_service.dart';
 import 'user_provider.dart'; // You'll create this model
 
 //TODO: change later to sensorOfChoice in initializeSensorListener, just make it a parameter
-//TODO: change how checkThresholds is looping through forecast data
-//TODO: make sure the only forecasts being notified is 30 and 60 minute interval.
 
 class SensorProvider extends ChangeNotifier {
   final SensorReadingService _service = SensorReadingService();
@@ -18,10 +16,13 @@ class SensorProvider extends ChangeNotifier {
   StreamSubscription? _currentDataSubscription;
   StreamSubscription? _forecastDataSubscription;
   String? readingId;
+  String? currentSensor;
 
+  Future<void> getCurrentSensor() async {
+    print('');
+  }
 
   Future<void> initializeSensorListener([String? sensorId]) async {
-
     if (_currentDataSubscription != null || _forecastDataSubscription != null) {
       debugPrint("Sensor listener already initialized, skipping...");
       return;
@@ -30,9 +31,6 @@ class SensorProvider extends ChangeNotifier {
     final userProvider = UserProvider();
     await userProvider.loadUserData();
 
-    final sensors = await _service.fetchAllSensorIds();
-
-    if (sensors.isNotEmpty) {
       final chosenSensor = sensorId ?? 'YDTdkdd2dSFsw6dtyvjd';
       readingId = await _service.fetchLatestReadingId(chosenSensor);
 
@@ -41,9 +39,8 @@ class SensorProvider extends ChangeNotifier {
       } else {
         debugPrint("No latest reading found for sensor $chosenSensor");
       }
-    }
-  }
 
+  }
 
   void listenToCurrentAndForecastReadings(String sensorId) {
     _currentDataSubscription?.cancel();
@@ -51,38 +48,35 @@ class SensorProvider extends ChangeNotifier {
 
     _notifService = NotificationReadingService(sensorId);
 
-
     _currentDataSubscription =
         _service.streamLatestCleanedReading(sensorId).listen((doc) {
-          if (doc.exists) {
+      if (doc.exists) {
+        currentData = SensorDetails.fromMap(doc.data());
+        notifyListeners();
 
-            currentData = SensorDetails.fromMap(doc.data());
-            notifyListeners();
+        final latestCleanedId = doc.id;
+        _forecastDataSubscription?.cancel();
 
+        // STEP 2: Initialize forecast data first
+        _forecastDataSubscription = _service
+            .streamForecastReadings(sensorId, latestCleanedId)
+            .listen((snapshot) {
+          // Initialize forecast data
+          forecastReadingData = snapshot.docs
+              .map((doc) => SensorDetails.fromMap(doc.data()))
+              .toList();
+          notifyListeners();
 
-            final latestCleanedId = doc.id;
-            _forecastDataSubscription?.cancel();
+          print(forecastReadingData);
 
-            // STEP 2: Initialize forecast data first
-            _forecastDataSubscription = _service
-                .streamForecastReadings(sensorId, latestCleanedId)
-                .listen((snapshot) {
-              // Initialize forecast data
-              forecastReadingData = snapshot.docs
-                  .map((doc) => SensorDetails.fromMap(doc.data()))
-                  .toList();
-              notifyListeners();
-
-              print(forecastReadingData);
-
-              _forecastDataChecks();
-            });
-
-            _currentDataChecks();
-          } else {
-            print("Nothing is here.");
-          }
+          _forecastDataChecks();
         });
+
+        _currentDataChecks();
+      } else {
+        print("Nothing is here.");
+      }
+    });
   }
 
   void _currentDataChecks() {
