@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import '../../../models/sensor_model_details.dart';
+import '../../../providers/sensor_provider.dart';
 import '../../../services/sensor_reading_service.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
@@ -20,6 +22,7 @@ class _SensorDataTabState extends State<SensorDataTab> {
   DateTime selectedDate = DateTime.now();
   final PageController _pageController = PageController(viewportFraction: 0.95);
 
+
   @override
   void dispose() {
     _pageController.dispose();
@@ -28,6 +31,8 @@ class _SensorDataTabState extends State<SensorDataTab> {
 
   @override
   Widget build(BuildContext context) {
+    final sensorProvider = Provider.of<SensorProvider>(context);
+    final sensorId = sensorProvider.sensorId;
 
     return Column(
       children: [
@@ -43,7 +48,7 @@ class _SensorDataTabState extends State<SensorDataTab> {
           // Chart list with snapping effect
           child: StreamBuilder<List<SensorDetails>>(
               stream: streamSensorHistoryData(
-                  "YDTdkdd2dSFsw6dtyvjd", selectedDate),
+                  '$sensorId', selectedDate),
               builder: (context, snapshot) {
 
                 if (snapshot.hasError) {

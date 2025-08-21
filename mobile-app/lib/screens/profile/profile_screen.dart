@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants.dart';
-import '../../providers/sensor_provider.dart';
+import '../../controllers/dashboard_manager.dart';
 import '../../widgets/profile/popups/avatar_selection_dialog.dart';
 import '../../widgets/profile/profile_container.dart';
 import '../../widgets/profile/settings_tile.dart';
@@ -11,6 +11,10 @@ import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../onboarding/splash_screen.dart';
+
+//TODO: implement logout functionality.
+// TODO: toggle notifications once switch is on.
+//TODO: dispose subscriptions and logout use clearUserData
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -32,10 +36,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-
     final firstName = userProvider.user?.firstName ?? 'No name';
     final lastName = userProvider.user?.lastName ?? 'No name';
     final phoneNo = userProvider.user?.phoneNo ?? 'No number';
+    late final DashboardService dashboardService = DashboardService();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -89,7 +93,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 isToggle: true,
                 iconContainerColor: forestGreen,
                 icon: Icons.notifications_none,
-                // TODO: toggle notifications once switch is on.
               ),
               SettingsTile(
                 tileTitle: 'Help',
@@ -116,13 +119,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               SettingsTile(
-                //TODO: implement logout functionality.
                 tileTitle: 'Logout',
                 isToggle: false,
                 iconContainerColor: Colors.red,
                 icon: Icons.logout,
                 onTap: () {
-                  SensorProvider().disposeListeners();
+
+
+                  dashboardService.dispose();
+                  userProvider.clearUserData();
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(

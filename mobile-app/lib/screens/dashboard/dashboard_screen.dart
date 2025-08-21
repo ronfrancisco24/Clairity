@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import '../../controllers/dashboard_manager.dart';
+import '../../controllers/sensor_manager.dart';
 import '../../models/sensor_model_details.dart';
 import '../../providers/log_provider.dart';
 import '../../utils/sensor_utils.dart';
@@ -20,7 +22,6 @@ import '../../services/sensor_reading_service.dart';
 import '../../constants.dart' as constants;
 import '../../widgets/sensor/time_info_tile.dart';
 
-//TODO: change card current to select sensors
 //TODO: modularize code.
 
 class DashboardScreen extends StatefulWidget {
@@ -33,18 +34,38 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int selectedTimeIndex = 0;
   final List<String> times = generateTimeSlots();
+  String? _selectedSensorId;
+
+  final DashboardService _dashboardService = DashboardService();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final sensorProvider =
-          Provider.of<SensorProvider>(context, listen: false);
-      sensorProvider.initializeSensorListener();
+      final sensorProvider = context.read<SensorProvider>();
+      final logProvider = context.read<LogProvider>();
 
-      final logProvider = Provider.of<LogProvider>(context, listen: false);
-      logProvider.listenToLatestCleanedTime("YDTdkdd2dSFsw6dtyvjd");
+      sensorProvider.loadSensorIds();
+
+      if (sensorProvider.sensorIds.isNotEmpty) {
+        _selectedSensorId = sensorProvider.sensorIds.first;
+        _dashboardService.setSensor(_selectedSensorId!, sensorProvider, logProvider);
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _dashboardService.dispose();
+    super.dispose();
+  }
+
+  void _setSensor(String sensorId) {
+    final sensorProvider = context.read<SensorProvider>();
+    final logProvider = context.read<LogProvider>();
+
+    setState(() => _selectedSensorId = sensorId);
+    _dashboardService.setSensor(sensorId, sensorProvider, logProvider);
   }
 
   @override
@@ -52,13 +73,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     String formattedDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
     final userProvider = Provider.of<UserProvider>(context);
     final current = context.watch<SensorProvider>().currentData;
+    final sensorList = context.watch<SensorProvider>().sensorIds;
     final forecastList = context.watch<SensorProvider>().forecastReadingData;
     final lastCurrentCleanedTime = context.watch<LogProvider>().lastCleanedTime;
     final formattedTime =
         lastCurrentCleanedTime != null ? getFormattedTime(lastCurrentCleanedTime) : "No record yet";
-
     final firstName = (userProvider.user?.firstName ?? 'No name').toString();
-
     SensorDetails? selectedReading;
     if (selectedTimeIndex == 0) {
       selectedReading = current;
@@ -67,7 +87,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     final nextCleaningTime= getNextCleaningTime(selectedReading, forecastList);
-    final formattedNextCleanedTime = getFormattedTime(nextCleaningTime!);
+    final formattedNextCleanedTime = nextCleaningTime != null
+        ? getFormattedTime(nextCleaningTime)
+        : "No prediction yet";
 
     ScreenUtil.init(context, designSize: const Size(360, 690));
 
@@ -76,7 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(20.w), // Match SensorScreen margins
+            padding: EdgeInsets.all(20.w),
             child: Column(
               children: [
                 // Header
@@ -108,11 +130,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 SizedBox(height: 16.h),
                 // Location Card
-                const CardLocation(
+                CardLocation(
+                  sensors: sensorList,
                   imageUrl:
                       'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
                   title: '1st Restroom',
                   subtitle: 'Near Printing Station',
+                  onSensorPicked: (sensorId) {
+                    _setSensor(sensorId);
+                  },
                 ),
                 SizedBox(height: 16.h),
                 // Time Selector
@@ -161,7 +187,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                               return CardQuality(
                                 onTap: () async {
-                                  await SensorReadingService().generateRawTestData('YDTdkdd2dSFsw6dtyvjd');
+                                  if (_selectedSensorId != null) {
+                                    await SensorReadingService().generateRawTestData(_selectedSensorId!);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("No sensor selected")),
+                                    );
+                                  }
                                 },
                                 trendLabel: 'Air Quality Trend',
                                 trendValue: highest?.key ?? '--',
@@ -177,11 +209,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 SizedBox(height: 16),
                 // Warning
-                //TODO: show warning message
                 CardMessage(
                   message: selectedReading == null
                       ? 'No air quality data available.'
-                      : getAqiMessage(selectedReading!.aqiCategory ?? 'Unknown'),
+                      : getAqiMessage(selectedReading.aqiCategory ?? 'Unknown'),
                 ),
                 SizedBox(height: 16),
                 Row(
@@ -197,9 +228,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     TimeInfoTile(
                         time: "$formattedNextCleanedTime",
                         label: "Clean Again By",
-                        icon: lastCurrentCleanedTime != null
-                            ? getTimeIcon(nextCleaningTime)
-                            : Icons.help_outline,),
+                      icon: lastCurrentCleanedTime != null
+                          ? getTimeIcon(nextCleaningTime)  // ⚠ nextCleaningTime can still be null
+                          : Icons.help_outline,),
                   ],
                 ),
                 SizedBox(height: 16),
