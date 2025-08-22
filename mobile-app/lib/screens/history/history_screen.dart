@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../widgets/header.dart';
 import '../../widgets/history/history_tab_selector.dart';
 import '../../widgets/history/past_alerts/past_alerts_tab.dart';
 import '../../widgets/history/cleaning_records/cleaning_records_tab.dart';
 import '../../widgets/history/sensor_chart/sensor_data_tab.dart';
-import '../../widgets/sensor/notifications/notifications_button.dart';
 
 //TODO: change sensor data pollutants to use thresholds
-//TODO: connect past alerts with notifications.
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -40,20 +39,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "History ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30.sp,
-                    color: Colors.black87,
-                  ),
-                ),
-                const NotificationsButton(),
-              ],
-            ),
+            child: DashboardHeader(title: 'History', hasDate: false)
           ),
         ),
       ),

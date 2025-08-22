@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants.dart';
-
 class NotificationFilter extends StatefulWidget {
   final String selectedFilter;
   final ValueChanged<String> onChanged;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 import '../../controllers/dashboard_manager.dart';
+import '../../widgets/header.dart';
 import '../../widgets/profile/popups/avatar_selection_dialog.dart';
 import '../../widgets/profile/profile_container.dart';
 import '../../widgets/profile/settings_tile.dart';
@@ -9,7 +10,6 @@ import '../../widgets/profile/popups/about_popup.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
-import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../onboarding/splash_screen.dart';
 
 //TODO: implement logout functionality.
@@ -45,23 +45,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+          padding: EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Profile',
-                    style: kHeadlineMedium.copyWith(
-                        fontWeight: FontWeight.bold, fontSize: 30.sp),
-                  ),
-                  NotificationsButton()
-                ],
-              ),
+              DashboardHeader(title: 'Profile', hasDate: false),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               ProfileContainer(
                 name: '${firstName} ${lastName}',

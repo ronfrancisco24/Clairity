@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../widgets/databases/cleaning_records_database/records_database_tab.dart';
 import '../../widgets/databases/database_tab_selector.dart';
+import '../../widgets/header.dart';
 import '../../widgets/history/past_alerts/past_alerts_tab.dart';
 import '../../widgets/history/sensor_chart/sensor_data_tab.dart';
-import '../../widgets/sensor/notifications/notifications_button.dart';
 import '../../widgets/databases/user_data/user_data_tab.dart';
 
 class DatabasesScreen extends StatefulWidget {
@@ -41,21 +41,8 @@ class _DatabasesScreenState extends State<DatabasesScreen> {
         preferredSize: Size.fromHeight(70.h),
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Databases",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30.sp,
-                    color: Colors.black87,
-                  ),
-                ),
-                const NotificationsButton(),
-              ],
-            ),
+            padding: EdgeInsets.all(20),
+            child: DashboardHeader(title:'Databases', hasDate: false)
           ),
         ),
       ),

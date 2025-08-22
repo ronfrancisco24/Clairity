@@ -16,8 +16,6 @@ class SensorDataTab extends StatefulWidget {
   State<SensorDataTab> createState() => _SensorDataTabState();
 }
 
-//TODO: if sensor changed from dashboard make sure to let whole app know.
-
 class _SensorDataTabState extends State<SensorDataTab> {
   DateTime selectedDate = DateTime.now();
   final PageController _pageController = PageController(viewportFraction: 0.95);
@@ -55,10 +53,10 @@ class _SensorDataTabState extends State<SensorDataTab> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No data for selected date'));
+                  print('No data');
                 }
 
-                final filteredSensorDetails = snapshot.data!;
+                final filteredSensorDetails = snapshot.data ?? [];
 
                 final List<Widget> chartWidgets = [
                   SensorChart(

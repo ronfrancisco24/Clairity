@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import '../../models/notifications_model.dart';
 import '../../providers/sensor_provider.dart';
 import '../../services/notification_reading_service.dart';
-import '../../widgets/sensor/notifications/notification_card.dart';
-import '../../widgets/sensor/notifications/notification_filter.dart';
+import '../../widgets/notifications/notification_card.dart';
+import '../../widgets/notifications/notification_filter.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
