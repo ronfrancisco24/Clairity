@@ -49,13 +49,13 @@ double getProgress(double value, {required double max}) {
 }
 
 const Map<String, double> pollutantMaxValues = {
-  'PM2.5': 100.0,
-  'TVOC': 600.0,
-  'CO': 9.0,
-  'CO₂': 1000.0,
+  'PM2.5': 500.4,
+  'TVOC': 5500.0,
+  'CO': 50.4,
+  'CO₂': 18000.0,
   'NH₃': 50.0,
-  'CH₄': 1000.0,
-  'H₂S': 10.0,
+  'CH₄': 19.9,
+  'H₂S': 60.0,
 };
 
 String getAqiCategory(int aqi) {

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import '../../controllers/dashboard_manager.dart';
-import '../../controllers/sensor_manager.dart';
 import '../../models/sensor_model_details.dart';
 import '../../providers/log_provider.dart';
-import '../../utils/sensor_utils.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/history/sensor_chart/sensor_data_tab.dart';
-import '../../widgets/sensor/notifications/notifications_button.dart';
+import '../../widgets/dashboard/cleaned_time_tiles.dart';
+import '../../widgets/header.dart';
 import '../../widgets/dashboard/card_location.dart';
 import '../../widgets/dashboard/aqi_card.dart';
 import '../../widgets/dashboard/card_quality.dart';
@@ -20,7 +17,7 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../services/sensor_reading_service.dart';
 import '../../constants.dart' as constants;
-import '../../widgets/sensor/time_info_tile.dart';
+import '../../widgets/dashboard/time_info_tile.dart';
 
 //TODO: modularize code.
 
@@ -41,7 +38,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initializeSensor());
+  }
+
+  void _initializeSensor() {
+    {
       final sensorProvider = context.read<SensorProvider>();
       final logProvider = context.read<LogProvider>();
 
@@ -49,15 +50,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       if (sensorProvider.sensorIds.isNotEmpty) {
         _selectedSensorId = sensorProvider.sensorIds.first;
-        _dashboardService.setSensor(_selectedSensorId!, sensorProvider, logProvider);
+        _dashboardService.setSensor(
+            _selectedSensorId!, sensorProvider, logProvider);
       }
-    });
-  }
-
-  @override
-  void dispose() {
-    _dashboardService.dispose();
-    super.dispose();
+    }
   }
 
   void _setSensor(String sensorId) {
@@ -68,28 +64,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _dashboardService.setSensor(sensorId, sensorProvider, logProvider);
   }
 
+  SensorDetails? _getSelectedReading(SensorProvider provider) {
+    if (selectedTimeIndex == 0) return provider.currentData;
+    final forecastList = provider.forecastReadingData;
+    if (selectedTimeIndex - 1 < forecastList.length) {
+      return forecastList[selectedTimeIndex - 1];
+    }
+    return null;
+  }
+
+  @override
+  void dispose() {
+    _dashboardService.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    String formattedDate = DateFormat('EEEE, MMMM d').format(DateTime.now());
-    final userProvider = Provider.of<UserProvider>(context);
-    final current = context.watch<SensorProvider>().currentData;
-    final sensorList = context.watch<SensorProvider>().sensorIds;
-    final forecastList = context.watch<SensorProvider>().forecastReadingData;
-    final lastCurrentCleanedTime = context.watch<LogProvider>().lastCleanedTime;
-    final formattedTime =
-        lastCurrentCleanedTime != null ? getFormattedTime(lastCurrentCleanedTime) : "No record yet";
-    final firstName = (userProvider.user?.firstName ?? 'No name').toString();
-    SensorDetails? selectedReading;
-    if (selectedTimeIndex == 0) {
-      selectedReading = current;
-    } else if (selectedTimeIndex - 1 < forecastList.length) {
-      selectedReading = forecastList[selectedTimeIndex - 1];
-    }
+    final userProvider = context.watch<UserProvider>();
+    final sensorProvider = context.watch<SensorProvider>();
 
-    final nextCleaningTime= getNextCleaningTime(selectedReading, forecastList);
-    final formattedNextCleanedTime = nextCleaningTime != null
-        ? getFormattedTime(nextCleaningTime)
-        : "No prediction yet";
+    final selectedReading = _getSelectedReading(sensorProvider);
+    final sensorList = context.watch<SensorProvider>().sensorIds;
+
+    final lastCurrentCleanedTime = context.watch<LogProvider>().lastCleanedTime;
+    final nextCleaningTime = getNextCleaningTime(
+        selectedReading, sensorProvider.forecastReadingData);
 
     ScreenUtil.init(context, designSize: const Size(360, 690));
 
@@ -102,32 +102,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               children: [
                 // Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Good Morning, $firstName!',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          '$formattedDate',
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                    NotificationsButton(),
-                  ],
-                ),
+                DashboardHeader(
+                    title: 'Welcome ${userProvider.user?.firstName}!',
+                    hasDate: true),
                 SizedBox(height: 16.h),
                 // Location Card
                 CardLocation(
@@ -143,7 +120,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 SizedBox(height: 16.h),
                 // Time Selector
                 SizedBox(
-                  height: 32.h, // Ensure it fits the ListView
+                  height: 32.h,
                   child: TimeSelector(
                     times: times,
                     selectedIndex: selectedTimeIndex,
@@ -182,16 +159,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         children: [
                           Consumer<SensorProvider>(
                             builder: (context, provider, _) {
-                              final highest = selectedReading != null ? getHighestPollutant(selectedReading) : null;
-                              final level = highest != null ? getPollutantLevel(highest.value) : null;
+                              final highest = selectedReading != null
+                                  ? getHighestPollutant(selectedReading)
+                                  : null;
+                              final level = highest != null
+                                  ? getPollutantLevel(highest.value)
+                                  : null;
 
                               return CardQuality(
                                 onTap: () async {
                                   if (_selectedSensorId != null) {
-                                    await SensorReadingService().generateRawTestData(_selectedSensorId!);
+                                    await SensorReadingService()
+                                        .generateRawTestData(
+                                            _selectedSensorId!);
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("No sensor selected")),
+                                      const SnackBar(
+                                          content: Text("No sensor selected")),
                                     );
                                   }
                                 },
@@ -212,26 +196,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 CardMessage(
                   message: selectedReading == null
                       ? 'No air quality data available.'
-                      : getAqiMessage(selectedReading.aqiCategory ?? 'Unknown'),
+                      : getAqiMessage(
+                          selectedReading.aqiCategory ?? 'Unknown'),
                 ),
-                SizedBox(height: 16),
-                Row(
-                  children: [
-                    TimeInfoTile(
-                      time: "$formattedTime", // readable format
-                      label: "Last Cleaned",
-                      icon: lastCurrentCleanedTime != null
-                          ? getTimeIcon(lastCurrentCleanedTime)
-                          : Icons.help_outline,
-                    ),
-                    const SizedBox(width: 12),
-                    TimeInfoTile(
-                        time: "$formattedNextCleanedTime",
-                        label: "Clean Again By",
-                      icon: lastCurrentCleanedTime != null
-                          ? getTimeIcon(nextCleaningTime)  // ⚠ nextCleaningTime can still be null
-                          : Icons.help_outline,),
-                  ],
+                const SizedBox(height: 16),
+                CleanedTimeTiles(
+                  lastCleaned: lastCurrentCleanedTime,
+                  nextCleaned: nextCleaningTime,
                 ),
                 SizedBox(height: 16),
                 // Pollutant Cards
@@ -249,9 +220,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                   );
                 }),
-                SizedBox(
-                    height:
-                        constants.bottomOffset.h + constants.navBarHeight.h),
+                const SizedBox(
+                    height: constants.bottomOffset + constants.navBarHeight),
               ],
             ),
           ),

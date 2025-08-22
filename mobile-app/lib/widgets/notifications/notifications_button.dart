@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../screens/notifications/notifications_screen.dart';
+import '../../screens/notifications/notifications_screen.dart';
 
 
 class NotificationsButton extends StatelessWidget {
