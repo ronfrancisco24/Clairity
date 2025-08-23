@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../models/notifications_model.dart';
+import '../../providers/notification_provider.dart';
 import '../../providers/sensor_provider.dart';
 import '../../services/notification_reading_service.dart';
 import '../../widgets/notifications/notification_card.dart';
@@ -18,26 +19,24 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   String selectedFilter = "current"; // default filter
 
-
   @override
   Widget build(BuildContext context) {
     final sensorProvider = Provider.of<SensorProvider>(context);
+    final notifProvider = Provider.of<NotificationProvider>(context);
     final sensorId = sensorProvider.sensorId;
 
-    final currentNotifications =
-        NotificationReadingService(sensorId!).streamNotifications('current');
-    final forecastNotifications =
-        NotificationReadingService(sensorId).streamNotifications('forecast');
+    notifProvider.listenToTodaysNotifications('current', sensorId);
+    notifProvider.listenToTodaysNotifications('forecast', sensorId);
 
-    Stream<List<NotificationsModel>> selectedStream;
+    final currentNotifications = notifProvider.todaysCurrentNotificationsList;
+    final currentForecastNotifications = notifProvider.todaysForecastNotificationsList;
 
-    // use for filtering notifications
-    switch (selectedFilter) {
-      case "forecast":
-        selectedStream = forecastNotifications;
-        break;
-      default:
-        selectedStream = currentNotifications;
+    List<NotificationsModel> selectedList;
+
+    if (selectedFilter == "forecast") {
+      selectedList = currentForecastNotifications;
+    } else {
+      selectedList = currentNotifications;
     }
 
     return Scaffold(
@@ -68,17 +67,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 }),
           ),
           Expanded(
-            child: StreamBuilder<List<NotificationsModel>>(
-              stream: selectedStream,
-              builder: (context, snapshot) {
-                final data = snapshot.data ?? [];
-                final hasNotifications = data.isNotEmpty;
-
-                return hasNotifications
-                    ? ListView.builder(
-                        itemCount: data.length,
+            child: selectedList.isNotEmpty ? ListView.builder(
+                        itemCount: selectedList.length,
                         itemBuilder: (context, index) {
-                          final model = data[index];
+                          final model = selectedList[index];
 
                           return NotificationCard(
                             warningLevel: model.warningLevel,
@@ -87,11 +79,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             time: model.timestamp,
                             isUnread: !model.isRead,
                             onTap: () async {
-                              await NotificationReadingService(sensorId).updateIsRead(
-                                  notificationId: model.id,
-                                  isRead: !model.isRead,
-                                  type: model.type);
-                            },
+                              if (sensorId != null) {
+                                await NotificationReadingService()
+                                    .updateIsRead(
+                                    sensorId: sensorId,
+                                    notificationId: model.id,
+                                    isRead: !model.isRead,
+                                    type: model.type);
+                              }
+                            }
                           );
                         },
                       )
@@ -123,10 +119,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             ],
                           ),
                         ),
-                      );
-              },
+                      ),
             ),
-          ),
         ],
       ),
     );

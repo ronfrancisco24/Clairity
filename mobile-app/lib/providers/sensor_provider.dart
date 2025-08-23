@@ -2,9 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../models/sensor_model_details.dart';
-import '../services/notification_reading_service.dart';
 import '../services/sensor_reading_service.dart';
-import 'user_provider.dart'; // You'll create this model
 
 class SensorProvider extends ChangeNotifier {
   final _service = FirebaseFirestore.instance;

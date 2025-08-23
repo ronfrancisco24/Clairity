@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../controllers/dashboard_manager.dart';
-import '../../models/sensor_model_details.dart';
 import '../../providers/log_provider.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/dashboard/cleaned_time_tiles.dart';
@@ -17,9 +16,6 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../services/sensor_reading_service.dart';
 import '../../constants.dart' as constants;
-import '../../widgets/dashboard/time_info_tile.dart';
-
-//TODO: modularize code.
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -29,11 +25,11 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  final DashboardService _dashboardService = DashboardService();
+
   int selectedTimeIndex = 0;
   final List<String> times = generateTimeSlots();
   String? _selectedSensorId;
-
-  final DashboardService _dashboardService = DashboardService();
 
   @override
   void initState() {
@@ -64,15 +60,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _dashboardService.setSensor(sensorId, sensorProvider, logProvider);
   }
 
-  SensorDetails? _getSelectedReading(SensorProvider provider) {
-    if (selectedTimeIndex == 0) return provider.currentData;
-    final forecastList = provider.forecastReadingData;
-    if (selectedTimeIndex - 1 < forecastList.length) {
-      return forecastList[selectedTimeIndex - 1];
-    }
-    return null;
-  }
-
   @override
   void dispose() {
     _dashboardService.dispose();
@@ -84,7 +71,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final userProvider = context.watch<UserProvider>();
     final sensorProvider = context.watch<SensorProvider>();
 
-    final selectedReading = _getSelectedReading(sensorProvider);
+    final selectedReading = _dashboardService.getSelectedReading(sensorProvider, selectedTimeIndex);
     final sensorList = context.watch<SensorProvider>().sensorIds;
 
     final lastCurrentCleanedTime = context.watch<LogProvider>().lastCleanedTime;
@@ -191,7 +178,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 // Warning
                 CardMessage(
                   message: selectedReading == null
@@ -204,7 +191,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   lastCleaned: lastCurrentCleanedTime,
                   nextCleaned: nextCleaningTime,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 // Pollutant Cards
                 Consumer<SensorProvider>(builder: (context, provider, _) {
                   final List<Map<String, dynamic>> pollutants =

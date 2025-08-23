@@ -38,3 +38,4 @@ Stream<List<NotificationsModel>> streamAlertData(String sensorId, DateTime selec
       .map((doc) => NotificationsModel.fromMap(doc.data(), doc.id))
       .toList());
 }
+
