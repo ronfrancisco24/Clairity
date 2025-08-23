@@ -18,13 +18,13 @@ class SensorLineChart extends StatelessWidget {
   });
 
   static const Map<String, List<double>> _thresholds = {
-    'NH3': [0, 8, 17, 35],
-    'H2S': [0, 5, 10, 20],
-    'CH4': [0, 250, 500, 1000],
-    'CO2': [0, 2250, 4500, 9000],
-    'PM2.5': [0, 35, 55, 150],
-    'CO': [0, 9, 12, 15],
-    'TVOC': [0, 660, 1430, 2200],
+    'NH3': [0, 8, 17, 50],
+    'H2S': [0, 5, 10, 60],
+    'CH4': [0, 250, 500, 19],
+    'CO2': [0, 2250, 4500, 18000],
+    'PM2.5': [0, 35, 55, 500],
+    'CO': [0, 9, 12, 50],
+    'TVOC': [0, 660, 1430, 5000],
   };
 
   List<double> get _xValues => _thresholds[label] ?? [0, 25, 50, 75, 100];

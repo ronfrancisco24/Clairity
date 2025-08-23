@@ -5,21 +5,39 @@ import '../models/sensor_model_details.dart';
 import '../utils/dashboard_utils.dart';
 
 //TODO: make this persist when app is closed or restarted, add persistence and background checks.
-
+//TODO: when adding notifications for forecasts, make sure to add the interval for example (air quality will raise in (30, 60, 90, 120) minutes)
 class NotificationReadingService {
   final FirebaseFirestore _notifications = FirebaseFirestore.instance;
-  final String sensorId;
 
   // use to send notifications for every 10 minutes
   static final Map<String, DateTime> _lastNotified = {};
 
-  NotificationReadingService(this.sensorId);
-
-  Stream<List<NotificationsModel>> streamNotifications(String type) {
+  Stream<List<NotificationsModel>> streamNotifications(
+      String type, String? sensorId) {
     return _notifications
         .collection('sensors')
         .doc(sensorId)
         .collection('${type}_notifications')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => NotificationsModel.fromMap(doc.data(), doc.id))
+            .toList());
+  }
+
+  Stream<List<NotificationsModel>> streamTodaysNotifications(
+      String type, String? sensorId) {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+    return _notifications
+        .collection('sensors')
+        .doc(sensorId)
+        .collection('${type}_notifications')
+        .where('createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
@@ -32,8 +50,8 @@ class NotificationReadingService {
       required String message,
       required int warningLevel,
       required String type,
-      required String dedupId}) async {
-
+      required String dedupId,
+      required String sensorId}) async {
     // determines title based on type
     String finalTitle = type == 'forecast'
         ? 'Forecast Alert: $title'
@@ -74,7 +92,8 @@ class NotificationReadingService {
   }
 
   // notify every 15 minutes.
-  bool _shouldNotify(String key, {Duration cooldown = const Duration(minutes: 10)}) {
+  bool _shouldNotify(String key,
+      {Duration cooldown = const Duration(minutes: 10)}) {
     final last = _lastNotified[key];
     if (last == null || DateTime.now().difference(last) > cooldown) {
       _lastNotified[key] = DateTime.now();
@@ -83,11 +102,12 @@ class NotificationReadingService {
     return false;
   }
 
-  Future<void> checkThresholdsAndNotify(SensorDetails data,
+  Future<void> checkThresholdsAndNotify(SensorDetails data, String sensorId,
       {required String type}) async {
     final aqiLevel = getAqiWarningLevel(data.aqiCategory!);
 
-    final aqiKey = "$sensorId-$type-aqi-${data.timestamp.millisecondsSinceEpoch}";
+    final aqiKey =
+        "$sensorId-$type-aqi-${data.timestamp.millisecondsSinceEpoch}";
 
     if (['At Risk', 'Unhealthy', 'Hazardous'].contains(data.aqiCategory) &&
         _shouldNotify(aqiKey, cooldown: Duration(minutes: 10))) {
@@ -96,14 +116,15 @@ class NotificationReadingService {
           message: 'AQI is ${data.aqi} (${data.aqiCategory})',
           warningLevel: aqiLevel,
           type: type,
-          dedupId: aqiKey
-      );
+          dedupId: aqiKey,
+          sensorId: sensorId);
     }
   }
 
   // update isRead.
   Future<void> updateIsRead(
-      {required String notificationId,
+      {required String sensorId,
+        required String notificationId,
       required bool isRead,
       required String type}) {
     return _notifications
@@ -113,5 +134,4 @@ class NotificationReadingService {
         .doc(notificationId)
         .update({'isRead': true});
   }
-
 }

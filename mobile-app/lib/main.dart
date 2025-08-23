@@ -2,11 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'firebase_options.dart';
+import 'providers/notification_provider.dart';
 import 'providers/sensor_provider.dart';
 import 'providers/user_provider.dart';
 import 'screens/onboarding/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/log_provider.dart';
+import 'services/notification_reading_service.dart';
 import 'utils/navbar_utils.dart';
 import 'services/sensor_reading_service.dart';
 
@@ -18,7 +20,8 @@ void main() async{
       providers: [
         ChangeNotifierProvider(create: (_) => LogProvider()),
         ChangeNotifierProvider(create: (_) => SensorProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider())
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider())
       ],
       child: const MyApp(),
     ),

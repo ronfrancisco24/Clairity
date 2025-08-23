@@ -1,3 +1,4 @@
+import '../models/sensor_model_details.dart';
 import '../providers/log_provider.dart';
 import 'sensor_manager.dart';
 import '../providers/sensor_provider.dart';
@@ -29,4 +30,14 @@ class DashboardService {
   void dispose() {
     _sensorManager?.dispose();
   }
+
+  SensorDetails? getSelectedReading(SensorProvider provider, int selectedTimeIndex) {
+    if (selectedTimeIndex == 0) return provider.currentData;
+    final forecastList = provider.forecastReadingData;
+    if (selectedTimeIndex - 1 < forecastList.length) {
+      return forecastList[selectedTimeIndex - 1];
+    }
+    return null;
+  }
+
 }

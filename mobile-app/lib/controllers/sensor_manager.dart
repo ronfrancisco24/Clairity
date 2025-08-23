@@ -11,7 +11,7 @@ class SensorManager {
   StreamSubscription? _forecastDataSub;
 
   SensorManager({required this.provider, required String sensorId})
-  : _notifService = NotificationReadingService(sensorId);
+  : _notifService = NotificationReadingService();
 
   void startListening(String sensorId) {
     _currentDataSub = SensorReadingService()
@@ -30,24 +30,24 @@ class SensorManager {
             snapshot.docs.map((doc) => SensorDetails.fromMap(doc.data())).toList(),
           );
 
-          _checkForecastNotifications();
+          _checkForecastNotifications(sensorId);
         });
 
-        _checkCurrentNotification();
+        _checkCurrentNotification(sensorId);
       }
     });
   }
 
 
-  void _checkCurrentNotification() {
+  void _checkCurrentNotification(String sensorId) {
     if (provider.currentData != null) {
-      _notifService.checkThresholdsAndNotify(provider.currentData!, type: 'current');
+      _notifService.checkThresholdsAndNotify(provider.currentData!, type: 'current', sensorId);
     }
   }
 
-  void _checkForecastNotifications() {
+  void _checkForecastNotifications(String sensorId) {
     for (var forecast in provider.forecastReadingData) {
-      _notifService.checkThresholdsAndNotify(forecast, type: 'forecast');
+      _notifService.checkThresholdsAndNotify(forecast, type: 'forecast', sensorId);
     }
   }
 

@@ -11,6 +11,9 @@ import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
 import '../../../utils/dashboard_utils.dart';
 
+
+//TODO: listen to all notifications.
+
 class PastAlertsTab extends StatefulWidget {
   const PastAlertsTab({super.key});
 
@@ -115,7 +118,6 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
                             height: constants.bottomOffset.h + constants.navBarHeight.h,
                           );
                         }
-
 
                         final alert = records[records.length - 1 - index];
 
