@@ -28,18 +28,40 @@ getFormattedTime(DateTime time) {
   return DateFormat('h:mm a').format(time);
 }
 
-DateTime? getNextCleaningTime(SensorDetails? current, List<SensorDetails> forecasts) {
+getFormattedMonth(DateTime time) {
+  return DateFormat('MMM d').format(time);
+}
+
+DateTime? getNextCleaningTime(
+    SensorDetails? current,
+    List<SensorDetails> forecasts,
+    ) {
+  final now = DateTime.now();
+
   // 1. If current reading is risky, clean now
   if (current != null &&
       ['At Risk', 'Unhealthy', 'Hazardous'].contains(current.aqiCategory)) {
-    return DateTime.now();
+    return now;
   }
 
-  // 2. Otherwise, find the first risky forecast
-  return forecasts.firstWhereOrNull(
-        (reading) => ['At Risk', 'Unhealthy', 'Hazardous'].contains(reading.aqiCategory),
-  )?.timestamp;
+  // 2. Find the first risky forecast in the future
+  final riskyForecast = forecasts.firstWhereOrNull(
+        (reading) =>
+    ['At Risk', 'Unhealthy', 'Hazardous'].contains(reading.aqiCategory) &&
+        reading.timestamp.isAfter(now),
+  );
+
+  // 3. If no future risky forecast, but there was a past one -> clean now
+  if (riskyForecast == null &&
+      forecasts.any((r) =>
+      ['At Risk', 'Unhealthy', 'Hazardous'].contains(r.aqiCategory) &&
+          r.timestamp.isBefore(now))) {
+    return now;
+  }
+
+  return riskyForecast?.timestamp;
 }
+
 
 //TODO: use current aqi to get alert label.
 
