@@ -8,14 +8,17 @@ class SettingsTile extends StatefulWidget {
   final Color iconContainerColor;
   final IconData icon;
   final VoidCallback? onTap;
+  final Function(bool)? onToggle; // <-- change here
 
-  SettingsTile(
-      {super.key,
-      required this.tileTitle,
-      required this.isToggle,
-      required this.iconContainerColor,
-      required this.icon,
-      this.onTap});
+  SettingsTile({
+    super.key,
+    required this.tileTitle,
+    required this.isToggle,
+    required this.iconContainerColor,
+    required this.icon,
+    this.onTap,
+    this.onToggle,
+  });
 
   @override
   State<SettingsTile> createState() => _SettingsTileState();
@@ -47,15 +50,17 @@ class _SettingsTileState extends State<SettingsTile> {
             title: Text(widget.tileTitle),
             trailing: widget.isToggle
                 ? Switch(
-              value: toggleValue,
-              activeColor: mossGreen,
-              onChanged: (bool newValue) {
-                setState(() {
-                  toggleValue = newValue;
-                });
-                if (widget.onTap != null) widget.onTap!(); // Optional: trigger callback
-              },
-            )
+                    value: toggleValue,
+                    activeColor: mossGreen,
+                    onChanged: (bool newValue) {
+                      setState(() {
+                        toggleValue = newValue;
+                      });
+                      if (widget.onToggle != null) {
+                        widget.onToggle!(newValue); // <-- pass new value
+                      }
+                    }
+                  )
                 : const Icon(Icons.arrow_forward_ios),
           ),
         ),
@@ -66,7 +71,9 @@ class _SettingsTileState extends State<SettingsTile> {
     return widget.isToggle
         ? tile
         : GestureDetector(
-      onTap: widget.onTap,
+      onTap: () {
+        if (widget.onToggle != null) widget.onToggle!(true);
+      },
       child: tile,
     );
   }

@@ -6,11 +6,29 @@ import '../models/sensor_model_details.dart';
 import '../utils/dashboard_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-//TODO: make this persist when app is closed or restarted, add persistence and background checks.
 //TODO: when adding notifications for forecasts, make sure to add the interval for example (air quality will raise in (30, 60, 90, 120) minutes)
 class NotificationReadingService {
   final FirebaseFirestore _notifications = FirebaseFirestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+
+  // global notifications
+  // Future<void> saveDeviceToken() async {
+  //   final token = await FirebaseMessaging.instance.getToken();
+  //   print("Fetched FCM token: $token");
+  //
+  //   if (token != null) {
+  //     final tokenRef = FirebaseFirestore.instance
+  //         .collection('devices')
+  //         .doc(token);
+  //
+  //     await tokenRef.set({
+  //       'token': token,
+  //       'enabled': true, // notifications ON by default
+  //       'createdAt': FieldValue.serverTimestamp(),
+  //     });
+  //     print("Token saved with global enabled flag!");
+  //   }
+  // }
 
   Future<void> saveDeviceToken(String sensorId) async {
     final token = await FirebaseMessaging.instance.getToken();
@@ -24,16 +42,41 @@ class NotificationReadingService {
           .doc(token);
 
       print("Saving token for sensor: $sensorId");
+
       await tokenRef.set({
         'token': token,
+        'enabled': true, // 👈 new field for notification toggle
         'createdAt': FieldValue.serverTimestamp(),
-      });
+      }, SetOptions(merge: true)); // merge so it doesn’t overwrite later
+
       print("Token saved!");
     } else {
       print("No token received 😕");
     }
   }
 
+
+  Future<void> enableNotifications(String sensorId, bool enabled) async {
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token == null) {
+      print("⚠️ No token available");
+      return;
+    }
+
+    final tokenRef = FirebaseFirestore.instance
+        .collection('sensors')
+        .doc(sensorId)
+        .collection('deviceTokens')
+        .doc(token);
+
+    await tokenRef.set({
+      'token': token,
+      'enabled': enabled,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+
+    print("Notifications ${enabled ? 'enabled' : 'disabled'} for this device ✅");
+  }
 
 
   // use to send notifications for every 10 minutes
