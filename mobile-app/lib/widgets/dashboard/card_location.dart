@@ -3,8 +3,6 @@ import 'package:provider/provider.dart';
 import '../../providers/sensor_provider.dart';
 import '../../services/sensor_reading_service.dart';
 
-enum BathroomType { women, men }
-
 class CardLocation extends StatefulWidget {
   const CardLocation({
     super.key,

@@ -103,9 +103,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 CardLocation(
                   sensors: sensorList,
                   imageUrl:
-                      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
+                      'https://images.unsplash.com/photo-1569122243657-3c1c51340f65?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                   title: '1st Restroom',
-                  subtitle: 'Near Printing Station',
+                  subtitle: (_selectedSensorId != null) ? 'Current Sensor: $_selectedSensorId' : 'No Sensor Selected',
                   onSensorPicked: (sensorId) {
                     _setSensor(sensorId);
                   },
@@ -165,7 +165,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     );
                                     return;
                                   }
-                                  await SensorReadingService().generateRawTestData(_selectedSensorId!);
+                                  // await SensorReadingService().generateRawTestData(_selectedSensorId!);
                                   NavController.of(context)?.onNavSelect(
                                       constants.NavRoute.history,
                                       initialIndex: 2);

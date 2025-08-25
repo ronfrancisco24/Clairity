@@ -12,9 +12,7 @@ import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
 import '../onboarding/splash_screen.dart';
 
-//TODO: implement logout functionality.
 // TODO: toggle notifications once switch is on.
-//TODO: dispose subscriptions and logout use clearUserData
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -114,8 +112,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 iconContainerColor: Colors.red,
                 icon: Icons.logout,
                 onTap: () {
-
-
                   dashboardService.dispose();
                   userProvider.clearUserData();
 
