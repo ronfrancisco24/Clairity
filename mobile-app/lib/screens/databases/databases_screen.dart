@@ -8,15 +8,15 @@ import '../../widgets/history/sensor_chart/sensor_data_tab.dart';
 import '../../widgets/databases/user_data/user_data_tab.dart';
 
 class DatabasesScreen extends StatefulWidget {
-  const DatabasesScreen({super.key});
+  final int initialIndex;
+  const DatabasesScreen({super.key, this.initialIndex = 1});
 
   @override
   State<DatabasesScreen> createState() => _DatabasesScreenState();
 }
 
 class _DatabasesScreenState extends State<DatabasesScreen> {
-  String selectedGender = 'Male';
-  int selectedIndex = 1;
+  late int selectedIndex;
 
   final List<String> _tabTitles = [
     "Past Alerts",
@@ -32,6 +32,12 @@ class _DatabasesScreenState extends State<DatabasesScreen> {
     SensorDataTab(),
     UserDataTab(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.initialIndex;
+  }
 
   @override
   Widget build(BuildContext context) {

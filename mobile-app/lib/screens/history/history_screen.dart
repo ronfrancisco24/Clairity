@@ -9,14 +9,16 @@ import '../../widgets/history/sensor_chart/sensor_data_tab.dart';
 //TODO: change sensor data pollutants to use thresholds
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+  final int initialIndex;
+
+  const HistoryScreen({super.key, this.initialIndex = 1});
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  int selectedIndex = 1;
+  late int selectedIndex;
 
   final List<String> _tabTitles = [
     "Past Alerts",
@@ -31,6 +33,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.initialIndex;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -39,7 +47,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-            child: DashboardHeader(title: 'History', hasDate: false)
+            child: const DashboardHeader(title: 'History', hasDate: false)
           ),
         ),
       ),

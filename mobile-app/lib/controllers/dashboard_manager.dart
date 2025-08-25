@@ -1,5 +1,6 @@
 import '../models/sensor_model_details.dart';
 import '../providers/log_provider.dart';
+import '../services/notification_reading_service.dart';
 import 'sensor_manager.dart';
 import '../providers/sensor_provider.dart';
 
@@ -13,6 +14,9 @@ class DashboardService {
       ) {
     // Update provider state
     sensorProvider.setSensorId(sensorId);
+
+    // Save the device token for this sensor
+    NotificationReadingService().saveDeviceToken(sensorId);
 
     // Dispose old manager
     _sensorManager?.dispose();

@@ -3,6 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../controllers/dashboard_manager.dart';
 import '../../providers/log_provider.dart';
 import 'package:provider/provider.dart';
+import '../../services/notification_reading_service.dart';
+import '../../services/sensor_reading_service.dart';
+import '../../utils/navbar_utils.dart';
 import '../../widgets/dashboard/cleaned_time_tiles.dart';
 import '../../widgets/header.dart';
 import '../../widgets/dashboard/card_location.dart';
@@ -14,7 +17,6 @@ import '../../widgets/dashboard/card_message.dart';
 import '../../utils/dashboard_utils.dart';
 import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
-import '../../services/sensor_reading_service.dart';
 import '../../constants.dart' as constants;
 
 class DashboardScreen extends StatefulWidget {
@@ -38,17 +40,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _initializeSensor() {
-    {
-      final sensorProvider = context.read<SensorProvider>();
-      final logProvider = context.read<LogProvider>();
+    final sensorProvider = context.read<SensorProvider>();
+    final logProvider = context.read<LogProvider>();
 
-      sensorProvider.loadSensorIds();
+    sensorProvider.loadSensorIds();
 
-      if (sensorProvider.sensorIds.isNotEmpty) {
-        _selectedSensorId = sensorProvider.sensorIds.first;
-        _dashboardService.setSensor(
-            _selectedSensorId!, sensorProvider, logProvider);
-      }
+    if (sensorProvider.sensorIds.isNotEmpty) {
+      _selectedSensorId = sensorProvider.sensorIds.first;
+
+      // Set the sensor in your dashboard service
+      _dashboardService.setSensor(
+          _selectedSensorId!, sensorProvider, logProvider);
+
+      //  Register device token for FCM
+      NotificationReadingService().saveDeviceToken(_selectedSensorId!);
     }
   }
 
@@ -71,12 +76,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final userProvider = context.watch<UserProvider>();
     final sensorProvider = context.watch<SensorProvider>();
 
-    final selectedReading = _dashboardService.getSelectedReading(sensorProvider, selectedTimeIndex);
+    final selectedReading =
+        _dashboardService.getSelectedReading(sensorProvider, selectedTimeIndex);
     final sensorList = context.watch<SensorProvider>().sensorIds;
 
     final lastCurrentCleanedTime = context.watch<LogProvider>().lastCleanedTime;
     final nextCleaningTime = getNextCleaningTime(
-        selectedReading, sensorProvider.forecastReadingData);
+        sensorProvider.currentData, sensorProvider.forecastReadingData);
+
+    final firstName = userProvider.user?.firstName;
 
     ScreenUtil.init(context, designSize: const Size(360, 690));
 
@@ -89,9 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               children: [
                 // Header
-                DashboardHeader(
-                    title: 'Welcome ${userProvider.user?.firstName}!',
-                    hasDate: true),
+                DashboardHeader(title: 'Welcome ${firstName}!', hasDate: true),
                 SizedBox(height: 16.h),
                 // Location Card
                 CardLocation(
@@ -130,7 +136,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           final value = (selectedReading?.aqi ?? 0);
                           final status =
                               selectedReading?.aqiCategory ?? 'Unknown';
-
                           return AqiCard(
                             value: value,
                             status: status,
@@ -139,7 +144,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     SizedBox(width: 12.w),
-                    // Quality Card
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,19 +156,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               final level = highest != null
                                   ? getPollutantLevel(highest.value)
                                   : null;
-
                               return CardQuality(
                                 onTap: () async {
-                                  if (_selectedSensorId != null) {
-                                    await SensorReadingService()
-                                        .generateRawTestData(
-                                            _selectedSensorId!);
-                                  } else {
+                                  if (_selectedSensorId == null) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                           content: Text("No sensor selected")),
                                     );
+                                    return;
                                   }
+                                  await SensorReadingService().generateRawTestData(_selectedSensorId!);
+                                  NavController.of(context)?.onNavSelect(
+                                      constants.NavRoute.history,
+                                      initialIndex: 2);
                                 },
                                 trendLabel: 'Air Quality Trend',
                                 trendValue: highest?.key ?? '--',
@@ -183,8 +187,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 CardMessage(
                   message: selectedReading == null
                       ? 'No air quality data available.'
-                      : getAqiMessage(
-                          selectedReading.aqiCategory ?? 'Unknown'),
+                      : getAqiMessage(selectedReading.aqiCategory ?? 'Unknown'),
                 ),
                 const SizedBox(height: 16),
                 CleanedTimeTiles(
@@ -195,10 +198,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // Pollutant Cards
                 Consumer<SensorProvider>(builder: (context, provider, _) {
                   final List<Map<String, dynamic>> pollutants =
-                      selectedReading != null
-                          ? getCurrentData(selectedReading)
+                      selectedReading != null ? getCurrentData(selectedReading)
                           : [];
-
                   return LayoutBuilder(
                     builder: (context, constraints) {
                       return PollutantGrid(
