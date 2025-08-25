@@ -29,8 +29,8 @@ exports.sendSensorNotification = onDocumentCreated(
     // 2. Build notification payload
     const payload = {
       notification: {
-        title: "New Sensor Notification",
-        body: `Sensor ${sensorId} recorded: ${JSON.stringify(readingData)}`,
+        title: `${readingData.title}`,
+        body: `Sensor ${sensorId} recorded: ${readingData.message}`,
       },
     };
 

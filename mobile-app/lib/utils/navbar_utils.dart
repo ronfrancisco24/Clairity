@@ -17,27 +17,36 @@ class NavController extends StatefulWidget {
 
   @override
   State<NavController> createState() => _NavControllerState();
+
+  static _NavControllerState? of(BuildContext context) {
+    return context.findAncestorStateOfType<_NavControllerState>();
+  }
+
 }
 
 class _NavControllerState extends State<NavController> {
   constants.NavRoute _activeRoute = constants.NavRoute.home;
+  int _historyIndex = 1;
 
   Widget _getScreen(constants.NavRoute route, String role) {
     switch (route) {
       case constants.NavRoute.home:
         return const DashboardScreen();
       case constants.NavRoute.history:
-        return  role == 'admin'
-            ? const DatabasesScreen()
-            : const HistoryScreen();
+        return role == 'admin'
+            ? DatabasesScreen(initialIndex: _historyIndex)
+            : HistoryScreen(initialIndex: _historyIndex);
       case constants.NavRoute.profile:
         return const ProfileScreen();
     }
   }
 
-  void _onNavSelect(constants.NavRoute route) {
+  void onNavSelect(constants.NavRoute route, {int? initialIndex}) {
     setState(() {
       _activeRoute = route;
+      if (route == constants.NavRoute.history) {
+        _historyIndex = initialIndex ?? 1; // 👈 fallback to 1
+      }
     });
   }
 
@@ -94,7 +103,7 @@ class _NavControllerState extends State<NavController> {
             bottom: constants.bottomOffset.h,
             child: MainNavigationBar(
               activeRoute: _activeRoute,
-              onSelect: _onNavSelect,
+              onSelect: onNavSelect,
               role: role,
               onAddRecord: () => _addQuickRecord(context),
             ),

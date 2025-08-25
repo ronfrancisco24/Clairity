@@ -1,13 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../models/notifications_model.dart';
 import '../models/sensor_model_details.dart';
 import '../utils/dashboard_utils.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 //TODO: make this persist when app is closed or restarted, add persistence and background checks.
 //TODO: when adding notifications for forecasts, make sure to add the interval for example (air quality will raise in (30, 60, 90, 120) minutes)
 class NotificationReadingService {
   final FirebaseFirestore _notifications = FirebaseFirestore.instance;
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+
+  Future<void> saveDeviceToken(String sensorId) async {
+    final token = await FirebaseMessaging.instance.getToken();
+    print("Fetched FCM token: $token");
+
+    if (token != null) {
+      final tokenRef = FirebaseFirestore.instance
+          .collection('sensors')
+          .doc(sensorId)
+          .collection('deviceTokens')
+          .doc(token);
+
+      print("Saving token for sensor: $sensorId");
+      await tokenRef.set({
+        'token': token,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+      print("Token saved!");
+    } else {
+      print("No token received 😕");
+    }
+  }
+
+
 
   // use to send notifications for every 10 minutes
   static final Map<String, DateTime> _lastNotified = {};
@@ -54,8 +81,8 @@ class NotificationReadingService {
       required String sensorId}) async {
     // determines title based on type
     String finalTitle = type == 'forecast'
-        ? 'Forecast Alert: $title'
-        : 'Current Reading Alert: $title';
+        ? 'Forecast Message: $title'
+        : 'Current Reading Message: $title';
 
     // determines message based on type
     String finalMessage =
