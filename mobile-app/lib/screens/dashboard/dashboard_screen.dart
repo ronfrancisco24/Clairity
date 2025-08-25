@@ -53,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _selectedSensorId!, sensorProvider, logProvider);
 
       //  Register device token for FCM
-      NotificationReadingService().saveDeviceToken(_selectedSensorId!);
+      // NotificationReadingService().saveDeviceToken(_selectedSensorId!);
     }
   }
 
