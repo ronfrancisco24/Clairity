@@ -56,10 +56,9 @@ class _SettingsTileState extends State<SettingsTile> {
                       setState(() {
                         toggleValue = newValue;
                       });
-                      if (widget.onToggle != null) {
-                        widget.onToggle!(newValue); // <-- pass new value
-                      }
-                    }
+                      if (widget.onToggle != null)
+                        widget.onToggle!; // Optional: trigger callback
+                    },
                   )
                 : const Icon(Icons.arrow_forward_ios),
           ),
@@ -71,10 +70,8 @@ class _SettingsTileState extends State<SettingsTile> {
     return widget.isToggle
         ? tile
         : GestureDetector(
-      onTap: () {
-        if (widget.onToggle != null) widget.onToggle!(true);
-      },
-      child: tile,
-    );
+            onTap: widget.onTap,
+            child: tile,
+          );
   }
 }

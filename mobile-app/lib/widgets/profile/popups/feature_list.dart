@@ -21,7 +21,7 @@ List<Widget> buildFeatureSection({
       style: titleStyle ??
           kTitleMedium.copyWith(
             fontWeight: FontWeight.bold,
-            color: vividGreen,
+            color: Colors.white,
           ),
     ),
     const SizedBox(height: 10),
