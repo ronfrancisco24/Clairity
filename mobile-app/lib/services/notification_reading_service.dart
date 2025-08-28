@@ -129,7 +129,7 @@ class NotificationReadingService {
 
     // determines message based on type
     String finalMessage =
-        type == 'forecast' ? 'This is a forecasted alert: $message' : message;
+        type == 'forecast' ? 'AQI Forecast: $message' : message;
 
     final dateTimeUtc8 = DateTime.now().toUtc().add(const Duration(hours: 8));
 
@@ -163,7 +163,7 @@ class NotificationReadingService {
 
   // notify every 15 minutes.
   bool _shouldNotify(String key,
-      {Duration cooldown = const Duration(minutes: 10)}) {
+      {Duration cooldown = const Duration(hours: 1)}) {
     final last = _lastNotified[key];
     if (last == null || DateTime.now().difference(last) > cooldown) {
       _lastNotified[key] = DateTime.now();
@@ -180,7 +180,7 @@ class NotificationReadingService {
         "$sensorId-$type-aqi-${data.timestamp.millisecondsSinceEpoch}";
 
     if (['At Risk', 'Unhealthy', 'Hazardous'].contains(data.aqiCategory) &&
-        _shouldNotify(aqiKey, cooldown: Duration(minutes: 10))) {
+        _shouldNotify(aqiKey, cooldown: Duration(hours: 1))) {
       addNotification(
           title: 'Air Quality Alert',
           message: 'AQI is ${data.aqi} (${data.aqiCategory})',
