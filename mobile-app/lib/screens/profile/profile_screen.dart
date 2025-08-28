@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 import '../../controllers/dashboard_manager.dart';
+import '../../services/notification_reading_service.dart';
 import '../../widgets/header.dart';
 import '../../widgets/profile/popups/avatar_selection_dialog.dart';
 import '../../widgets/profile/profile_container.dart';
@@ -81,6 +82,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 isToggle: true,
                 iconContainerColor: forestGreen,
                 icon: Icons.notifications_none,
+                onToggle: (enabled) async {
+                  await NotificationReadingService().setGlobalNotifications(enabled);
+                },
               ),
               SettingsTile(
                 tileTitle: 'Help',

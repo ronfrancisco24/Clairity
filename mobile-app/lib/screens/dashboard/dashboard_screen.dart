@@ -44,6 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await NotificationReadingService().saveDeviceToken();
       await _initializeSensor();
     });
   }
