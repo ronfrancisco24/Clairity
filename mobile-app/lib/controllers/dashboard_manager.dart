@@ -15,9 +15,6 @@ class DashboardService {
     // Update provider state
     sensorProvider.setSensorId(sensorId);
 
-    // Save the device token for this sensor
-    NotificationReadingService().saveDeviceToken(sensorId);
-
     // Dispose old manager
     _sensorManager?.dispose();
 

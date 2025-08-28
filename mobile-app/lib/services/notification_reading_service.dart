@@ -12,72 +12,38 @@ class NotificationReadingService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
   // global notifications
-  // Future<void> saveDeviceToken() async {
-  //   final token = await FirebaseMessaging.instance.getToken();
-  //   print("Fetched FCM token: $token");
-  //
-  //   if (token != null) {
-  //     final tokenRef = FirebaseFirestore.instance
-  //         .collection('devices')
-  //         .doc(token);
-  //
-  //     await tokenRef.set({
-  //       'token': token,
-  //       'enabled': true, // notifications ON by default
-  //       'createdAt': FieldValue.serverTimestamp(),
-  //     });
-  //     print("Token saved with global enabled flag!");
-  //   }
-  // }
-
-  Future<void> saveDeviceToken(String sensorId) async {
+  Future<void> saveDeviceToken() async {
     final token = await FirebaseMessaging.instance.getToken();
-    print("Fetched FCM token: $token");
+    if (token == null) return;
 
-    if (token != null) {
-      final tokenRef = FirebaseFirestore.instance
-          .collection('sensors')
-          .doc(sensorId)
-          .collection('deviceTokens')
-          .doc(token);
+    final tokenRef = FirebaseFirestore.instance.collection('devices').doc(token);
 
-      print("Saving token for sensor: $sensorId");
-
+    try {
       await tokenRef.set({
         'token': token,
-        'enabled': true, // 👈 new field for notification toggle
+        'enabled': true, // ON by default
         'createdAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true)); // merge so it doesn’t overwrite later
-
-      print("Token saved!");
-    } else {
-      print("No token received 😕");
+      }, SetOptions(merge: true));
+    } catch (e) {
+      print("Error saving token: $e");
     }
+
+    print("Device token saved globally!");
   }
 
-
-  Future<void> enableNotifications(String sensorId, bool enabled) async {
+  Future<void> setGlobalNotifications(bool enabled) async {
     final token = await FirebaseMessaging.instance.getToken();
-    if (token == null) {
-      print("⚠️ No token available");
-      return;
-    }
+    if (token == null) return;
 
-    final tokenRef = FirebaseFirestore.instance
-        .collection('sensors')
-        .doc(sensorId)
-        .collection('deviceTokens')
-        .doc(token);
+    final tokenRef = FirebaseFirestore.instance.collection('devices').doc(token);
 
     await tokenRef.set({
-      'token': token,
       'enabled': enabled,
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
 
-    print("Notifications ${enabled ? 'enabled' : 'disabled'} for this device ✅");
+    print("Notifications ${enabled ? 'enabled' : 'disabled'} globally!");
   }
-
 
   // use to send notifications for every 10 minutes
   static final Map<String, DateTime> _lastNotified = {};
