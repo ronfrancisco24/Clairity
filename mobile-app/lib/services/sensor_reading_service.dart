@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 import '../utils/dashboard_utils.dart';
 
-//TODO: use this function to switch in between sensors.
-
 class SensorReadingService {
   final _db = FirebaseFirestore.instance;
   final _now = DateTime.now();
@@ -20,15 +18,17 @@ class SensorReadingService {
         .map((snapshot) => snapshot.docs.first);
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> streamForecastReadings(
+  //TODO: use one document instead.
+  Stream<DocumentSnapshot<Map<String, dynamic>>> streamForecastReading(
       String sensorId, String cleanReadingId) {
+    final forecastId = '${cleanReadingId}_60mins';
     return _db
         .collection('sensors')
         .doc(sensorId)
         .collection('cleanedReadingData')
         .doc(cleanReadingId)
         .collection('forecast')
-        .orderBy('timestamp')
+        .doc(forecastId)
         .snapshots();
   }
 
@@ -56,6 +56,7 @@ class SensorReadingService {
     return snapshot.docs.map((doc) => doc.id).toList();
   }
 
+  //TODO: generate until 60 minutes only.
   // for testing purposes, generate 8 documents under readings
   Future<void> generateRawTestData(String sensorId) async {
     for (int i = 0; i < 8; i++) {
@@ -82,16 +83,16 @@ class SensorReadingService {
           .doc(cleanedDocId);
 
       await cleanedRef.set(testData);
-      for (int j = 1; j <= 4; j++) {
-        final forecastTime = readingTime.add(Duration(minutes: j * 30));
-        final forecastData = generateSensorValues(forecastTime);
-        final forecastDataId = '${cleanedDocId}_${30 * j}mins';
+      // for (int j = 1; j <= 4; j++) {
+      final forecastTime = readingTime.add(Duration(minutes: 60));
+      final forecastData = generateSensorValues(forecastTime);
+      final forecastDataId = '${cleanedDocId}_60mins';
 
-        await cleanedRef
-            .collection('forecast')
-            .doc(forecastDataId)
-            .set(forecastData);
-      }
+      await cleanedRef
+          .collection('forecast')
+          .doc(forecastDataId)
+          .set(forecastData);
+      // }
     }
     print('Test data generated successfully');
   }

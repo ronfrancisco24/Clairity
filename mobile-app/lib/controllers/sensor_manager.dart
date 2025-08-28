@@ -11,7 +11,7 @@ class SensorManager {
   StreamSubscription? _forecastDataSub;
 
   SensorManager({required this.provider, required String sensorId})
-  : _notifService = NotificationReadingService();
+      : _notifService = NotificationReadingService();
 
   void startListening(String sensorId) {
     _currentDataSub = SensorReadingService()
@@ -19,18 +19,16 @@ class SensorManager {
         .listen((doc) {
       if (doc.exists) {
         provider.setCurrentData(SensorDetails.fromMap(doc.data()));
-
         final latestCleanedId = doc.id;
 
         _forecastDataSub?.cancel();
         _forecastDataSub = SensorReadingService()
-            .streamForecastReadings(sensorId, latestCleanedId)
-            .listen((snapshot) {
-          provider.setForecastData(
-            snapshot.docs.map((doc) => SensorDetails.fromMap(doc.data())).toList(),
-          );
-
-          _checkForecastNotifications(sensorId);
+            .streamForecastReading(sensorId, latestCleanedId)
+            .listen((doc) {
+          if (doc.exists) {
+            provider.setForecastData(SensorDetails.fromMap(doc.data()!));
+            _checkForecastNotifications(sensorId);
+          }
         });
 
         _checkCurrentNotification(sensorId);
@@ -38,16 +36,17 @@ class SensorManager {
     });
   }
 
-
   void _checkCurrentNotification(String sensorId) {
     if (provider.currentData != null) {
-      _notifService.checkThresholdsAndNotify(provider.currentData!, type: 'current', sensorId);
+      _notifService.checkThresholdsAndNotify(
+          provider.currentData!, type: 'current', sensorId);
     }
   }
 
   void _checkForecastNotifications(String sensorId) {
-    for (var forecast in provider.forecastReadingData) {
-      _notifService.checkThresholdsAndNotify(forecast, type: 'forecast', sensorId);
+    if (provider.forecastReadingData != null) {
+      _notifService.checkThresholdsAndNotify(
+          provider.forecastReadingData!, type: 'forecast', sensorId);
     }
   }
 
@@ -55,5 +54,4 @@ class SensorManager {
     _currentDataSub?.cancel();
     _forecastDataSub?.cancel();
   }
-
 }

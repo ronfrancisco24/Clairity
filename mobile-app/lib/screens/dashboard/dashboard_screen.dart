@@ -7,17 +7,24 @@ import '../../services/notification_reading_service.dart';
 import '../../services/sensor_reading_service.dart';
 import '../../utils/navbar_utils.dart';
 import '../../widgets/dashboard/cleaned_time_tiles.dart';
+import '../../widgets/dashboard/forecast_card.dart';
 import '../../widgets/header.dart';
 import '../../widgets/dashboard/card_location.dart';
 import '../../widgets/dashboard/aqi_card.dart';
 import '../../widgets/dashboard/card_quality.dart';
 import '../../widgets/dashboard/pollutant_grid.dart';
-import '../../widgets/dashboard/time_selector.dart';
 import '../../widgets/dashboard/card_message.dart';
 import '../../utils/dashboard_utils.dart';
 import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../constants.dart' as constants;
+
+//TODO: edit dashboard screen and notifications.
+//TODO: just provide current data under selected reading instead.
+//TODO: have two boxes the showcase aqi in the next 30 and 60 minutes.
+//TODO: edit notifications to match the new format.
+//TODO: forecast notifcations should also be established in firebase cloud push.
+//TODO: dedupId should now be set for all notifcations, so setup a global deviceTokens collection.
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -36,26 +43,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _initializeSensor());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _initializeSensor();
+    });
   }
 
-  void _initializeSensor() {
+  Future<void> _initializeSensor() async {
     final sensorProvider = context.read<SensorProvider>();
     final logProvider = context.read<LogProvider>();
 
-    sensorProvider.loadSensorIds();
+    await sensorProvider.loadSensorIds(); // wait for Firestore
 
     if (sensorProvider.sensorIds.isNotEmpty) {
-      _selectedSensorId = sensorProvider.sensorIds.first;
+      // Only set if not already chosen
+      if (sensorProvider.sensorId == null) {
+        sensorProvider.setSensorId(sensorProvider.sensorIds.first);
+      }
 
-      // Set the sensor in your dashboard service
+      _selectedSensorId = sensorProvider.sensorId;
+
       _dashboardService.setSensor(
-          _selectedSensorId!, sensorProvider, logProvider);
-
-      //  Register device token for FCM
-      // NotificationReadingService().saveDeviceToken(_selectedSensorId!);
+        _selectedSensorId!,
+        sensorProvider,
+        logProvider,
+      );
     }
   }
+
 
   void _setSensor(String sensorId) {
     final sensorProvider = context.read<SensorProvider>();
@@ -76,8 +90,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final userProvider = context.watch<UserProvider>();
     final sensorProvider = context.watch<SensorProvider>();
 
-    final selectedReading =
-        _dashboardService.getSelectedReading(sensorProvider, selectedTimeIndex);
+    final selectedReading = sensorProvider.currentData;
+        // _dashboardService.getSelectedReading(sensorProvider, selectedTimeIndex);
     final sensorList = context.watch<SensorProvider>().sensorIds;
 
     final lastCurrentCleanedTime = context.watch<LogProvider>().lastCleanedTime;
@@ -87,6 +101,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final firstName = userProvider.user?.firstName;
 
     ScreenUtil.init(context, designSize: const Size(360, 690));
+
+    print(sensorProvider.forecastReadingData);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -105,26 +121,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   imageUrl:
                       'https://images.unsplash.com/photo-1569122243657-3c1c51340f65?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                   title: '1st Restroom',
-                  subtitle: (_selectedSensorId != null) ? 'Current Sensor: $_selectedSensorId' : 'No Sensor Selected',
+                  subtitle: (_selectedSensorId != null)
+                      ? 'Current Sensor: $_selectedSensorId'
+                      : 'No Sensor Selected',
                   onSensorPicked: (sensorId) {
                     _setSensor(sensorId);
                   },
                 ),
-                SizedBox(height: 16.h),
                 // Time Selector
-                SizedBox(
-                  height: 32.h,
-                  child: TimeSelector(
-                    times: times,
-                    selectedIndex: selectedTimeIndex,
-                    onSelected: (index) {
-                      setState(() {
-                        selectedTimeIndex = index;
-                      });
-                    },
+                // SizedBox(
+                //   height: 32.h,
+                //   child: TimeSelector(
+                //     times: times,
+                //     selectedIndex: selectedTimeIndex,
+                //     onSelected: (index) {
+                //       setState(() {
+                //         selectedTimeIndex = index;
+                //       });
+                //     },
+                //   ),
+                // ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: ForecastCard(
+                    category: sensorProvider.forecastReadingData?.aqiCategory,
+                    value: sensorProvider.forecastReadingData?.aqi,
                   ),
                 ),
-                SizedBox(height: 16.h),
                 // Air Quality & Trend Cards
                 Row(
                   children: [
@@ -165,7 +188,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     );
                                     return;
                                   }
-                                  // await SensorReadingService().generateRawTestData(_selectedSensorId!);
+                                  await SensorReadingService().generateRawTestData(_selectedSensorId!);
                                   NavController.of(context)?.onNavSelect(
                                       constants.NavRoute.history,
                                       initialIndex: 2);
@@ -176,7 +199,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               );
                             },
                           ),
-                          const SizedBox(height: 8),
                         ],
                       ),
                     ),
@@ -198,7 +220,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // Pollutant Cards
                 Consumer<SensorProvider>(builder: (context, provider, _) {
                   final List<Map<String, dynamic>> pollutants =
-                      selectedReading != null ? getCurrentData(selectedReading)
+                      selectedReading != null
+                          ? getCurrentData(selectedReading)
                           : [];
                   return LayoutBuilder(
                     builder: (context, constraints) {

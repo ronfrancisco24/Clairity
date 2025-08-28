@@ -7,13 +7,13 @@ import '../services/sensor_reading_service.dart';
 class SensorProvider extends ChangeNotifier {
   final _service = FirebaseFirestore.instance;
   SensorDetails? _currentData;
-  List<SensorDetails> _forecastReadingData = [];
+  SensorDetails? _forecastReadingData;
   final List<String> _sensorIds = [];
   String? _sensorId;
 
 
   SensorDetails? get currentData => _currentData;
-  List<SensorDetails> get forecastReadingData => _forecastReadingData;
+  SensorDetails? get forecastReadingData => _forecastReadingData;
   List<String> get sensorIds => _sensorIds;
   String? get sensorId => _sensorId;
 
@@ -22,8 +22,8 @@ class SensorProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setForecastData(List<SensorDetails> forecasts) {
-    _forecastReadingData = forecasts;
+  void setForecastData(SensorDetails forecast) {
+    _forecastReadingData = forecast;
     notifyListeners();
   }
 

@@ -35,13 +35,5 @@ class DashboardService {
     _sensorManager?.dispose();
   }
 
-  SensorDetails? getSelectedReading(SensorProvider provider, int selectedTimeIndex) {
-    if (selectedTimeIndex == 0) return provider.currentData;
-    final forecastList = provider.forecastReadingData;
-    if (selectedTimeIndex - 1 < forecastList.length) {
-      return forecastList[selectedTimeIndex - 1];
-    }
-    return null;
-  }
 
 }

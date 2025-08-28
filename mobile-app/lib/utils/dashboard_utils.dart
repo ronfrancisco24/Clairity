@@ -5,7 +5,7 @@ import '../models/sensor_model_details.dart';
 import '../models/sensor_model_details.dart';
 
 List<String> generateTimeSlots() {
-  final now = DateTime.now();
+  final now = DateTime.now().toUtc().add(const Duration(hours: 8));
   final List<String> times = [];
 
   for (int i = 0; i <= 4; i++) {
@@ -34,9 +34,9 @@ getFormattedMonth(DateTime time) {
 
 DateTime? getNextCleaningTime(
     SensorDetails? current,
-    List<SensorDetails> forecasts,
+    SensorDetails? forecast,
     ) {
-  final now = DateTime.now();
+  final now = DateTime.now().toUtc().add(const Duration(hours: 8));
 
   // 1. If current reading is risky, clean now
   if (current != null &&
@@ -44,26 +44,22 @@ DateTime? getNextCleaningTime(
     return now;
   }
 
-  // 2. Find the first risky forecast in the future
-  final riskyForecast = forecasts.firstWhereOrNull(
-        (reading) =>
-    ['At Risk', 'Unhealthy', 'Hazardous'].contains(reading.aqiCategory) &&
-        reading.timestamp.isAfter(now),
-  );
-
-  // 3. If no future risky forecast, but there was a past one -> clean now
-  if (riskyForecast == null &&
-      forecasts.any((r) =>
-      ['At Risk', 'Unhealthy', 'Hazardous'].contains(r.aqiCategory) &&
-          r.timestamp.isBefore(now))) {
-    return now;
+  // 2. If the forecast is risky and in the future, schedule cleaning at that time
+  if (forecast != null &&
+      ['At Risk', 'Unhealthy', 'Hazardous'].contains(forecast.aqiCategory)) {
+    if (forecast.timestamp.isAfter(now)) {
+      return forecast.timestamp;
+    } else {
+      // forecast is risky but in the past → clean now
+      return now;
+    }
   }
 
-  return riskyForecast?.timestamp;
+  // 3. Otherwise, no cleaning needed
+  return null;
 }
 
 
-//TODO: use current aqi to get alert label.
 
 double getProgress(double value, {required double max}) {
   if (max == 0) return 0.0;
