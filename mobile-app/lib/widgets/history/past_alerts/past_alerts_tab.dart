@@ -45,8 +45,8 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
               });
             },
           ),
-          SizedBox(height: 10.h),
           Container(
+            height: 56,
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             margin: EdgeInsets.symmetric(horizontal: 16.w),

@@ -3,8 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AdminMessage extends StatelessWidget {
   final VoidCallback onSubmit;
+  final TextEditingController controller;
 
-  const AdminMessage({super.key, required this.onSubmit});
+  const AdminMessage({super.key, required this.onSubmit, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,7 @@ class AdminMessage extends StatelessWidget {
           child: Column(
             children: [
               TextField(
+                controller: controller,
                 decoration: InputDecoration(
                   hintText: 'Add a comment...',
                   border: OutlineInputBorder(

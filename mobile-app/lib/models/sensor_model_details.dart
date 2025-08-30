@@ -31,8 +31,21 @@ class SensorDetails {
 
 
   factory SensorDetails.fromMap(Map<String, dynamic> map) {
+    DateTime parsedTimestamp;
+
+    if (map['timestamp'] is Timestamp) {
+      // Firestore Timestamp
+      parsedTimestamp = (map['timestamp'] as Timestamp).toDate();
+    } else if (map['timestamp'] is String) {
+      // ISO 8601 String
+      parsedTimestamp = DateTime.tryParse(map['timestamp']) ?? DateTime.now();
+    } else {
+      // Fallback
+      parsedTimestamp = DateTime.now();
+    }
+
     return SensorDetails(
-      timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      timestamp: parsedTimestamp,
       pm25: (map['pm25'] as num?)?.toDouble() ?? 0.0,
       co: (map['co'] as num?)?.toDouble() ?? 0.0,
       nh3: (map['nh3'] as num?)?.toDouble() ?? 0.0,

@@ -10,30 +10,27 @@ async function sendToEnabledDevices(sensorId, readingData) {
   const devicesSnap = await getFirestore()
        .collection("devices")
        .where("enabled", "==", true)
+       //.where("sensorId", "==", sensorId) // optional if devices are per sensor
        .get();
 
   if (devicesSnap.empty) {
     console.log(`No enabled device tokens found for sensor ${sensorId}`);
-    return null;
+    return;
   }
 
-  // Extract token field, not document ID
-  const tokens = devicesSnap.docs.map((doc) => doc.data().token);
+  const tokens = devicesSnap.docs.map((doc) => doc.data().token).filter(Boolean);
 
   const payload = {
+    tokens,
     notification: {
-      title: `${readingData.title}`,
+      title: readingData.title,
       body: `Sensor ${sensorId} recorded: ${readingData.message}`,
     },
   };
 
-  const response = await getMessaging().sendEachForMulticast({
-    tokens,
-    ...payload,
-  });
+  const response = await getMessaging().sendEachForMulticast(payload);
 
-  console.log("Notification sent:", response);
-  return null;
+  console.log("Notification sent:", response.successCount, "successful,", response.failureCount, "failed");
 }
 
 
