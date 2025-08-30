@@ -1,3 +1,18 @@
+// Top of project-level build.gradle
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Google Services plugin for Firebase
+        classpath 'com.google.gms:google-services:4.3.15'
+
+        // Other classpaths your project may need
+        // classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10"
+    }
+}
+
 allprojects {
     repositories {
         google()

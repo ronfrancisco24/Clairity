@@ -19,13 +19,6 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../constants.dart' as constants;
 
-//TODO: edit dashboard screen and notifications.
-//TODO: just provide current data under selected reading instead.
-//TODO: have two boxes the showcase aqi in the next 30 and 60 minutes.
-//TODO: edit notifications to match the new format.
-//TODO: forecast notifcations should also be established in firebase cloud push.
-//TODO: dedupId should now be set for all notifcations, so setup a global deviceTokens collection.
-
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -36,8 +29,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final DashboardService _dashboardService = DashboardService();
 
-  int selectedTimeIndex = 0;
-  final List<String> times = generateTimeSlots();
   String? _selectedSensorId;
 
   @override
@@ -71,7 +62,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-
   void _setSensor(String sensorId) {
     final sensorProvider = context.read<SensorProvider>();
     final logProvider = context.read<LogProvider>();
@@ -92,7 +82,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final sensorProvider = context.watch<SensorProvider>();
 
     final selectedReading = sensorProvider.currentData;
-        // _dashboardService.getSelectedReading(sensorProvider, selectedTimeIndex);
     final sensorList = context.watch<SensorProvider>().sensorIds;
 
     final lastCurrentCleanedTime = context.watch<LogProvider>().lastCleanedTime;
@@ -103,8 +92,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     ScreenUtil.init(context, designSize: const Size(360, 690));
 
-    print(sensorProvider.forecastReadingData);
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -114,7 +101,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               children: [
                 // Header
-                DashboardHeader(title: 'Welcome ${firstName}!', hasDate: true),
+                DashboardHeader(title: 'Welcome $firstName!', hasDate: true),
                 SizedBox(height: 16.h),
                 // Location Card
                 CardLocation(
@@ -129,19 +116,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     _setSensor(sensorId);
                   },
                 ),
-                // Time Selector
-                // SizedBox(
-                //   height: 32.h,
-                //   child: TimeSelector(
-                //     times: times,
-                //     selectedIndex: selectedTimeIndex,
-                //     onSelected: (index) {
-                //       setState(() {
-                //         selectedTimeIndex = index;
-                //       });
-                //     },
-                //   ),
-                // ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: ForecastCard(
@@ -222,8 +196,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Consumer<SensorProvider>(builder: (context, provider, _) {
                   final List<Map<String, dynamic>> pollutants =
                       selectedReading != null
-                          ? getCurrentData(selectedReading)
-                          : [];
+                          ? getCurrentData(selectedReading) : [];
                   return LayoutBuilder(
                     builder: (context, constraints) {
                       return PollutantGrid(

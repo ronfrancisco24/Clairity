@@ -71,7 +71,7 @@ class _NavControllerState extends State<NavController> {
       userId: userProvider.user?.uid ?? '',
       comment: 'Cleaned.',
       rating: 5,
-      timestamp: DateTime.now(),
+      timestamp: DateTime.now().toUtc().add(const Duration(hours: 8)),
       acknowledged: false,
       adminMessage: '',
     );

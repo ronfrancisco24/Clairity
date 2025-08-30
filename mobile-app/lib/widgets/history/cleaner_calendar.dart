@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import '../../providers/sensor_provider.dart';
 import 'calendar_week_view.dart';
 
 class CalendarWidget extends StatefulWidget {
@@ -32,7 +34,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     super.initState();
     final startOfWeekToday = _getStartOfWeek(today);
     final startOfWeekStartDate = _getStartOfWeek(startDate);
-    final daysSinceStart = startOfWeekToday.difference(startOfWeekStartDate).inDays;
+    final daysSinceStart =
+        startOfWeekToday.difference(startOfWeekStartDate).inDays;
     initialPage = daysSinceStart ~/ 7;
     maxPage = initialPage;
     _pageController = PageController(initialPage: initialPage);
@@ -40,23 +43,37 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final sensorProvider = Provider.of<SensorProvider>(context);
+    final sensorId = sensorProvider.sensorId;
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: Text(
-              _getMonthYearText(widget.selectedDate),
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _getMonthYearText(widget.selectedDate),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                Text(
+                  'Current Sensor: $sensorId',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 12.h),
           SizedBox(
             height: 80.h,
             child: PageView.builder(
@@ -84,8 +101,18 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   String _getMonthYearText(DateTime date) {
     List<String> months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
     ];
     return '${months[date.month - 1]} ${date.year}';
   }

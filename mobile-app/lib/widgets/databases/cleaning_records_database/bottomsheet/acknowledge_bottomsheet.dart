@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,12 @@ class _AcknowledgeBottomSheetState extends State<AcknowledgeBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController _controller = TextEditingController();
+
+    @override
+    void dispose() {
+      _controller.dispose(); // Always dispose controllers!
+      super.dispose();
+    }
 
     return FractionallySizedBox(
       heightFactor: 0.85,
@@ -54,6 +61,7 @@ class _AcknowledgeBottomSheetState extends State<AcknowledgeBottomSheet> {
 
               // Admin comment widget
               AdminMessage(
+                controller: _controller,
                 onSubmit: () {
                   final message = _controller.text.trim().isEmpty
                       ? "Acknowledged."

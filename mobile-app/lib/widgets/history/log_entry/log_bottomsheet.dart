@@ -77,14 +77,17 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
               ],
             ),
             const Text('Rate Your Experience'),
-            Ratings(
-              color: Colors.yellow,
-              initialRating: _selectedRating,
-              onRatingSelected: (rating) {
-                setState(() {
-                  _selectedRating = rating;
-                });
-              },
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Ratings(
+                color: Colors.yellow,
+                initialRating: _selectedRating,
+                onRatingSelected: (rating) {
+                  setState(() {
+                    _selectedRating = rating;
+                  });
+                },
+              ),
             ),
             const Text('Add a comment.'),
             Expanded(
@@ -112,7 +115,7 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
                     final hasText = value.text.isNotEmpty;
                     return EntryButton(
                       text: isEdit ? 'Update Log' : 'Save Log',
-                      color: oliveGreen,
+                      color: Colors.black,
                       textColor: Colors.white,
                       hasText: hasText,
                       onTap: hasText

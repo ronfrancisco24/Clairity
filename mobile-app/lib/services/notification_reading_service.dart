@@ -11,6 +11,10 @@ class NotificationReadingService {
   final FirebaseFirestore _notifications = FirebaseFirestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
+  // Future<void> isNotificationsEnabled(){
+  //
+  // }
+
   // global notifications
   Future<void> saveDeviceToken() async {
     final token = await FirebaseMessaging.instance.getToken();
