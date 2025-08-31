@@ -52,7 +52,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
       ),
       body: Container(
-        color: Color(0x00F9FAFC),
+        color: const Color(0x00F9FAFC),
         child: Column(
           children: [
             SizedBox(height: 10.h),

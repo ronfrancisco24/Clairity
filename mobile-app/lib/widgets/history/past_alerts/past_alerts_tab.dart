@@ -5,7 +5,6 @@ import '../../../models/notifications_model.dart';
 import '../../../providers/sensor_provider.dart';
 import '../../../services/history_reading_service.dart';
 import '../../../utils/history_utils.dart';
-import '../../../models/alert_model.dart';
 import 'alert_tile.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;

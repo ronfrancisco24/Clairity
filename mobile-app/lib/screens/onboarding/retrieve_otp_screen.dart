@@ -30,7 +30,7 @@ class RetrieveOtpScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(25),
+            padding: const EdgeInsets.all(25),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -38,7 +38,7 @@ class RetrieveOtpScreen extends StatelessWidget {
                   child: Image(image: AssetImage('images/logo.png')),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 30),
+                  margin: const EdgeInsets.only(top: 30),
                   alignment: Alignment.centerLeft,
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +89,7 @@ class RetrieveOtpScreen extends StatelessWidget {
                     );
                   },
                 ),
-                Divider(
+                const Divider(
                   color: greenAccent,
                   thickness: 3,
                 ),

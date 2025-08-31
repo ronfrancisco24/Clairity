@@ -6,10 +6,8 @@ import '../models/sensor_model_details.dart';
 import '../utils/dashboard_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-//TODO: when adding notifications for forecasts, make sure to add the interval for example (air quality will raise in (30, 60, 90, 120) minutes)
 class NotificationReadingService {
   final FirebaseFirestore _notifications = FirebaseFirestore.instance;
-  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
   // global notifications
   Future<void> saveDeviceToken() async {
@@ -146,7 +144,7 @@ class NotificationReadingService {
     final aqiKey =
         "$sensorId-$type-aqi-${data.timestamp.millisecondsSinceEpoch}";
 
-    if (['At Risk', 'Unhealthy', 'Hazardous'].contains(data.aqiCategory) &&
+    if (['High', 'Very High'].contains(data.aqiCategory) &&
         _shouldNotify(aqiKey, cooldown: Duration(hours: 1))) {
       addNotification(
           title: 'Air Quality Alert',

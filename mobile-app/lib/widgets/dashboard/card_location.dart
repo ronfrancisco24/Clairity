@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../providers/sensor_provider.dart';
-import '../../services/sensor_reading_service.dart';
 
 class CardLocation extends StatefulWidget {
   const CardLocation({

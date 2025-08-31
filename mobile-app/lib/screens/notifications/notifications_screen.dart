@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +56,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: NotificationFilter(
                 selectedFilter: selectedFilter,
                 onChanged: (newSelection) {

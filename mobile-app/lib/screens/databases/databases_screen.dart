@@ -45,7 +45,7 @@ class _DatabasesScreenState extends State<DatabasesScreen> {
       backgroundColor: Colors.grey[50],
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.h),
-        child: SafeArea(
+        child: const SafeArea(
           child: Padding(
             padding: EdgeInsets.all(20),
             child: DashboardHeader(title:'Databases', hasDate: false)
@@ -53,7 +53,7 @@ class _DatabasesScreenState extends State<DatabasesScreen> {
         ),
       ),
       body: Container(
-        color: Color(0x00F9FAFC),
+        color: const Color(0x00F9FAFC),
         child: Column(
           children: [
             SizedBox(height: 10.h),

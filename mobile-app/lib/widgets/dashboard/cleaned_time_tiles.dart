@@ -20,6 +20,9 @@ class CleanedTimeTiles extends StatelessWidget {
     final lastCleanedDate = lastCleaned != null ? getFormattedMonth(lastCleaned!) : '';
     final nextCleaningDate = nextCleaned != null ? getFormattedMonth(nextCleaned!) : '';
 
+    print(lastCleaned);
+    print(nextCleaned);
+
     return Row(
       children: [
         TimeInfoTile(

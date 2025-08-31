@@ -44,11 +44,10 @@ class CardQuality extends StatelessWidget {
               width: double.infinity,
               child: LineChart(
                 LineChartData(
-                  gridData: FlGridData(show: false),
-                  titlesData: FlTitlesData(show: false),
+                  gridData: const FlGridData(show: false),
+                  titlesData: const FlTitlesData(show: false),
                   borderData: FlBorderData(show: false),
                   lineBarsData: [
-                    // TODO: use trends here from firestore data.
                     LineChartBarData(
                       spots: [
                         FlSpot(0, 1),

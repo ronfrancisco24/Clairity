@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../models/sensor_model_details.dart';
 import '../../../providers/sensor_provider.dart';
-import '../../../services/sensor_reading_service.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
 import 'sensor_chart.dart';

@@ -4,7 +4,7 @@ import '../utils/dashboard_utils.dart';
 
 class SensorReadingService {
   final _db = FirebaseFirestore.instance;
-  final _now = DateTime.now();
+  final _now = DateTime.now().toUtc().add(const Duration(hours: 8));
   final random = Random();
 
   Stream<QueryDocumentSnapshot<Map<String, dynamic>>> streamLatestCleanedReading(String sensorId) {
@@ -56,7 +56,6 @@ class SensorReadingService {
     return snapshot.docs.map((doc) => doc.id).toList();
   }
 
-  //TODO: generate until 60 minutes only.
   // for testing purposes, generate 8 documents under readings
   Future<void> generateRawTestData(String sensorId) async {
     for (int i = 0; i < 8; i++) {
@@ -99,21 +98,21 @@ class SensorReadingService {
 
   // generate random sensor values
   Map<String, dynamic> generateSensorValues(DateTime time) {
-    final aqiValue = random.nextInt(500);
+    final aqiValue = random.nextInt(200);
 
     return {
       'timestamp': Timestamp.fromDate(time),
       'temp': double.parse((20 + random.nextDouble() * 10).toStringAsFixed(1)),
       'humidity': double.parse((30 + random.nextDouble() * 40).toStringAsFixed(1)),
       'co': double.parse((random.nextDouble() * 50).toStringAsFixed(1)),
-      'co2': double.parse((400 + random.nextDouble() * 18000).toStringAsFixed(1)),
-      'ch4': double.parse((random.nextDouble() * 19).toStringAsFixed(1)),
+      'co2': double.parse((400 + random.nextDouble() * 20000).toStringAsFixed(1)),
+      'ch4': double.parse((random.nextDouble() * 6).toStringAsFixed(1)),
       'tvoc': double.parse((random.nextDouble() * 5500).toStringAsFixed(1)),
       'aqi': aqiValue,
       'aqiCategory': getAqiCategory(aqiValue),
       'pm25': double.parse((random.nextDouble() * 500).toStringAsFixed(1)),
-      'h2s': double.parse((random.nextDouble() * 60).toStringAsFixed(1)),
-      'nh3': double.parse((random.nextDouble() * 50).toStringAsFixed(1)),
+      'h2s': double.parse((random.nextDouble() * 10).toStringAsFixed(1)),
+      'nh3': double.parse((random.nextDouble() * 10).toStringAsFixed(1)),
     };
   }
 }

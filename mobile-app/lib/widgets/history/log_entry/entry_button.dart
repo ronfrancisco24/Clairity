@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../constants.dart';
 
 class EntryButton extends StatelessWidget {
   final String text;

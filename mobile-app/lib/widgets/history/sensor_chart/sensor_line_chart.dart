@@ -18,13 +18,13 @@ class SensorLineChart extends StatelessWidget {
   });
 
   static const Map<String, List<double>> _thresholds = {
-    'NH3': [0, 8, 17, 50],
-    'H2S': [0, 5, 10, 60],
-    'CH4': [0, 250, 500, 19],
-    'CO2': [0, 2250, 4500, 18000],
-    'PM2.5': [0, 35, 55, 500],
-    'CO': [0, 9, 12, 50],
-    'TVOC': [0, 660, 1430, 5000],
+    'NH3': [0, 1, 1.5, 2.5, 4, 5, 10],
+    'H2S': [0, 1, 1.5, 2.5, 4, 5, 10],
+    'CH4': [0, 1, 2, 3, 4, 5, 6],
+    'CO2': [0, 600, 1000, 2000, 5000, 10000, 20000],
+    'PM2.5': [0, 12, 35.4, 55.4, 150.4, 250.4, 500.4],
+    'CO': [0, 4.4, 9.4, 12.4, 15.4, 30.4, 50.4],
+    'TVOC': [0, 220, 660, 1430, 2200, 3300, 5000],
   };
 
   List<double> get _xValues => _thresholds[label] ?? [0, 25, 50, 75, 100];
@@ -144,7 +144,7 @@ class SensorLineChart extends StatelessWidget {
       getTouchedSpotIndicator: (_, spotIndexes) {
         return spotIndexes.map((index) {
           return TouchedSpotIndicatorData(
-            FlLine(color: Colors.transparent, strokeWidth: 0),
+            const FlLine(color: Colors.transparent, strokeWidth: 0),
             FlDotData(
               show: true,
               getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(

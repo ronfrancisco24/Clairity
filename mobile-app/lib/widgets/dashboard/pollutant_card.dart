@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_progress_bar/gradient_progress_bar.dart';
 
-import '../../constants.dart';
 
 class PollutantCard extends StatelessWidget {
   const PollutantCard({
