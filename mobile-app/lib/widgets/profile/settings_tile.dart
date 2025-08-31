@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 
-class SettingsTile extends StatefulWidget {
+class SettingsTile extends StatelessWidget {
   final String tileTitle;
   final bool isToggle;
   final Color iconContainerColor;
   final IconData icon;
   final VoidCallback? onTap;
   final Function(bool)? onToggle; // <-- change here
+  bool toggleValue; // must be passed in constructor
 
   SettingsTile({
     super.key,
@@ -18,14 +19,8 @@ class SettingsTile extends StatefulWidget {
     required this.icon,
     this.onTap,
     this.onToggle,
+    this.toggleValue = false
   });
-
-  @override
-  State<SettingsTile> createState() => _SettingsTileState();
-}
-
-class _SettingsTileState extends State<SettingsTile> {
-  bool toggleValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,25 +34,23 @@ class _SettingsTileState extends State<SettingsTile> {
               height: MediaQuery.of(context).size.height * 0.05,
               width: MediaQuery.of(context).size.width * 0.11,
               decoration: BoxDecoration(
-                color: widget.iconContainerColor,
+                color: iconContainerColor,
                 borderRadius: BorderRadius.circular(30),
               ),
               child: Icon(
-                widget.icon,
+                icon,
                 color: Colors.white,
               ),
             ),
-            title: Text(widget.tileTitle),
-            trailing: widget.isToggle
+            title: Text(tileTitle),
+            trailing: isToggle
                 ? Switch(
                     value: toggleValue,
                     activeColor: mossGreen,
                     onChanged: (bool newValue) {
-                      setState(() {
-                        toggleValue = newValue;
-                      });
-                      if (widget.onToggle != null)
-                        widget.onToggle!; // Optional: trigger callback
+                      if (onToggle != null) {
+                        onToggle!(newValue); // call parent callback
+                      }
                     },
                   )
                 : const Icon(Icons.arrow_forward_ios),
@@ -67,10 +60,10 @@ class _SettingsTileState extends State<SettingsTile> {
     );
 
     // Only wrap with GestureDetector if isToggle is false
-    return widget.isToggle
+    return isToggle
         ? tile
         : GestureDetector(
-            onTap: widget.onTap,
+            onTap: onTap,
             child: tile,
           );
   }
