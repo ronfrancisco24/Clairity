@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'calendar_day_item.dart';
 
 class CalendarWeekView extends StatelessWidget {

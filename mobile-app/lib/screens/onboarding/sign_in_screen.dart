@@ -35,14 +35,14 @@ class _SignInScreenState extends State<SignInScreen> {
             const BoxDecoration(gradient: AppGradients.secondaryGradient),
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(25),
+            padding: const EdgeInsets.all(25),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Center(
                     child: Image(image: AssetImage('images/logo.png'))),
                 Container(
-                  margin: EdgeInsets.only(top: 30),
+                  margin: const EdgeInsets.only(top: 30),
                   alignment: Alignment.centerLeft,
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

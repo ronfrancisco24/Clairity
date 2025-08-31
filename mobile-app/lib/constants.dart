@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'models/cleaning_log_model.dart';
 
 enum NavRoute {
   home,
@@ -23,7 +22,7 @@ const Color vividGreen = Color(0xFF10e84a);
 const double bottomOffset = 30.0; // nav bar height
 const double navBarHeight = 50; // nav bar height
 
-final legendColors = [
+const legendColors = [
   Color(0xFF547327),
   Color(0xFF222B45),
   Color(0xFFE69F5C),
@@ -95,12 +94,6 @@ class NavIcons {
   static const history = 'material-symbols:history-2';
   static const profile = 'material-symbols:person-2-rounded';
 }
-/*Container(
-  decoration: const BoxDecoration(
-    gradient: AppGradients.primaryGradient,
-  ),
-)
-*/
 
 class AuthTheme {
   final ThemeData authTheme = ThemeData(
@@ -119,6 +112,9 @@ const TextStyle kHeading =
     TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white);
 
 const TextStyle kSubheading = TextStyle(fontSize: 15, color: Colors.white);
+
+const TextStyle aqiCardFont =
+    TextStyle(color: Colors.white, fontWeight: FontWeight.bold);
 
 TextStyle kDisplayLarge = GoogleFonts.dmSans(
   fontSize: 57,

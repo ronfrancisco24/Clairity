@@ -23,6 +23,10 @@ import '../../constants.dart' as constants;
 //TODO: restructure sensor details to new firestore structure
 //TODO: fix user creation.
 //TODO: fix pollutant max values.
+//TODO: add logo
+//TODO: fix about button
+//TODO: fix size constraints
+//TODO: when adding notifications for forecasts, make sure to add the interval for example (air quality will raise in (30, 60, 90, 120) minutes)
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -96,6 +100,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final firstName = userProvider.user?.firstName;
 
     ScreenUtil.init(context, designSize: const Size(360, 690));
+
+    print('This is the next forecast time: ${sensorProvider.forecastReadingData?.timestamp}');
 
     return Scaffold(
       backgroundColor: Colors.white,

@@ -1,20 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 import '../models/sensor_model_details.dart';
-import '../models/sensor_model_details.dart';
-
-List<String> generateTimeSlots() {
-  final now = DateTime.now().toUtc().add(const Duration(hours: 8));
-  final List<String> times = [];
-
-  for (int i = 0; i <= 4; i++) {
-    final time = now.add(Duration(minutes: i * 30));
-    times.add(DateFormat.jm().format(time));
-  }
-
-  return times;
-}
 
 IconData getTimeIcon(DateTime? time) {
   if (time!.hour >= 6 && time.hour <= 18) {
@@ -33,20 +19,19 @@ getFormattedMonth(DateTime time) {
 }
 
 DateTime? getNextCleaningTime(
-    SensorDetails? current,
-    SensorDetails? forecast,
-    ) {
+  SensorDetails? current,
+  SensorDetails? forecast,
+) {
   final now = DateTime.now().toUtc().add(const Duration(hours: 8));
 
   // 1. If current reading is risky, clean now
-  if (current != null &&
-      ['At Risk', 'Unhealthy', 'Hazardous'].contains(current.aqiCategory)) {
+  if (current != null && ['High', 'Very High'].contains(current.aqiCategory)) {
     return now;
   }
 
   // 2. If the forecast is risky and in the future, schedule cleaning at that time
   if (forecast != null &&
-      ['At Risk', 'Unhealthy', 'Hazardous'].contains(forecast.aqiCategory)) {
+      ['High', 'Very High'].contains(forecast.aqiCategory)) {
     if (forecast.timestamp.isAfter(now)) {
       return forecast.timestamp;
     } else {
@@ -54,12 +39,9 @@ DateTime? getNextCleaningTime(
       return now;
     }
   }
-
   // 3. Otherwise, no cleaning needed
   return null;
 }
-
-
 
 double getProgress(double value, {required double max}) {
   if (max == 0) return 0.0;
@@ -70,29 +52,33 @@ const Map<String, double> pollutantMaxValues = {
   'PM2.5': 500.4,
   'TVOC': 5500.0,
   'CO': 50.4,
-  'CO₂': 18000.0,
-  'NH₃': 50.0,
-  'CH₄': 19.9,
-  'H₂S': 60.0,
+  'CO₂': 20000.0,
+  'NH₃': 10.0,
+  'CH₄': 6.0,
+  'H₂S': 10.0,
 };
 
 String getAqiCategory(int aqi) {
-  if (aqi <= 50) return 'Good';
-  if (aqi <= 100) return 'Moderate';
-  if (aqi <= 150) return 'At Risk';
-  if (aqi <= 200) return 'Unhealthy';
-  return 'Hazardous';
+  if (aqi <= 50) {
+    return 'Good';
+  } else if (aqi <= 100) {
+    return 'Moderate';
+  } else if (aqi <= 150) {
+    return 'High';
+  } else {
+    return 'Very High';
+  }
 }
 
 int getAqiWarningLevel(String category) {
   switch (category) {
-    case 'Unhealthy':
+    case 'Good':
       return 1;
     case 'Moderate':
       return 2;
-    case 'At Risk':
+    case 'High':
       return 3;
-    case 'Hazardous':
+    case 'Very High':
       return 4;
     default:
       return 0; // Safe
@@ -101,17 +87,20 @@ int getAqiWarningLevel(String category) {
 
 const Map<String, String> aqiMessages = {
   'Good': 'Air quality is good. Enjoy your day!',
-  'Moderate': 'Air quality is acceptable, but sensitive individuals should be cautious.',
-  'At Risk': 'Air quality may affect vulnerable groups. Consider limiting strenuous activity.',
-  'Unhealthy': 'Air quality is unhealthy. Recommend limiting occupancy and ventilating if possible.',
-  'Hazardous': 'Air quality is hazardous. Strongly advise avoiding exposure and ensuring proper ventilation.',
+  'Moderate':
+      'Air quality is acceptable, but sensitive individuals should be cautious.',
+  'High':
+      'Air quality is unhealthy. Recommend limiting occupancy and ventilating if possible.',
+  'Very High':
+      'Air quality is hazardous. Strongly advise avoiding exposure and ensuring proper ventilation.',
 };
 
 String getAqiMessage(String category) {
   return aqiMessages[category] ?? 'Air quality data unavailable.';
 }
 
-List<Map<String, dynamic>> getCurrentData(SensorDetails data, {String? forecastId}) {
+List<Map<String, dynamic>> getCurrentData(SensorDetails data,
+    {String? forecastId}) {
   return [
     {
       'label': 'PM2.5',
@@ -151,7 +140,6 @@ List<Map<String, dynamic>> getCurrentData(SensorDetails data, {String? forecastI
   ];
 }
 
-
 String getAlertLabel(int warningLevel) {
   switch (warningLevel) {
     case 1:
@@ -167,7 +155,7 @@ String getAlertLabel(int warningLevel) {
   }
 }
 
-Map<String, double> getNormalizedReadings(SensorDetails data){
+Map<String, double> getNormalizedReadings(SensorDetails data) {
   return {
     'PM2.5': getProgress(data.pm25, max: pollutantMaxValues['PM2.5']!),
     'TVOC': getProgress(data.tvoc, max: pollutantMaxValues['TVOC']!),
@@ -184,7 +172,7 @@ MapEntry<String, double> getHighestPollutant(SensorDetails data) {
 
   // find the entry with max progress
   final highest = normalized.entries.reduce(
-        (a, b) => a.value >= b.value ? a : b,
+    (a, b) => a.value >= b.value ? a : b,
   );
 
   return highest;
@@ -193,11 +181,6 @@ MapEntry<String, double> getHighestPollutant(SensorDetails data) {
 String getPollutantLevel(double value) {
   if (value < 0.3) return "Good";
   if (value < 0.6) return "Moderate";
-  if (value < 0.8) return "Unhealthy";
-  return "Hazardous";
+  if (value < 0.8) return "High";
+  return "Very High";
 }
-
-
-
-
-

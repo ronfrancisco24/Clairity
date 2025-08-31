@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../utils/dashboard_utils.dart';
 import 'pollutant_card.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'dart:math';
 
 class PollutantGrid extends StatelessWidget {
   final List<Map<String, dynamic>> pollutantList;

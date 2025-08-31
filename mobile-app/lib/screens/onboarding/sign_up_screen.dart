@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../widgets/onboarding/auth_text_field.dart';
 import '../../widgets/onboarding/onboarding_divider.dart';
 import '../../widgets/onboarding/sign_button.dart';
 import '../../widgets/onboarding/social_button.dart';

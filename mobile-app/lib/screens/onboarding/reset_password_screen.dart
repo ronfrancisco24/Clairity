@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../constants.dart';
-import '../../widgets/onboarding/auth_text_field.dart';
 import 'sign_up_screen.dart';
 import '../../widgets/onboarding/sign_button.dart';
 
@@ -25,7 +24,7 @@ class ResetPasswordScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(25),
+            padding: const EdgeInsets.all(25),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -33,7 +32,7 @@ class ResetPasswordScreen extends StatelessWidget {
                   child: Image(image: AssetImage('images/logo.png')),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 30),
+                  margin: const EdgeInsets.only(top: 30),
                   alignment: Alignment.centerLeft,
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +60,7 @@ class ResetPasswordScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SignUpScreen(),
+                            builder: (context) => const SignUpScreen(),
                           ),
                         );
                       },

@@ -32,9 +32,9 @@ class AqiCard extends StatelessWidget {
                 curve: Curves.elasticOut,
                 radius: 100,
                 value: value,
-                axis: GaugeAxis(
+                axis: const GaugeAxis(
                   min: 0,
-                  max: 250,
+                  max: 200,
                   degrees: 240,
                   style: GaugeAxisStyle(
                     thickness: 20,
@@ -69,9 +69,9 @@ class AqiCard extends StatelessWidget {
               ),
               Center(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 20),
                   child: Text(
-                    '${value.toStringAsFixed(0)}',
+                    value.toStringAsFixed(0),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 36,

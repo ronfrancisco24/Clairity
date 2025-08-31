@@ -1,7 +1,6 @@
 import '../models/notifications_model.dart';
 import '../models/sensor_model_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 
 final _db = FirebaseFirestore.instance;
 
