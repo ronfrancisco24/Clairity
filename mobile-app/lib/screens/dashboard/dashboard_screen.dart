@@ -22,7 +22,7 @@ import '../../constants.dart' as constants;
 //TODO: fix bugs for cleaning records, must correlate with current sensor
 //TODO: restructure sensor details to new firestore structure
 //TODO: fix user creation.
-//TODO: add actual username and avatar under profile info.
+//TODO: fix pollutant max values.
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -164,11 +164,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   if (_selectedSensorId == null) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content: Text("No sensor selected")),
+                                        content: Text("No sensor selected"),
+                                      ),
                                     );
                                     return;
                                   }
-                                  await SensorReadingService().generateRawTestData(_selectedSensorId!);
+                                  await SensorReadingService()
+                                      .generateRawTestData(_selectedSensorId!);
                                   NavController.of(context)?.onNavSelect(
                                       constants.NavRoute.history,
                                       initialIndex: 2);
@@ -201,7 +203,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Consumer<SensorProvider>(builder: (context, provider, _) {
                   final List<Map<String, dynamic>> pollutants =
                       selectedReading != null
-                          ? getCurrentData(selectedReading) : [];
+                          ? getCurrentData(selectedReading)
+                          : [];
                   return LayoutBuilder(
                     builder: (context, constraints) {
                       return PollutantGrid(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../constants.dart';
 import '../../controllers/dashboard_manager.dart';
+import '../../providers/notification_provider.dart';
 import '../../services/notification_reading_service.dart';
 import '../../widgets/header.dart';
 import '../../widgets/profile/popups/avatar_selection_dialog.dart';
@@ -35,10 +36,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
+    final notificationsProvider = Provider.of<NotificationProvider>(context);
     final firstName = userProvider.user?.firstName ?? 'No name';
     final lastName = userProvider.user?.lastName ?? 'No name';
     final phoneNo = userProvider.user?.phoneNo ?? 'No number';
     late final DashboardService dashboardService = DashboardService();
+    final enabled = context.watch<NotificationProvider>().enabledNotifications ?? false;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -80,10 +83,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SettingsTile(
                 tileTitle: 'Notifications',
                 isToggle: true,
+                toggleValue: enabled,
                 iconContainerColor: forestGreen,
                 icon: Icons.notifications_none,
-                onToggle: (enabled) async {
-                  await NotificationReadingService().setGlobalNotifications(enabled);
+                onToggle: (newValue) async {
+                  await context.read<NotificationProvider>().setNotificationsEnabled(newValue);
                 },
               ),
               SettingsTile(
