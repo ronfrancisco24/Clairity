@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import '../../../models/user_model.dart';
 import '../../../providers/log_provider.dart';
+import '../../../providers/user_provider.dart';
 import '../../../utils/history_utils.dart';
 import '../../history/cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
@@ -64,32 +66,51 @@ class _CleaningRecordsDatabaseTabState extends State<CleaningRecordsDatabaseTab>
               ),
             )
                 : ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    itemCount: filteredLogs.length + 1, // add 1 for SizedBox
-                    itemBuilder: (context, index) {
-                      if (index == filteredLogs.length) {
-                        return SizedBox(
-                          height: constants.bottomOffset.h + constants.navBarHeight.h,
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              itemCount: filteredLogs.length + 1, // add 1 for SizedBox
+              itemBuilder: (context, index) {
+                if (index == filteredLogs.length) {
+                  return SizedBox(
+                    height: constants.bottomOffset.h + constants.navBarHeight.h,
+                  );
+                }
+
+                final record = filteredLogs[index];
+                final recordId = record.userId;
+
+                return FutureBuilder<UserModel?>(
+                  future: Provider.of<UserProvider>(context, listen: false)
+                      .getUserDetailsById(recordId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (!snapshot.hasData) {
+                      return const SizedBox(); // or placeholder if user not found
+                    }
+
+                    final user = snapshot.data!;
+
+                    return AcknowledgeCard(
+                      record: record,
+                      onAcknowledge: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (_) => AcknowledgeBottomSheet(
+                            record: record,
+                            user: user,
+                          ),
                         );
-                      }
-
-                      final record = filteredLogs[index];
-
-                      return AcknowledgeCard(
-                        record: record,
-                        onAcknowledge: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (_) => AcknowledgeBottomSheet(record: record),
-                          );
-                        },
-                        onDelete: () {
-                          context.read<LogProvider>().removeLog(record.cleaningId);
-                        },
-                      );
-                    },
-                  ),
+                      },
+                      onDelete: () {
+                        context.read<LogProvider>().removeLog(record.cleaningId);
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),

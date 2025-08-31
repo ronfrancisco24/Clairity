@@ -44,4 +44,13 @@ class ProfileService {
       }
     });
   }
+
+  Future<UserModel?> getUserDetailsById(String uid) async {
+    final doc = await _firestore.collection('users').doc(uid).get();
+    if (doc.exists) {
+      return UserModel.fromMap(uid, doc.data() as Map<String, dynamic>);
+    } else {
+      return null;
+    }
+  }
 }
