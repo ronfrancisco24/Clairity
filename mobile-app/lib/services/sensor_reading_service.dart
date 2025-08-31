@@ -18,7 +18,6 @@ class SensorReadingService {
         .map((snapshot) => snapshot.docs.first);
   }
 
-  //TODO: use one document instead.
   Stream<DocumentSnapshot<Map<String, dynamic>>> streamForecastReading(
       String sensorId, String cleanReadingId) {
     final forecastId = '${cleanReadingId}_60mins';
@@ -82,7 +81,6 @@ class SensorReadingService {
           .doc(cleanedDocId);
 
       await cleanedRef.set(testData);
-      // for (int j = 1; j <= 4; j++) {
       final forecastTime = readingTime.add(Duration(minutes: 60));
       final forecastData = generateSensorValues(forecastTime);
       final forecastDataId = '${cleanedDocId}_60mins';
@@ -91,7 +89,6 @@ class SensorReadingService {
           .collection('forecast')
           .doc(forecastDataId)
           .set(forecastData);
-      // }
     }
     print('Test data generated successfully');
   }
