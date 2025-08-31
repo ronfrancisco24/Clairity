@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../models/cleaning_log_model.dart';
+import '../../../../models/user_model.dart';
+import '../../../../constants.dart' as constants;
 
 class ProfileInfo extends StatelessWidget {
   final CleaningRecord record;
+  final UserModel user;
 
-  const ProfileInfo({super.key, required this.record});
+  const ProfileInfo({super.key, required this.record, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +22,15 @@ class ProfileInfo extends StatelessWidget {
         padding: EdgeInsets.all(10.w),
         child: Column(
           children: [
-            CircleAvatar(radius: 30.r),
-            SizedBox(height: 10.h,),
+            CircleAvatar(
+              radius: 30.r,
+              backgroundImage:
+                  AssetImage(constants.avatarImage[user.avatar ?? 0]),
+              backgroundColor: Colors.grey[300],
+            ),
+            SizedBox(
+              height: 10.h,
+            ),
             Text(
               '${record.userId}',
               style: TextStyle(
@@ -29,7 +39,7 @@ class ProfileInfo extends StatelessWidget {
               ),
             ),
             Text(
-              'Add actual name here',
+              '${user.firstName} ${user.lastName}',
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 12.sp,

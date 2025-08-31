@@ -19,6 +19,11 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../constants.dart' as constants;
 
+//TODO: fix bugs for cleaning records, must correlate with current sensor
+//TODO: restructure sensor details to new firestore structure
+//TODO: fix user creation.
+//TODO: add actual username and avatar under profile info.
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 

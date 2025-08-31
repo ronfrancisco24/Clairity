@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../../models/cleaning_log_model.dart';
+import '../../../../models/user_model.dart';
 import '../../../../providers/log_provider.dart';
 import 'admin_message.dart';
 import 'profile_info.dart';
@@ -10,8 +11,10 @@ import 'record_description/record_info_container.dart';
 
 class AcknowledgeBottomSheet extends StatefulWidget {
   final CleaningRecord record;
+  final UserModel user;
 
-  const AcknowledgeBottomSheet({super.key, required this.record});
+  const AcknowledgeBottomSheet(
+      {super.key, required this.record, required this.user});
 
   @override
   State<AcknowledgeBottomSheet> createState() => _AcknowledgeBottomSheetState();
@@ -54,11 +57,15 @@ class _AcknowledgeBottomSheetState extends State<AcknowledgeBottomSheet> {
                   ),
                 ),
               ),
-              ProfileInfo(record: widget.record),
-              SizedBox(height: 10.h,),
+              ProfileInfo(
+                record: widget.record,
+                user: widget.user,
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
               RecordInfoContainer(record: widget.record),
               SizedBox(height: 10.h),
-
               // Admin comment widget
               AdminMessage(
                 controller: _controller,
@@ -68,10 +75,10 @@ class _AcknowledgeBottomSheetState extends State<AcknowledgeBottomSheet> {
                       : _controller.text.trim();
 
                   context.read<LogProvider>().updateLog(
-                    widget.record.cleaningId,
-                    acknowledged: true,
-                    adminMessage: message,
-                  );
+                        widget.record.cleaningId,
+                        acknowledged: true,
+                        adminMessage: message,
+                      );
 
                   Navigator.pop(context);
                 },

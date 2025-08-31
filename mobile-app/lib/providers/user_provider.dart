@@ -32,6 +32,10 @@ class UserProvider extends ChangeNotifier {
     return _profileService.getUserDetailsStreamById(uid);
   }
 
+  Future<UserModel?> getUserDetailsById(String uid) {
+    return _profileService.getUserDetailsById(uid);
+  }
+
   // User management database
   final UserDatabaseService _userService = UserDatabaseService();
 
