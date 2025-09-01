@@ -1,13 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../models/sensor_model_details.dart';
+import '../../../models/sensor_data_model.dart';
 
 class SensorLineChart extends StatelessWidget {
   final String label;
   final Color color;
-  final List<SensorDetails> data;
-  final double Function(SensorDetails) valueSelector;
+  final List<SensorDataModel> data;
+  final double Function(SensorDataModel) valueSelector;
 
   const SensorLineChart({
     super.key,

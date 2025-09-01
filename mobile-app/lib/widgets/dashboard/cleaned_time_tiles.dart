@@ -15,13 +15,10 @@ class CleanedTimeTiles extends StatelessWidget {
     final formattedLast =
     lastCleaned != null ? getFormattedTime(lastCleaned!) : 'No record yet';
     final formattedNext =
-    nextCleaned != null ? getFormattedTime(nextCleaned!) : 'No prediction yet';
+    nextCleaned != null ? getFormattedTime(nextCleaned!) : 'Not Needed!';
 
     final lastCleanedDate = lastCleaned != null ? getFormattedMonth(lastCleaned!) : '';
     final nextCleaningDate = nextCleaned != null ? getFormattedMonth(nextCleaned!) : '';
-
-    print(lastCleaned);
-    print(nextCleaned);
 
     return Row(
       children: [
@@ -41,7 +38,7 @@ class CleanedTimeTiles extends StatelessWidget {
           icon: nextCleaned != null
               ? getTimeIcon(
               nextCleaned)
-              : Icons.help_outline,
+              : Icons.info,
         ),
       ],
     );

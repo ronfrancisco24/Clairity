@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../models/notifications_model.dart';
-import '../models/sensor_model_details.dart';
+import '../models/sensor_data_model.dart';
+import '../utils/aqi_base_utils.dart';
 import '../utils/dashboard_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -14,7 +15,8 @@ class NotificationReadingService {
     final token = await FirebaseMessaging.instance.getToken();
     if (token == null) return;
 
-    final tokenRef = FirebaseFirestore.instance.collection('devices').doc(token);
+    final tokenRef =
+        FirebaseFirestore.instance.collection('devices').doc(token);
 
     try {
       await tokenRef.set({
@@ -34,7 +36,8 @@ class NotificationReadingService {
     print(token);
     if (token == null) return;
 
-    final tokenRef = FirebaseFirestore.instance.collection('devices').doc(token);
+    final tokenRef =
+        FirebaseFirestore.instance.collection('devices').doc(token);
 
     await tokenRef.set({
       'enabled': enabled,
@@ -137,7 +140,7 @@ class NotificationReadingService {
     return false;
   }
 
-  Future<void> checkThresholdsAndNotify(SensorDetails data, String sensorId,
+  Future<void> checkThresholdsAndNotify(AqiBase data, String sensorId,
       {required String type}) async {
     final aqiLevel = getAqiWarningLevel(data.aqiCategory!);
 
@@ -159,7 +162,7 @@ class NotificationReadingService {
   // update isRead.
   Future<void> updateIsRead(
       {required String sensorId,
-        required String notificationId,
+      required String notificationId,
       required bool isRead,
       required String type}) {
     return _notifications

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import '../models/record_timestampped_model.dart';
-import '../models/sensor_model_details.dart';
+import '../models/sensor_data_model.dart';
 
 List<T> filterRecordsByDate<T extends TimestampedRecord>(List<T> records, DateTime selectedDate) {
   return records.where((record) {
@@ -39,7 +39,7 @@ String _monthName(int month) {
 String _twoDigits(int n) => n.toString().padLeft(2, '0');
 
 // Filters the list of sensor details by the selected date.
-List<SensorDetails> filterSensorDetailsByDate(List<SensorDetails> samples, DateTime selectedDate) {
+List<SensorDataModel> filterSensorDetailsByDate(List<SensorDataModel> samples, DateTime selectedDate) {
   return samples.where((sensorDetail) {
     return sensorDetail.timestamp.year == selectedDate.year &&
         sensorDetail.timestamp.month == selectedDate.month &&

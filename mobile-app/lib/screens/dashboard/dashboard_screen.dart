@@ -19,14 +19,16 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../constants.dart' as constants;
 
-//TODO: fix bugs for cleaning records, must correlate with current sensor
 //TODO: restructure sensor details to new firestore structure
 //TODO: fix user creation.
-//TODO: fix pollutant max values.
 //TODO: add logo
-//TODO: fix about button
+//TODO: fix about popup
+//TODO: add info buttons.
+//TODO: for alerts show which sensor it came from.
+//TODO: for sensor data just filter it depending on the sensor.
+//TODO: instead of displaying no direction yet when forecast and current is good,
+//TODO: just state that air quality is good for now for the next cleaning time.
 //TODO: fix size constraints
-//TODO: when adding notifications for forecasts, make sure to add the interval for example (air quality will raise in (30, 60, 90, 120) minutes)
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -43,10 +45,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await NotificationReadingService().saveDeviceToken();
-      await _initializeSensor();
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        await NotificationReadingService().saveDeviceToken();
+        await _initializeSensor();
+      },
+    );
   }
 
   Future<void> _initializeSensor() async {
@@ -95,13 +99,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final lastCurrentCleanedTime = context.watch<LogProvider>().lastCleanedTime;
     final nextCleaningTime = getNextCleaningTime(
-        sensorProvider.currentData, sensorProvider.forecastReadingData);
+        sensorProvider.currentData, sensorProvider.predictedData);
 
     final firstName = userProvider.user?.firstName;
 
     ScreenUtil.init(context, designSize: const Size(360, 690));
 
-    print('This is the next forecast time: ${sensorProvider.forecastReadingData?.timestamp}');
+    print('This is the next forecast time: ${sensorProvider.predictedData?.timestamp}');
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -130,8 +134,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: ForecastCard(
-                    category: sensorProvider.forecastReadingData?.aqiCategory,
-                    value: sensorProvider.forecastReadingData?.aqi,
+                    category: sensorProvider.predictedData?.aqiCategory,
+                    value: sensorProvider.predictedData?.aqi,
                   ),
                 ),
                 // Air Quality & Trend Cards
@@ -206,19 +210,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 const SizedBox(height: 16),
                 // Pollutant Cards
-                Consumer<SensorProvider>(builder: (context, provider, _) {
-                  final List<Map<String, dynamic>> pollutants =
-                      selectedReading != null
-                          ? getCurrentData(selectedReading)
-                          : [];
-                  return LayoutBuilder(
-                    builder: (context, constraints) {
-                      return PollutantGrid(
-                        pollutantList: pollutants, // show placeholder data
-                      );
-                    },
-                  );
-                }),
+                Consumer<SensorProvider>(
+                  builder: (context, provider, _) {
+                    final List<Map<String, dynamic>> pollutants =
+                        selectedReading != null
+                            ? getCurrentData(selectedReading)
+                            : [];
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        return PollutantGrid(
+                          pollutantList: pollutants, // show placeholder data
+                        );
+                      },
+                    );
+                  },
+                ),
                 const SizedBox(
                     height: constants.bottomOffset + constants.navBarHeight),
               ],

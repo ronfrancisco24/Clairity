@@ -1,14 +1,17 @@
 import 'dart:async';
-import '../models/sensor_model_details.dart';
+import '../models/forecasted_sensor_data_model.dart';
+import '../models/sensor_data_model.dart';
 import '../providers/sensor_provider.dart';
 import '../services/notification_reading_service.dart';
 import '../services/sensor_reading_service.dart';
+
+//TODO: set forecast data sub to predicted data model.
 
 class SensorManager {
   final SensorProvider provider;
   final NotificationReadingService _notifService;
   StreamSubscription? _currentDataSub;
-  StreamSubscription? _forecastDataSub;
+  StreamSubscription? _predictedDataSub; //change this to forecastDataSub later.
 
   SensorManager({required this.provider, required String sensorId})
       : _notifService = NotificationReadingService();
@@ -18,22 +21,22 @@ class SensorManager {
         .streamLatestCleanedReading(sensorId)
         .listen((doc) {
       if (doc.exists) {
-        provider.setCurrentData(SensorDetails.fromMap(doc.data()));
-        final latestCleanedId = doc.id;
-
-        _forecastDataSub?.cancel();
-        _forecastDataSub = SensorReadingService()
-            .streamForecastReading(sensorId, latestCleanedId)
-            .listen((doc) {
-          if (doc.exists) {
-            provider.setForecastData(SensorDetails.fromMap(doc.data()!));
-            _checkForecastNotifications(sensorId);
-          }
-        });
-
+        provider.setCurrentData(SensorDataModel.fromMap(doc.data()));
         _checkCurrentNotification(sensorId);
       }
+
     });
+
+    _predictedDataSub?.cancel();
+    _predictedDataSub = SensorReadingService()
+        .fetchLatestPredictionId(sensorId)
+        .listen((doc) {
+      if (doc.exists) {
+        provider.setPredictedData(ForecastedDataModel.fromMap(doc.data()));
+      }
+    });
+
+    _checkPredictionNotifications(sensorId);
   }
 
   void _checkCurrentNotification(String sensorId) {
@@ -43,15 +46,16 @@ class SensorManager {
     }
   }
 
-  void _checkForecastNotifications(String sensorId) {
-    if (provider.forecastReadingData != null) {
+  void _checkPredictionNotifications(String sensorId) {
+    if (provider.predictedData != null) {
       _notifService.checkThresholdsAndNotify(
-          provider.forecastReadingData!, type: 'forecast', sensorId);
+          provider.predictedData!, type: 'forecast', sensorId);
     }
+    print('i predicted data!');
   }
 
   void dispose() {
     _currentDataSub?.cancel();
-    _forecastDataSub?.cancel();
+    _predictedDataSub?.cancel();
   }
 }

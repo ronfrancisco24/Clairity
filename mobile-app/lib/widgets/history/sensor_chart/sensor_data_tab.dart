@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import '../../../models/sensor_model_details.dart';
+import '../../../models/sensor_data_model.dart';
 import '../../../providers/sensor_provider.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
@@ -16,7 +16,7 @@ class SensorDataTab extends StatefulWidget {
 }
 
 class _SensorDataTabState extends State<SensorDataTab> {
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate = DateTime.now().toUtc().add(const Duration(hours: 8));
   final PageController _pageController = PageController(viewportFraction: 0.95);
 
 
@@ -43,7 +43,7 @@ class _SensorDataTabState extends State<SensorDataTab> {
         SizedBox(height: 5.h),
         Expanded(
           // Chart list with snapping effect
-          child: StreamBuilder<List<SensorDetails>>(
+          child: StreamBuilder<List<SensorDataModel>>(
               stream: streamSensorHistoryData(
                   '$sensorId', selectedDate),
               builder: (context, snapshot) {

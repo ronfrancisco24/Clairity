@@ -7,6 +7,8 @@ enum NavRoute {
   profile,
 }
 
+/// utc time: DateTime.now().toUtc().add(const Duration(hours: 8));
+
 const Color white = Color(0xFFF3F4F5);
 const Color lightBlo = Color(0xFFA6BDBE);
 const Color darkBlo = Color(0xFF0B334D);

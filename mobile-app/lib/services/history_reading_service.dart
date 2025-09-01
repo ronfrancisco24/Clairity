@@ -1,23 +1,23 @@
 import '../models/notifications_model.dart';
-import '../models/sensor_model_details.dart';
+import '../models/sensor_data_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _db = FirebaseFirestore.instance;
 
-Stream<List<SensorDetails>> streamSensorHistoryData(String sensorId, DateTime selectedDate) {
+Stream<List<SensorDataModel>> streamSensorHistoryData(String sensorId, DateTime selectedDate) {
   final startOfDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
   final endOfDay = startOfDay.add(Duration(days: 1));
 
   return _db
       .collection('sensors')
       .doc(sensorId)
-      .collection('cleanedReadingData')
+      .collection('cleanData')
       .where('timestamp', isGreaterThanOrEqualTo: startOfDay)
       .where('timestamp', isLessThan: endOfDay)
       .orderBy('timestamp')
       .snapshots()
       .map((querySnapshot) => querySnapshot.docs
-      .map((doc) => SensorDetails.fromMap(doc.data()))
+      .map((doc) => SensorDataModel.fromMap(doc.data()))
       .toList());
 }
 
