@@ -19,15 +19,12 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../constants.dart' as constants;
 
-//TODO: restructure sensor details to new firestore structure
+//TODO instead of a fixed 1 hr, display actual forecast time in forecast card.
 //TODO: fix user creation.
 //TODO: add logo
 //TODO: fix about popup
 //TODO: add info buttons.
-//TODO: for alerts show which sensor it came from.
 //TODO: for sensor data just filter it depending on the sensor.
-//TODO: instead of displaying no direction yet when forecast and current is good,
-//TODO: just state that air quality is good for now for the next cleaning time.
 //TODO: fix size constraints
 
 class DashboardScreen extends StatefulWidget {
@@ -61,10 +58,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (sensorProvider.sensorIds.isNotEmpty) {
       // Only set if not already chosen
-      if (sensorProvider.sensorId == null) {
-        sensorProvider.setSensorId(sensorProvider.sensorIds.first);
-      }
-
       _selectedSensorId = sensorProvider.sensorId;
 
       _dashboardService.setSensor(
@@ -72,6 +65,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         sensorProvider,
         logProvider,
       );
+
+    } else {
+      sensorProvider.setSensorId(sensorProvider.sensorIds.first);
     }
   }
 

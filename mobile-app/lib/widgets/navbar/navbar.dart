@@ -51,7 +51,7 @@ class MainNavigationBar extends StatelessWidget {
           if (role == 'user') ...[
             NavigationItem(
               label: 'Add',
-              iconData: Icons.add_circle_outline, // Use sensor door icon for demo
+              iconData: Icons.cleaning_services, // Use sensor door icon for demo
               isSelected: false,
               onSelect: onAddRecord,
             ),

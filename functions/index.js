@@ -6,11 +6,10 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 
 // Helper function to send notifications to globally enabled devices
-async function sendToEnabledDevices(sensorId, readingData) {
+async function sendToEnabledDevices(readingData) {
   const devicesSnap = await getFirestore()
        .collection("devices")
        .where("enabled", "==", true)
-       //.where("sensorId", "==", sensorId) // optional if devices are per sensor
        .get();
 
   if (devicesSnap.empty) {
@@ -24,7 +23,7 @@ async function sendToEnabledDevices(sensorId, readingData) {
     tokens,
     notification: {
       title: readingData.title,
-      body: `Sensor ${sensorId} recorded: ${readingData.message}`,
+      body: `Sensor ${readingData.sensorId} recorded: ${readingData.message}`,
     },
   };
 
@@ -36,20 +35,20 @@ async function sendToEnabledDevices(sensorId, readingData) {
 
 // Trigger for current notifications
 exports.sendSensorNotification = onDocumentCreated(
-  "sensors/{sensorId}/current_notifications/{notificationId}",
+  "current_notifications/{notificationId}",
   async (event) => {
     const sensorId = event.params.sensorId;
     const readingData = event.data.data();
-    await sendToEnabledDevices(sensorId, readingData);
+    await sendToEnabledDevices(readingData);
   }
 );
 
 // Trigger for forecast notifications
 exports.sendForecastNotification = onDocumentCreated(
-  "sensors/{sensorId}/forecast_notifications/{notificationId}",
+  "forecast_notifications/{notificationId}",
   async (event) => {
     const sensorId = event.params.sensorId;
     const readingData = event.data.data();
-    await sendToEnabledDevices(sensorId, readingData);
+    await sendToEnabledDevices(readingData);
   }
 );

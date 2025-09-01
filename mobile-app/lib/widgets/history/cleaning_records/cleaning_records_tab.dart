@@ -17,6 +17,7 @@ class CleaningRecordsTab extends StatefulWidget {
 
 class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
   DateTime selectedDate = DateTime.now();
+
   String get formattedDate => formatSelectedDate(selectedDate);
 
   @override
@@ -37,12 +38,15 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
           CalendarWidget(
             selectedDate: selectedDate,
             onDateSelected: (date) {
-              setState(() {
-                selectedDate = date;
-              });
+              setState(
+                () {
+                  selectedDate = date;
+                },
+              );
             },
           ),
           Container(
+            height: 70,
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             decoration: BoxDecoration(
@@ -71,8 +75,8 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
                   width: 30.w,
                   height: 30.h,
                   child: (selectedDate.year == DateTime.now().year &&
-                      selectedDate.month == DateTime.now().month &&
-                      selectedDate.day == DateTime.now().day)
+                          selectedDate.month == DateTime.now().month &&
+                          selectedDate.day == DateTime.now().day)
                       ? IconButton(
                           padding: EdgeInsets.zero,
                           iconSize: 20.sp,
@@ -85,50 +89,54 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
                           },
                           icon: Icon(Icons.add, color: Colors.white),
                         )
-                      : const SizedBox.shrink(), // Keeps space but shows nothing
+                      : const SizedBox
+                          .shrink(), // Keeps space but shows nothing
                 ),
               ],
             ),
           ),
           SizedBox(height: 12.h),
           Expanded(
-            child: filteredLogs.isEmpty
-                ? Center(
-                  child: Text(
-                    "No cleaning records for this day.",
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                )
-                : ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    itemCount: filteredLogs.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == filteredLogs.length) {
-                        return SizedBox(
-                          height: constants.bottomOffset.h + constants.navBarHeight.h,
-                        );
-                      }
-
-                      final record = filteredLogs[index];
-                      return CleanerTile(
-                        record: record,
-                        onEdit: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (_) => LogBottomsheet(recordToEdit: record),
+              child: filteredLogs.isEmpty
+                  ? Center(
+                      child: Text(
+                        "No cleaning records for this day.",
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      itemCount: filteredLogs.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == filteredLogs.length) {
+                          return SizedBox(
+                            height: constants.bottomOffset.h +
+                                constants.navBarHeight.h,
                           );
-                        },
-                        onDelete: () {
-                          context.read<LogProvider>().removeLog(record.cleaningId);
-                        },
-                      );
-                    },
-                  )
-          ),
+                        }
+
+                        final record = filteredLogs[index];
+                        return CleanerTile(
+                          record: record,
+                          onEdit: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (_) =>
+                                  LogBottomsheet(recordToEdit: record),
+                            );
+                          },
+                          onDelete: () {
+                            context
+                                .read<LogProvider>()
+                                .removeLog(record.cleaningId);
+                          },
+                        );
+                      },
+                    )),
         ],
       ),
     );

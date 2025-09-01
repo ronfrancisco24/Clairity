@@ -6,13 +6,14 @@ class AlertTile extends StatelessWidget {
   final DateTime date;
   final String alert;
   final int level;
+  final String sensorId;
 
-  const AlertTile({
-    super.key,
-    required this.date,
-    required this.alert,
-    required this.level,
-  });
+  const AlertTile(
+      {super.key,
+      required this.date,
+      required this.alert,
+      required this.level,
+      required this.sensorId});
 
   Color get levelColor {
     switch (level) {
@@ -21,11 +22,11 @@ class AlertTile extends StatelessWidget {
       case 2:
         return Colors.orange; // Yellow
       case 3:
-        return Colors.red;   // Red
+        return Colors.red; // Red
       case 4:
         return Color(0xFF800000);
       default:
-        return Colors.grey;  // Default/fallback
+        return Colors.grey; // Default/fallback
     }
   }
 
@@ -92,6 +93,14 @@ class AlertTile extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+                Text(
+                  'Sensor: $sensorId',
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 SizedBox(height: 4.h),
                 // Alert text

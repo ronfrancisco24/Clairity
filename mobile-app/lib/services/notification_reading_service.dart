@@ -50,11 +50,8 @@ class NotificationReadingService {
   // use to send notifications for every 10 minutes
   static final Map<String, DateTime> _lastNotified = {};
 
-  Stream<List<NotificationsModel>> streamNotifications(
-      String type, String? sensorId) {
+  Stream<List<NotificationsModel>> streamNotifications(String type) {
     return _notifications
-        .collection('sensors')
-        .doc(sensorId)
         .collection('${type}_notifications')
         .orderBy('createdAt', descending: true)
         .snapshots()
@@ -63,15 +60,12 @@ class NotificationReadingService {
             .toList());
   }
 
-  Stream<List<NotificationsModel>> streamTodaysNotifications(
-      String type, String? sensorId) {
+  Stream<List<NotificationsModel>> streamTodaysNotifications(String type) {
     final now = DateTime.now();
     final startOfDay = DateTime(now.year, now.month, now.day);
     final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
 
     return _notifications
-        .collection('sensors')
-        .doc(sensorId)
         .collection('${type}_notifications')
         .where('createdAt',
             isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
@@ -102,8 +96,6 @@ class NotificationReadingService {
     final dateTimeUtc8 = DateTime.now().toUtc().add(const Duration(hours: 8));
 
     final exists = await _notifications
-        .collection('sensors')
-        .doc(sensorId)
         .collection('${type}_notifications')
         .where('dedupId', isEqualTo: dedupId)
         .limit(1)
@@ -114,18 +106,15 @@ class NotificationReadingService {
       return;
     }
 
-    await _notifications
-        .collection('sensors')
-        .doc(sensorId)
-        .collection('${type}_notifications')
-        .add({
+    await _notifications.collection('${type}_notifications').add({
       'title': finalTitle,
       'message': finalMessage,
       'warningLevel': warningLevel,
       'type': type,
       'createdAt': dateTimeUtc8,
       'isRead': false,
-      'dedupId': dedupId
+      'dedupId': dedupId,
+      'sensorId': sensorId
     });
   }
 
@@ -161,13 +150,10 @@ class NotificationReadingService {
 
   // update isRead.
   Future<void> updateIsRead(
-      {required String sensorId,
-      required String notificationId,
+      {required String notificationId,
       required bool isRead,
       required String type}) {
     return _notifications
-        .collection('sensors')
-        .doc(sensorId)
         .collection('${type}_notifications')
         .doc(notificationId)
         .update({'isRead': true});
