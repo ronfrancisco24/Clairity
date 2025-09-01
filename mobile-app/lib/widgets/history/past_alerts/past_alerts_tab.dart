@@ -31,9 +31,25 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
     final sensorId = sensorProvider.sensorId;
 
     return Container(
-      color: Colors.grey[50],
+      color: Colors.white,
       child: Column(
         children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 5.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  getMonthYearText(selectedDate),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
           CalendarWidget(
             selectedDate: selectedDate,
             onDateSelected: (date) {

@@ -45,21 +45,11 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   Widget build(BuildContext context) {
 
     return Container(
+      color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: Text(
-              _getMonthYearText(widget.selectedDate),
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-          ),
           SizedBox(
             height: 80.h,
             child: PageView.builder(
@@ -85,23 +75,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     );
   }
 
-  String _getMonthYearText(DateTime date) {
-    List<String> months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-    return '${months[date.month - 1]} ${date.year}';
-  }
 
   bool _isSameDay(DateTime d1, DateTime d2) {
     return d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;

@@ -18,6 +18,25 @@ String formatSelectedDate(DateTime selectedDate) {
   return '${_weekdayName(selectedDate.weekday)}, ${_twoDigits(selectedDate.day)} ${_monthName(selectedDate.month)} ${selectedDate.year}';
 }
 
+
+String getMonthYearText(DateTime date) {
+  List<String> months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+  return '${months[date.month - 1]} ${date.year}';
+}
+
 // Returns weekday name from integer.
 String _weekdayName(int weekday) {
   const weekdays = [

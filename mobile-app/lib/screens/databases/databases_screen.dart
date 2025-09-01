@@ -42,7 +42,7 @@ class _DatabasesScreenState extends State<DatabasesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.h),
         child: const SafeArea(
