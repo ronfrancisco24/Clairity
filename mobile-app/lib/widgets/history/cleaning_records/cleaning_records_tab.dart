@@ -35,6 +35,22 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
       color: Colors.grey[50],
       child: Column(
         children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  getMonthYearText(selectedDate),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
           CalendarWidget(
             selectedDate: selectedDate,
             onDateSelected: (date) {
