@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import '../models/sensor_model_details.dart';
+import '../models/sensor_data_model.dart';
+import 'aqi_base_utils.dart';
 
 IconData getTimeIcon(DateTime? time) {
   if (time!.hour >= 6 && time.hour <= 18) {
@@ -19,8 +20,8 @@ getFormattedMonth(DateTime time) {
 }
 
 DateTime? getNextCleaningTime(
-  SensorDetails? current,
-  SensorDetails? forecast,
+  AqiBase? current,
+  AqiBase? forecast,
 ) {
   final now = DateTime.now().toUtc().add(const Duration(hours: 8));
 
@@ -99,7 +100,7 @@ String getAqiMessage(String category) {
   return aqiMessages[category] ?? 'Air quality data unavailable.';
 }
 
-List<Map<String, dynamic>> getCurrentData(SensorDetails data,
+List<Map<String, dynamic>> getCurrentData(SensorDataModel data,
     {String? forecastId}) {
   return [
     {
@@ -155,7 +156,7 @@ String getAlertLabel(int warningLevel) {
   }
 }
 
-Map<String, double> getNormalizedReadings(SensorDetails data) {
+Map<String, double> getNormalizedReadings(SensorDataModel data) {
   return {
     'PM2.5': getProgress(data.pm25, max: pollutantMaxValues['PM2.5']!),
     'TVOC': getProgress(data.tvoc, max: pollutantMaxValues['TVOC']!),
@@ -167,7 +168,7 @@ Map<String, double> getNormalizedReadings(SensorDetails data) {
   };
 }
 
-MapEntry<String, double> getHighestPollutant(SensorDetails data) {
+MapEntry<String, double> getHighestPollutant(SensorDataModel data) {
   final normalized = getNormalizedReadings(data);
 
   // find the entry with max progress

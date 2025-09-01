@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SensorDetails {
+import '../utils/aqi_base_utils.dart';
+
+class SensorDataModel implements AqiBase {
+  @override
   final DateTime timestamp;
+
   final double pm25;
   final double co;
   final double nh3;
@@ -11,10 +15,14 @@ class SensorDetails {
   final double tvoc;
   final double temp;
   final double humidity;
+
+  @override
   final double? aqi;
+
+  @override
   final String? aqiCategory;
 
-  SensorDetails({
+  SensorDataModel({
     required this.timestamp,
     required this.pm25,
     required this.co,
@@ -30,7 +38,7 @@ class SensorDetails {
   });
 
 
-  factory SensorDetails.fromMap(Map<String, dynamic> map) {
+  factory SensorDataModel.fromMap(Map<String, dynamic> map) {
     DateTime parsedTimestamp;
 
     if (map['timestamp'] is Timestamp) {
@@ -44,7 +52,7 @@ class SensorDetails {
       parsedTimestamp = DateTime.now();
     }
 
-    return SensorDetails(
+    return SensorDataModel(
       timestamp: parsedTimestamp,
       pm25: (map['pm25'] as num?)?.toDouble() ?? 0.0,
       co: (map['co'] as num?)?.toDouble() ?? 0.0,
@@ -55,8 +63,8 @@ class SensorDetails {
       tvoc: (map['tvoc'] as num?)?.toDouble() ?? 0.0,
       temp: (map['temp'] as num?)?.toDouble() ?? 0.0,
       humidity: (map['humidity'] as num?)?.toDouble() ?? 0.0,
-      aqi: (map['aqi'] as num?)?.toDouble() ?? 0.0,
-      aqiCategory: map['aqiCategory'] as String? ?? 'Unknown',
+      aqi: (map['general_aqi'] as num?)?.toDouble() ?? 0.0,
+      aqiCategory: map['aqi_category'] as String? ?? 'Unknown',
     );
   }
 }

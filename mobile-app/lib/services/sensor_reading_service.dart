@@ -7,45 +7,28 @@ class SensorReadingService {
   final _now = DateTime.now().toUtc().add(const Duration(hours: 8));
   final random = Random();
 
-  Stream<QueryDocumentSnapshot<Map<String, dynamic>>> streamLatestCleanedReading(String sensorId) {
+  Stream<QueryDocumentSnapshot<Map<String, dynamic>>>
+      streamLatestCleanedReading(String sensorId) {
     return _db
         .collection('sensors')
         .doc(sensorId)
-        .collection('cleanedReadingData')
+        .collection('cleanData')
         .orderBy('timestamp', descending: true)
         .limit(1)
         .snapshots()
         .map((snapshot) => snapshot.docs.first);
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> streamForecastReading(
-      String sensorId, String cleanReadingId) {
-    final forecastId = '${cleanReadingId}_60mins';
+  // gets latestReadingId
+  Stream<QueryDocumentSnapshot<Map<String, dynamic>>> fetchLatestPredictionId(String sensorId) {
     return _db
         .collection('sensors')
         .doc(sensorId)
-        .collection('cleanedReadingData')
-        .doc(cleanReadingId)
-        .collection('forecast')
-        .doc(forecastId)
-        .snapshots();
-  }
-
-  // gets latestReadingId
-  Future<String?> fetchLatestReadingId(String sensorId) async {
-    final snapshot = await _db
-        .collection('sensors')
-        .doc(sensorId)
-        .collection('cleanedReadingData')
+        .collection('predictedData')
         .orderBy('timestamp', descending: true)
         .limit(1)
-        .get();
-
-    if (snapshot.docs.isNotEmpty) {
-      return snapshot.docs.first.id;
-    }
-
-    return null;
+        .snapshots()
+        .map((snapshot) => snapshot.docs.first);
   }
 
   Future<List<String>> fetchAllSensorIds() async {
@@ -70,24 +53,27 @@ class SensorReadingService {
           .add(testData);
 
       final rawId = rawRef.id;
-
       final cleanedDocId = '${rawId}_clean';
 
       // Cleaned Data
       final cleanedRef = _db
           .collection('sensors')
           .doc(sensorId)
-          .collection('cleanedReadingData')
+          .collection('cleanData')
           .doc(cleanedDocId);
 
       await cleanedRef.set(testData);
-      final forecastTime = readingTime.add(Duration(minutes: 60));
-      final forecastData = generateSensorValues(forecastTime);
-      final forecastDataId = '${cleanedDocId}_60mins';
 
-      await cleanedRef
-          .collection('forecast')
-          .doc(forecastDataId)
+      final forecastTime = readingTime.add(const Duration(minutes: 60));
+      final forecastData = generatePredictedValues(forecastTime);
+
+      final predictedDataId = '${rawId}_predicted';
+
+      await _db
+          .collection('sensors')
+          .doc(sensorId)
+          .collection('predictedData')
+          .doc(predictedDataId)
           .set(forecastData);
     }
     print('Test data generated successfully');
@@ -96,22 +82,30 @@ class SensorReadingService {
   // generate random sensor values
   Map<String, dynamic> generateSensorValues(DateTime time) {
     final aqiValue = random.nextInt(200);
-
     return {
       'timestamp': Timestamp.fromDate(time),
       'temp': double.parse((20 + random.nextDouble() * 10).toStringAsFixed(1)),
-      'humidity': double.parse((30 + random.nextDouble() * 40).toStringAsFixed(1)),
+      'humidity':
+          double.parse((30 + random.nextDouble() * 40).toStringAsFixed(1)),
       'co': double.parse((random.nextDouble() * 50).toStringAsFixed(1)),
-      'co2': double.parse((400 + random.nextDouble() * 20000).toStringAsFixed(1)),
+      'co2':
+          double.parse((400 + random.nextDouble() * 20000).toStringAsFixed(1)),
       'ch4': double.parse((random.nextDouble() * 6).toStringAsFixed(1)),
       'tvoc': double.parse((random.nextDouble() * 5500).toStringAsFixed(1)),
-      'aqi': aqiValue,
-      'aqiCategory': getAqiCategory(aqiValue),
+      'general_aqi': aqiValue,
+      'aqi_category': getAqiCategory(aqiValue),
       'pm25': double.parse((random.nextDouble() * 500).toStringAsFixed(1)),
       'h2s': double.parse((random.nextDouble() * 10).toStringAsFixed(1)),
       'nh3': double.parse((random.nextDouble() * 10).toStringAsFixed(1)),
     };
   }
+
+  Map<String, dynamic> generatePredictedValues(DateTime time) {
+    final aqiValue = random.nextInt(200);
+    return {
+      'timestamp': Timestamp.fromDate(time),
+      'general_aqi': aqiValue,
+      'aqi_category': getAqiCategory(aqiValue),
+    };
+  }
 }
-
-
