@@ -93,7 +93,7 @@ const Map<String, String> aqiMessages = {
   'High':
       'Air quality is unhealthy. Recommend limiting occupancy and ventilating if possible.',
   'Very High':
-      'Air quality is hazardous. Strongly advise avoiding exposure and ensuring proper ventilation.',
+      'Air quality is very high. Strongly advise avoiding exposure and ensuring proper ventilation.',
 };
 
 String getAqiMessage(String category) {
@@ -150,7 +150,7 @@ String getAlertLabel(int warningLevel) {
     case 3:
       return "High Gas Levels Detected";
     case 4:
-      return "Hazardous Gas Levels!";
+      return "Very High Gas Levels!";
     default:
       return "Unknown";
   }

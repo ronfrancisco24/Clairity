@@ -43,8 +43,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final sensorProvider = Provider.of<SensorProvider>(context);
-    final sensorId = sensorProvider.sensorId;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -53,25 +51,13 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _getMonthYearText(widget.selectedDate),
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-                Text(
-                  'Current Sensor: $sensorId',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.grey[700],
-                  ),
-                ),
-              ],
+            child: Text(
+              _getMonthYearText(widget.selectedDate),
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
             ),
           ),
           SizedBox(

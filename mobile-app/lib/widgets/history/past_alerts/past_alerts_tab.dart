@@ -11,8 +11,6 @@ import '../../../constants.dart' as constants;
 import '../../../utils/dashboard_utils.dart';
 
 
-//TODO: listen to all notifications.
-
 class PastAlertsTab extends StatefulWidget {
   const PastAlertsTab({super.key});
 
@@ -45,7 +43,7 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
             },
           ),
           Container(
-            height: 56,
+            height: 70,
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
             margin: EdgeInsets.symmetric(horizontal: 16.w),
@@ -122,6 +120,7 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
 
                         return AlertTile(
                           date: alert.timestamp,
+                          sensorId: alert.sensorId,
                           alert: getAlertLabel(alert.warningLevel),
                           level: alert.warningLevel,
                         );

@@ -8,8 +8,7 @@ Stream<List<SensorDataModel>> streamSensorHistoryData(String sensorId, DateTime 
   final startOfDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
   final endOfDay = startOfDay.add(Duration(days: 1));
 
-  return _db
-      .collection('sensors')
+  return _db.collection('sensors')
       .doc(sensorId)
       .collection('cleanData')
       .where('timestamp', isGreaterThanOrEqualTo: startOfDay)
@@ -26,8 +25,6 @@ Stream<List<NotificationsModel>> streamAlertData(String sensorId, DateTime selec
   final endOfDay = startOfDay.add(const Duration(days: 1));
 
   return _db
-      .collection('sensors')
-      .doc(sensorId)
       .collection('current_notifications')
       .where('createdAt', isGreaterThanOrEqualTo: startOfDay)
       .where('createdAt', isLessThan: endOfDay)

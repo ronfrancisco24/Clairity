@@ -43,7 +43,7 @@ class NotificationProvider extends ChangeNotifier {
       _allNotificationsSub?.cancel();
 
       _allNotificationsSub =
-          _notificationReadingService.streamNotifications(type, sensorId).listen((list) {
+          _notificationReadingService.streamNotifications(type).listen((list) {
         _notificationsList = list;
         notifyListeners();
       });
@@ -57,7 +57,7 @@ class NotificationProvider extends ChangeNotifier {
       if (type == 'current') {
         _todaysCurrentSub?.cancel();
         _todaysCurrentSub = _notificationReadingService
-            .streamTodaysNotifications(type, sensorId)
+            .streamTodaysNotifications(type)
             .listen((list) {
           _todaysCurrentNotificationsList = list;
           notifyListeners();
@@ -65,7 +65,7 @@ class NotificationProvider extends ChangeNotifier {
       } else if (type == 'forecast') {
         _todaysForecastSub?.cancel();
         _todaysForecastSub = _notificationReadingService
-            .streamTodaysNotifications(type, sensorId)
+            .streamTodaysNotifications(type)
             .listen((list) {
           _todaysForecastNotificationsList = list;
           notifyListeners();

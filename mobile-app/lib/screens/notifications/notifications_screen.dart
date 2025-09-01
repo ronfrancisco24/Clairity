@@ -81,7 +81,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               if (sensorId != null) {
                                 await NotificationReadingService()
                                     .updateIsRead(
-                                    sensorId: sensorId,
                                     notificationId: model.id,
                                     isRead: !model.isRead,
                                     type: model.type);

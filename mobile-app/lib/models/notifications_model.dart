@@ -8,6 +8,7 @@ class NotificationsModel {
   final DateTime timestamp;
   final bool isRead;
   final String type;
+  final String sensorId;
 
   NotificationsModel(
       {required this.id,
@@ -16,7 +17,8 @@ class NotificationsModel {
       required this.message,
       required this.timestamp,
       required this.isRead,
-      required this.type});
+      required this.type,
+      required this.sensorId});
 
   factory NotificationsModel.fromMap(Map<String, dynamic> map, String id) {
     return NotificationsModel(
@@ -26,6 +28,8 @@ class NotificationsModel {
         message: map['message'] ?? '',
         warningLevel: (map['warningLevel'] as num?)?.toInt() ?? 0,
         isRead: map['isRead'] ?? false,
-        type: map['type'] ?? '');
+        type: map['type'] ?? '',
+        sensorId: map['sensorId'] ?? '');
+
   }
 }

@@ -9,6 +9,7 @@ class NavigationItem extends StatelessWidget {
     required this.isSelected,
     required this.onSelect,
     this.spotlight = true,
+    this.color = Colors.transparent
   });
 
   final IconData iconData;
@@ -16,6 +17,7 @@ class NavigationItem extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onSelect;
   final bool spotlight;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
