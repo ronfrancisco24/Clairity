@@ -13,12 +13,12 @@ class AdminMessageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 8.h),
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: TextField(
             readOnly: true,
             decoration: InputDecoration(
-              hintText: '${record.adminMessage}',
+              hintText: record.adminMessage,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
               ),

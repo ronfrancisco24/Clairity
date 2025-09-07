@@ -20,13 +20,13 @@ class SplashScreen extends StatelessWidget {
         child: Container(
           height: double.infinity,
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: AppGradients.primaryGradient
           ),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Center(
+              Center(
                   child: Image(image: AssetImage('images/logo.png'))
               ),
               SizedBox(height:30),

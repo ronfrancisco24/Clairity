@@ -9,10 +9,10 @@ void showOtpDialog(BuildContext context, String verificationId, Map<String, dyna
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      title: Text("Verify OTP"),
-      content: TextFormField(controller: _otpController, decoration: InputDecoration(labelText: "Enter OTP")),
+      title: const Text("Verify OTP"),
+      content: TextFormField(controller: _otpController, decoration: const InputDecoration(labelText: "Enter OTP")),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: Text("Cancel")),
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
         ElevatedButton(
           onPressed: () {
             userProvider.verifyAndCreateUser(
@@ -23,7 +23,7 @@ void showOtpDialog(BuildContext context, String verificationId, Map<String, dyna
               Navigator.pop(context);
             });
           },
-          child: Text("Verify & Create"),
+          child: const Text("Verify & Create"),
         ),
       ],
     ),

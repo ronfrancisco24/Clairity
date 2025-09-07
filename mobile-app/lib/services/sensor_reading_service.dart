@@ -12,7 +12,7 @@ class SensorReadingService {
     return _db
         .collection('sensors')
         .doc(sensorId)
-        .collection('cleanData')
+        .collection('cleaningData') //TODO: change to cleaningData
         .orderBy('timestamp', descending: true)
         .limit(1)
         .snapshots()
@@ -25,7 +25,7 @@ class SensorReadingService {
         .collection('sensors')
         .doc(sensorId)
         .collection('predictedData')
-        .orderBy('timestamp', descending: true)
+        .orderBy('predicted_timestamp', descending: true)
         .limit(1)
         .snapshots()
         .map((snapshot) => snapshot.docs.first);
@@ -59,7 +59,7 @@ class SensorReadingService {
       final cleanedRef = _db
           .collection('sensors')
           .doc(sensorId)
-          .collection('cleanData')
+          .collection('cleaningData') //TODO: change to cleaningData
           .doc(cleanedDocId);
 
       await cleanedRef.set(testData);
@@ -79,7 +79,7 @@ class SensorReadingService {
     print('Test data generated successfully');
   }
 
-  // generate random sensor values
+  // generate random sensor values for testing
   Map<String, dynamic> generateSensorValues(DateTime time) {
     final aqiValue = random.nextInt(200);
     return {
@@ -103,9 +103,9 @@ class SensorReadingService {
   Map<String, dynamic> generatePredictedValues(DateTime time) {
     final aqiValue = random.nextInt(200);
     return {
-      'timestamp': Timestamp.fromDate(time),
-      'general_aqi': aqiValue,
-      'aqi_category': getAqiCategory(aqiValue),
+      'predicted_timestamp': Timestamp.fromDate(time),
+      'predicted_general_aqi': aqiValue,
+      'predicted_aqi_category': getAqiCategory(aqiValue),
     };
   }
 }

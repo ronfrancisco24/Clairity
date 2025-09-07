@@ -35,7 +35,7 @@ void showDeleteConfirmationDialog(BuildContext context, VoidCallback onDelete) {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context), // Cancel
-            child: Text("Cancel"),
+            child: const Text("Cancel"),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -47,7 +47,7 @@ void showDeleteConfirmationDialog(BuildContext context, VoidCallback onDelete) {
                 onDelete(); // Execute deletion
               }
             },
-            child: Text("Delete", style: TextStyle(color: Colors.white)),
+            child: const Text("Delete", style: TextStyle(color: Colors.white)),
           ),
         ],
       );

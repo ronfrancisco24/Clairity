@@ -105,8 +105,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                     );
                   },
-                  child: Text(
-                    'Get OTP here',
+                  child: const Text(
+                    'No OTP? Get OTP here.',
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

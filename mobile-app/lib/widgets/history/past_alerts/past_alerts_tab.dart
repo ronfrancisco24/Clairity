@@ -5,6 +5,7 @@ import '../../../models/notifications_model.dart';
 import '../../../providers/sensor_provider.dart';
 import '../../../services/history_reading_service.dart';
 import '../../../utils/history_utils.dart';
+import 'alert_popup.dart';
 import 'alert_tile.dart';
 import '../cleaner_calendar.dart';
 import '../../../constants.dart' as constants;
@@ -135,6 +136,12 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
                         final alert = records[records.length - 1 - index];
 
                         return AlertTile(
+                          onTap: (){
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertPopup(),
+                            );
+                          },
                           date: alert.timestamp,
                           sensorId: alert.sensorId,
                           alert: getAlertLabel(alert.warningLevel),

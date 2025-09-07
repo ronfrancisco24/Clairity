@@ -22,7 +22,7 @@ class RecordInfoRow extends StatelessWidget {
             '$label',
             style: TextStyle(
               fontSize: 12.sp,
-              color: Color(0xFF000000).withOpacity(0.7),
+              color: const Color(0xFF000000).withOpacity(0.7),
               fontWeight: FontWeight.w500,
             ),
           ),

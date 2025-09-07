@@ -65,7 +65,7 @@ class AboutPopup extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Header(title: 'About Clairity'),
+              const Header(title: 'About Clairity'),
               const SizedBox(height: 5),
               Expanded(
                 child: SingleChildScrollView(
@@ -75,7 +75,7 @@ class AboutPopup extends StatelessWidget {
                       const SizedBox(height: 15),
                       _buildLogoBox(),
                       const SizedBox(height: 20),
-                      Text(
+                      const Text(
                         'Clairity is an AI-powered system that monitors indoor air quality in restrooms using environmental sensors. '
                         'Designed to support janitorial efficiency, Clairity ensures cleanliness through real-time data and intelligent alerts.',
                         textAlign: TextAlign.justify,

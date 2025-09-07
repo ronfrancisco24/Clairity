@@ -32,7 +32,7 @@ class ProfileInfo extends StatelessWidget {
               height: 10.h,
             ),
             Text(
-              '${record.userId}',
+              record.userId,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16.sp,

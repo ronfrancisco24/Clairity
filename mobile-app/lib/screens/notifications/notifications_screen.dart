@@ -77,6 +77,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             message: model.message,
                             time: model.timestamp,
                             isUnread: !model.isRead,
+                            sensor: model.sensorId,
                             onTap: () async {
                               if (sensorId != null) {
                                 await NotificationReadingService()

@@ -33,7 +33,7 @@ class SocialButton extends StatelessWidget {
           SizedBox(
             width: 25,
           ),
-          SizedBox(
+              const SizedBox(
             height: 25,
             width: 25,
             child: CircleAvatar(

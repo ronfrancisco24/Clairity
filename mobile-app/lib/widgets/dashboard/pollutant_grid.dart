@@ -30,7 +30,7 @@ class PollutantGrid extends StatelessWidget {
           crossAxisCellCount: (isLastItem && isOddCount) ? crossAxisCount : 1,
           child: PollutantCard(
             // input firestore data
-            value: data['value'],
+            value:(data['value'] as num).toDouble(),
             // take from pollutantMaxValues and assign its label.
             maxValue: (pollutantMaxValues[data['label']] ?? 100).toInt(),
             label: data['label'],

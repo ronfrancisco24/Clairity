@@ -22,12 +22,12 @@ class ForecastedDataModel implements AqiBase {
   factory ForecastedDataModel.fromMap(Map<String, dynamic> map) {
     DateTime parsedTimestamp;
 
-    if (map['timestamp'] is Timestamp) {
+    if (map['predicted_timestamp'] is Timestamp) {
       // Firestore Timestamp
-      parsedTimestamp = (map['timestamp'] as Timestamp).toDate();
-    } else if (map['timestamp'] is String) {
+      parsedTimestamp = (map['predicted_timestamp'] as Timestamp).toDate();
+    } else if (map['predicted_timestamp'] is String) {
       // ISO 8601 String
-      parsedTimestamp = DateTime.tryParse(map['timestamp']) ?? DateTime.now();
+      parsedTimestamp = DateTime.tryParse(map['predicted_timestamp']) ?? DateTime.now();
     } else {
       // Fallback
       parsedTimestamp = DateTime.now();
@@ -35,8 +35,8 @@ class ForecastedDataModel implements AqiBase {
 
     return ForecastedDataModel.PredictedSensorDetailsModel(
       timestamp: parsedTimestamp,
-      aqi: (map['general_aqi'] as num?)?.toDouble() ?? 0.0,
-      aqiCategory: map['aqi_category'] as String? ?? 'Unknown',
+      aqi: (map['predicted_general_aqi'] as num?)?.toDouble() ?? 0.0, //change to predicted aqi.
+      aqiCategory: map['predicted_aqi_category'] as String? ?? 'Unknown',
     );
   }
 }

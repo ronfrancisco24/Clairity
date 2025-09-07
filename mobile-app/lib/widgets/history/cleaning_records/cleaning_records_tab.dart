@@ -86,7 +86,7 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 SizedBox(
                   width: 30.w,
                   height: 30.h,
@@ -103,7 +103,7 @@ class _CleaningRecordsTabState extends State<CleaningRecordsTab> {
                               builder: (_) => const LogBottomsheet(),
                             );
                           },
-                          icon: Icon(Icons.add, color: Colors.white),
+                          icon: const Icon(Icons.add, color: Colors.white),
                         )
                       : const SizedBox
                           .shrink(), // Keeps space but shows nothing

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-
 import '../../constants.dart';
 import '../../utils/dashboard_utils.dart';
 
 class ForecastCard extends StatelessWidget {
-  const ForecastCard({super.key, required this.category, required this.value});
+  const ForecastCard(
+      {super.key,
+      required this.category,
+      required this.value,
+      required this.nextForecast});
 
   final String? category;
   final double? value;
+  final DateTime? nextForecast;
 
   Color getCategoricalColors(String? category) {
     switch (category) {
@@ -26,8 +30,8 @@ class ForecastCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final min60 = DateTime.now().toUtc().add(const Duration(hours: 9));
-    late final String formatted60 = getFormattedTime(min60);
+    late final String formatted60 =
+    nextForecast != null ? getFormattedTime(nextForecast!) : "N/A";
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -54,7 +58,8 @@ class ForecastCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 decoration: BoxDecoration(
                   color: getCategoricalColors(category),
                   border: Border.all(
@@ -64,7 +69,7 @@ class ForecastCard extends StatelessWidget {
                 ),
                 child: Text(category ?? "Unknown", style: aqiCardFont),
               ),
-              Text('$value', style: aqiCardFont),
+              Text('${value?.toStringAsFixed(0)}', style: aqiCardFont),
             ],
           ),
         ],

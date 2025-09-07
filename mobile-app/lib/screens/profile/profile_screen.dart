@@ -44,16 +44,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DashboardHeader(title: 'Profile', hasDate: false),
-              SizedBox(
+              const DashboardHeader(title: 'Profile', hasDate: false),
+              const SizedBox(
                 height: 20,
               ),
               ProfileContainer(
-                name: '${firstName} ${lastName}',
+                name: '$firstName $lastName',
                 email: phoneNo,
                 building: userProvider.user?.building ?? 'Building 1',
                 avatarIndex: userProvider.user?.avatar ?? 0,
@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Text(
@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (context) => HelpPopup(),
+                    builder: (context) => const HelpPopup(),
                   );
                 },
               ),
@@ -107,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (context) => AboutPopup(),
+                    builder: (context) => const AboutPopup(),
                   );
                 },
               ),
@@ -123,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SplashScreen(),
+                      builder: (context) => const SplashScreen(),
                     ),
                   );
                 },

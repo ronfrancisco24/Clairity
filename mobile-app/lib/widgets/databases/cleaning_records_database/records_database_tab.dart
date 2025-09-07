@@ -10,8 +10,6 @@ import '../../../constants.dart' as constants;
 import 'acknowledge_card/acknowledge_card.dart';
 import 'bottomsheet/acknowledge_bottomsheet.dart';
 
-//TODO: Username based on userId
-
 class CleaningRecordsDatabaseTab extends StatefulWidget {
   const CleaningRecordsDatabaseTab({super.key});
 
@@ -64,7 +62,7 @@ class _CleaningRecordsDatabaseTabState extends State<CleaningRecordsDatabaseTab>
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.w),
-            child: Divider(),
+            child: const Divider(),
           ),
           SizedBox(height: 10.h,),
           Expanded(

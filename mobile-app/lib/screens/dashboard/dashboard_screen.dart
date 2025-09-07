@@ -19,12 +19,11 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../constants.dart' as constants;
 
-//TODO instead of a fixed 1 hr, display actual forecast time in forecast card.
-//TODO: fix user creation.
+//TODO: fix user creation. checkout sha-1 and sha-256 creation
+// https://stackoverflow.com/questions/46751766/this-app-is-not-authorized-to-use-firebase-authentication-please-verify-that-the
 //TODO: add logo
 //TODO: fix about popup
 //TODO: add info buttons.
-//TODO: for sensor data just filter it depending on the sensor.
 //TODO: fix size constraints
 
 class DashboardScreen extends StatefulWidget {
@@ -101,8 +100,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     ScreenUtil.init(context, designSize: const Size(360, 690));
 
-    print('This is the next forecast time: ${sensorProvider.predictedData?.timestamp}');
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -132,6 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: ForecastCard(
                     category: sensorProvider.predictedData?.aqiCategory,
                     value: sensorProvider.predictedData?.aqi,
+                    nextForecast: sensorProvider.predictedData?.timestamp,
                   ),
                 ),
                 // Air Quality & Trend Cards
