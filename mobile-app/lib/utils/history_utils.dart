@@ -109,3 +109,18 @@ Color getRandomIconColor() {
   final random = Random();
   return colorOptions[random.nextInt(colorOptions.length)];
 }
+
+String getAqiDescription(String aqiCategory) {
+  switch (aqiCategory) {
+    case 'Good':
+      return 'Air quality recorded as clean and healthy. No risks expected — enjoy normal activities.';
+    case 'Moderate':
+      return 'Air quality recorded as acceptable. Some sensitive groups may notice mild effects.';
+    case 'High':
+      return 'Pollutant levels were recorded as high. Long exposure may cause discomfort; consider limiting outdoor activity.';
+    case 'Very High':
+      return 'Air quality recorded as hazardous. Strongly advised to stay indoors and avoid physical exertion outside.';
+    default:
+      return 'Air quality data unavailable.';
+  }
+}
