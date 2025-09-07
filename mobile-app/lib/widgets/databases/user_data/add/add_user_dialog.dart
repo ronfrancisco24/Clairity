@@ -61,8 +61,8 @@ class _AddUserDialogState extends State<AddUserDialog> {
                   controller: _phoneController,
                   validator: (value) {
                     if (value == null || value.isEmpty) return 'Phone number is required';
-                    if (!RegExp(r'^\+63\d{10}$').hasMatch(value)) {
-                      return 'Enter a valid +63 phone number';
+                    if (!RegExp(r'^[9]\d{9}$').hasMatch(value)) {
+                      return 'Enter a valid phone number (9XXXXXXXXX)';
                     }
                     return null;
                   },
@@ -91,7 +91,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                               "firstName": _firstNameController.text.trim(),
                               "lastName": _lastNameController.text.trim(),
                               "username": _usernameController.text.trim(),
-                              "phoneNo": "+63" + _phoneController.text.trim(),
+                              "phoneNo": "+63${_phoneController.text.trim()}",
                               "building": _buildingController.text.trim(),
                               "role": "user",
                             };
