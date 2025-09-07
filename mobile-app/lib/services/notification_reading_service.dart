@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../models/notifications_model.dart';
-import '../models/sensor_data_model.dart';
 import '../utils/aqi_base_utils.dart';
 import '../utils/dashboard_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
+//TODO adjust to new notifications model.
 
 class NotificationReadingService {
   final FirebaseFirestore _notifications = FirebaseFirestore.instance;
@@ -83,7 +84,9 @@ class NotificationReadingService {
       required int warningLevel,
       required String type,
       required String dedupId,
-      required String sensorId}) async {
+      required String sensorId,
+      required double? aqi,
+      required String? aqiCategory}) async {
     // determines title based on type
     String finalTitle = type == 'forecast'
         ? 'Forecast Message: $title'
@@ -114,7 +117,9 @@ class NotificationReadingService {
       'createdAt': dateTimeUtc8,
       'isRead': false,
       'dedupId': dedupId,
-      'sensorId': sensorId
+      'sensorId': sensorId,
+      'aqi': aqi,
+      'aqiCategory': aqiCategory
     });
   }
 
@@ -144,7 +149,9 @@ class NotificationReadingService {
           warningLevel: aqiLevel,
           type: type,
           dedupId: aqiKey,
-          sensorId: sensorId);
+          sensorId: sensorId,
+          aqi: data.aqi,
+          aqiCategory: data.aqiCategory);
     }
   }
 

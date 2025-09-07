@@ -30,7 +30,7 @@ class AdminMessage extends StatelessWidget {
                 ),
                 maxLines: 5,
               ),
-              Expanded(child: SizedBox()), // Spacer
+              const Expanded(child: SizedBox()), // Spacer
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

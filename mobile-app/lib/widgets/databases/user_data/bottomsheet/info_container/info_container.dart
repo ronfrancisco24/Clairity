@@ -49,12 +49,12 @@ class _InfoContainerState extends State<InfoContainer> {
         decoration: BoxDecoration(
           color: const Color(0xFFF3F4F6),
           borderRadius: BorderRadius.circular(8.r),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.grey,
               spreadRadius: 2,
               blurRadius: 4,
-              offset: const Offset(2, 3),
+              offset: Offset(2, 3),
             ),
           ],
         ),

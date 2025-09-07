@@ -20,7 +20,7 @@ class DetailRow extends StatelessWidget {
           SizedBox(
             width: 100.w,
             child: Text(
-              '$label',
+              label,
               style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
             ),
           ),

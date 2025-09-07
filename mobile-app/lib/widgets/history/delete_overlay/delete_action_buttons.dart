@@ -56,7 +56,7 @@ class DeleteActionButtons extends StatelessWidget {
                 ? SizedBox(
               width: 16.w,
               height: 16.w,
-              child: CircularProgressIndicator(
+              child: const CircularProgressIndicator(
                 strokeWidth: 2,
                 color: Colors.white,
               ),

@@ -6,8 +6,6 @@ import '../../widgets/history/past_alerts/past_alerts_tab.dart';
 import '../../widgets/history/cleaning_records/cleaning_records_tab.dart';
 import '../../widgets/history/sensor_chart/sensor_data_tab.dart';
 
-//TODO: change sensor data pollutants to use thresholds
-
 class HistoryScreen extends StatefulWidget {
   final int initialIndex;
 

@@ -78,7 +78,7 @@ class _LogBottomsheetState extends State<LogBottomsheet> {
             ),
             const Text('Rate Your Experience'),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: Ratings(
                 color: Colors.yellow,
                 initialRating: _selectedRating,

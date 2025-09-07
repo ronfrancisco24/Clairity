@@ -57,7 +57,7 @@ class _CleanerTileState extends State<CleanerTile> {
           return Container(
             margin: EdgeInsets.only(bottom: 12.h),
             padding: EdgeInsets.all(16.w),
-            child: Center(child: CircularProgressIndicator()),
+            child: const Center(child: CircularProgressIndicator()),
           );
         }
 
@@ -84,7 +84,7 @@ class _CleanerTileState extends State<CleanerTile> {
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
                 blurRadius: 8,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -122,7 +122,7 @@ class _CleanerTileState extends State<CleanerTile> {
                 ],
               ),
               if (widget.record.acknowledged == true) ...[
-                Divider(),
+                const Divider(),
                 AdminMessageContainer(record: widget.record),
               ],
             ],

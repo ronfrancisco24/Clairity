@@ -43,3 +43,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# secret keys
+node_modules
+firebase.json
+functions/node_modules
+functions/package-lock.json
+functions/package.json
+/android
+/ios

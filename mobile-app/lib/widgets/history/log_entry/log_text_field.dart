@@ -19,7 +19,7 @@ class _LogTextFieldState extends State<LogTextField> {
       textAlignVertical: TextAlignVertical.top,
       decoration: InputDecoration(
         hintText: 'Share your thoughts, experiences, or notes.',
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
           color: Colors.grey
         ),
         border: OutlineInputBorder(
@@ -27,11 +27,11 @@ class _LogTextFieldState extends State<LogTextField> {
           borderRadius: BorderRadius.circular(10),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1.5),
+          borderSide: const BorderSide(color: Colors.grey, width: 1.5),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black, width: 2),
+          borderSide: const BorderSide(color: Colors.black, width: 2),
           borderRadius: BorderRadius.circular(10),
         ),
       ),

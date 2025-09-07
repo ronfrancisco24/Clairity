@@ -26,7 +26,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
 
     return AlertDialog(
       backgroundColor: Colors.white,
-      title: Center(child: const Text("Add User")),
+      title: const Center(child: Text("Add User")),
       content: Container(
         color: Colors.white,
         width: MediaQuery.of(context).size.width,

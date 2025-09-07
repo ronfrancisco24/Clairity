@@ -6,11 +6,11 @@ final _db = FirebaseFirestore.instance;
 
 Stream<List<SensorDataModel>> streamSensorHistoryData(String sensorId, DateTime selectedDate) {
   final startOfDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
-  final endOfDay = startOfDay.add(Duration(days: 1));
+  final endOfDay = startOfDay.add(const Duration(days: 1));
 
   return _db.collection('sensors')
       .doc(sensorId)
-      .collection('cleanData')
+      .collection('cleaningData')
       .where('timestamp', isGreaterThanOrEqualTo: startOfDay)
       .where('timestamp', isLessThan: endOfDay)
       .orderBy('timestamp')

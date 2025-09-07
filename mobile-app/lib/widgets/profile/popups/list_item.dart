@@ -21,7 +21,7 @@ class ListItem extends StatelessWidget {
           Expanded(
             child: RichText(
               text: TextSpan(
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 children: [
                   TextSpan(
                     text: '$label\n',

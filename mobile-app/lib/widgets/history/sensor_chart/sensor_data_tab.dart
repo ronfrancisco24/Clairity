@@ -28,7 +28,6 @@ class _SensorDataTabState extends State<SensorDataTab> {
     super.dispose();
   }
 
-
   @override
   void initState() {
     super.initState();

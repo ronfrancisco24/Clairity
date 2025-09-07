@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import '../models/record_timestampped_model.dart';
 import '../models/sensor_data_model.dart';
 
-List<T> filterRecordsByDate<T extends TimestampedRecord>(List<T> records, DateTime selectedDate) {
+List<T> filterRecordsByDate<T extends TimestampedRecord>(
+    List<T> records, DateTime selectedDate) {
   return records.where((record) {
     final date = record.timestamp;
     return date.year == selectedDate.year &&
@@ -17,7 +18,6 @@ List<T> filterRecordsByDate<T extends TimestampedRecord>(List<T> records, DateTi
 String formatSelectedDate(DateTime selectedDate) {
   return '${_weekdayName(selectedDate.weekday)}, ${_twoDigits(selectedDate.day)} ${_monthName(selectedDate.month)} ${selectedDate.year}';
 }
-
 
 String getMonthYearText(DateTime date) {
   List<String> months = [
@@ -40,7 +40,13 @@ String getMonthYearText(DateTime date) {
 // Returns weekday name from integer.
 String _weekdayName(int weekday) {
   const weekdays = [
-    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
   ];
   return weekdays[weekday - 1];
 }
@@ -48,8 +54,18 @@ String _weekdayName(int weekday) {
 // Returns month name from integer.
 String _monthName(int month) {
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
   ];
   return months[month - 1];
 }
@@ -58,7 +74,8 @@ String _monthName(int month) {
 String _twoDigits(int n) => n.toString().padLeft(2, '0');
 
 // Filters the list of sensor details by the selected date.
-List<SensorDataModel> filterSensorDetailsByDate(List<SensorDataModel> samples, DateTime selectedDate) {
+List<SensorDataModel> filterSensorDetailsByDate(
+    List<SensorDataModel> samples, DateTime selectedDate) {
   return samples.where((sensorDetail) {
     return sensorDetail.timestamp.year == selectedDate.year &&
         sensorDetail.timestamp.month == selectedDate.month &&
@@ -66,7 +83,8 @@ List<SensorDataModel> filterSensorDetailsByDate(List<SensorDataModel> samples, D
   }).toList();
 }
 
-List<T> sortByDate<T>(List<T> items, DateTime Function(T) getDate, {bool descending = true}) {
+List<T> sortByDate<T>(List<T> items, DateTime Function(T) getDate,
+    {bool descending = true}) {
   items.sort((a, b) {
     final dateA = getDate(a);
     final dateB = getDate(b);

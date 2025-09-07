@@ -39,7 +39,7 @@ class SensorLineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
-        gridData: FlGridData(show: false),
+        gridData: const FlGridData(show: false),
         titlesData: _buildTitlesData(),
         borderData: FlBorderData(show: false),
         minX: 0,

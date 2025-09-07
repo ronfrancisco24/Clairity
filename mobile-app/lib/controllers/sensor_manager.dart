@@ -5,8 +5,6 @@ import '../providers/sensor_provider.dart';
 import '../services/notification_reading_service.dart';
 import '../services/sensor_reading_service.dart';
 
-//TODO: set forecast data sub to predicted data model.
-
 class SensorManager {
   final SensorProvider provider;
   final NotificationReadingService _notifService;
@@ -51,7 +49,6 @@ class SensorManager {
       _notifService.checkThresholdsAndNotify(
           provider.predictedData!, type: 'forecast', sensorId);
     }
-    print('i predicted data!');
   }
 
   void dispose() {

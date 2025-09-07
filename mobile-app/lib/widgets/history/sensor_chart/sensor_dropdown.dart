@@ -33,14 +33,22 @@ class _SensorDropdownState extends State<SensorDropdown> {
             widget.onChanged(value);
           }
         },
-        items: widget.list.map((String value) {
+        // Dropdown menu items (show names)
+        items: widget.list.map((value) {
           return DropdownMenuItem<String>(
             value: value,
-            child: Text(
-              value == widget.value ? "Current Sensor: $value" : value,
-            ),
+            child: Text(value), // show full sensor name in menu
           );
         }).toList(),
+        // Selected value display (show index instead)
+        selectedItemBuilder: (BuildContext context) {
+          return widget.list.asMap().entries.map<Widget>((entry) {
+            final index = entry.key;
+            return Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Sensor ${index + 1}")); // show index in the button
+          }).toList();
+        },
       ),
     );
   }

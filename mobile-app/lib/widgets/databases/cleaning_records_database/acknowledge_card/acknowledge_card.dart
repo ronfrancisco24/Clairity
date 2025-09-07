@@ -44,7 +44,7 @@ class _AcknowledgeCardState extends State<AcknowledgeCard> {
           return Container(
             margin: EdgeInsets.only(bottom: 12.h),
             padding: EdgeInsets.all(12.w),
-            child: Center(child: CircularProgressIndicator()),
+            child: const Center(child: CircularProgressIndicator()),
           );
         }
 
@@ -94,7 +94,7 @@ class _AcknowledgeCardState extends State<AcknowledgeCard> {
                 ],
               ),
               if (widget.record.acknowledged == true) ...[
-                Divider(),
+                const Divider(),
                 AdminMessageContainer(record: widget.record),
               ]
             ],

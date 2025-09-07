@@ -28,7 +28,7 @@ class AqiCard extends StatelessWidget {
             height: 125,
             child: Stack(children: [
               AnimatedRadialGauge(
-                duration: Duration(seconds: 1),
+                duration: const Duration(seconds: 1),
                 curve: Curves.elasticOut,
                 radius: 100,
                 value: value,

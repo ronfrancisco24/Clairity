@@ -87,7 +87,7 @@ class _UserDataTabState extends State<UserDataTab> {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(child: UserTable(users: filteredUsers)),
             ],
           ),

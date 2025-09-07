@@ -77,7 +77,7 @@ class HelpPopup extends StatelessWidget {
           padding: const EdgeInsets.all(30),
           child: Column(
             children: [
-              Header(title: 'Help - Clairity Guide'),
+              const Header(title: 'Help - Clairity Guide'),
               const SizedBox(height: 5),
               Expanded(
                 child: SingleChildScrollView(
@@ -96,13 +96,13 @@ class HelpPopup extends StatelessWidget {
                           color: vividGreen,
                         ),
                       ),
-                      SizedBox(height: 10,),
+                      const SizedBox(height: 10,),
                       FrostedContainer(
                           width: width * 0.9,
                           height: height * 0.05,
                           text: 'Red - Needs immediate cleaning.',
                           color: Colors.red),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       FrostedContainer(
@@ -110,7 +110,7 @@ class HelpPopup extends StatelessWidget {
                           height: height * 0.05,
                           text: 'Yellow - Moderate, check soon',
                           color: Colors.yellowAccent),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       const Divider(height: 20),
