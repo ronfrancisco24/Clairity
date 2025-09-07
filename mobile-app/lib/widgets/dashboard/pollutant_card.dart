@@ -20,8 +20,18 @@ class PollutantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final roundedValue = double.parse(value.toStringAsFixed(1));
-    final normalized = (roundedValue / maxValue).clamp(0.0, 1.0);
+
+    // Fix: Calculate normalized value directly from the original value
+    // without unnecessary string conversion
+    var normalized = value / maxValue;
+
+    if (value > 0 && normalized < 0.05) {
+      normalized = 0.3;
+    }
+
+    // Only round the value for display purposes
+    final displayValue = value.toStringAsFixed(1);
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -35,7 +45,7 @@ class PollutantCard extends StatelessWidget {
         children: [
           FittedBox(
             child: Text(
-              '${value.toStringAsFixed(1)}/$maxValue',
+              '$displayValue/$maxValue',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 26,
@@ -60,9 +70,15 @@ class PollutantCard extends StatelessWidget {
                 child: GradientProgressIndicator(
                     const [
                       Color(0xFFA0C878),
+                      Color(0xFFA0C878),
+                      Color(0xFF27667B),
                       Color(0xFF27667B),
                       Color(0xFF143D60),
+                      Color(0xFF143D60),
+                      Color(0xFF143D60),
                       Color(0xFFDDEB9D),
+                      Color(0xFFDDEB9D),
+                      Color(0xFFA0C878),
                     ], normalized),
               ),
             ),

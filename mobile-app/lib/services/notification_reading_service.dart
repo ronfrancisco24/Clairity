@@ -96,7 +96,8 @@ class NotificationReadingService {
     String finalMessage =
         type == 'forecast' ? 'AQI Forecast: $message' : message;
 
-    final dateTimeUtc8 = DateTime.now().toUtc().add(const Duration(hours: 8));
+    final dateTimeUtc8 = DateTime.now();
+    // final dateTimeUtc8 = DateTime.now().toUtc().add(const Duration(hours: 8));
 
     final exists = await _notifications
         .collection('${type}_notifications')
@@ -145,7 +146,7 @@ class NotificationReadingService {
         _shouldNotify(aqiKey, cooldown: Duration(hours: 1))) {
       addNotification(
           title: 'Air Quality Alert',
-          message: 'AQI is ${data.aqi} (${data.aqiCategory})',
+          message: 'AQI is ${data.aqi?.toStringAsFixed(0)} (${data.aqiCategory})',
           warningLevel: aqiLevel,
           type: type,
           dedupId: aqiKey,

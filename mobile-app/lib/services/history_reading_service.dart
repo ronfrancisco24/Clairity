@@ -4,20 +4,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _db = FirebaseFirestore.instance;
 
-Stream<List<SensorDataModel>> streamSensorHistoryData(String sensorId, DateTime selectedDate) {
-  final startOfDay = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+
+Stream<List<SensorDataModel>> streamSensorHistoryData(
+    String sensorId, DateTime selectedDate) {
+  final startOfDay =
+  DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
   final endOfDay = startOfDay.add(const Duration(days: 1));
 
-  return _db.collection('sensors')
+  return _db
+      .collection('sensors')
       .doc(sensorId)
       .collection('cleaningData')
-      .where('timestamp', isGreaterThanOrEqualTo: startOfDay)
-      .where('timestamp', isLessThan: endOfDay)
+      .where('timestamp', isGreaterThanOrEqualTo: _convertToQueryFormat(startOfDay))
+      .where('timestamp', isLessThan: _convertToQueryFormat(endOfDay))
       .orderBy('timestamp')
       .snapshots()
-      .map((querySnapshot) => querySnapshot.docs
-      .map((doc) => SensorDataModel.fromMap(doc.data()))
-      .toList());
+      .map((querySnapshot) =>
+      querySnapshot.docs.map((doc) => SensorDataModel.fromMap(doc.data())).toList());
+}
+
+// Flexible converter: works with both Firestore Timestamps and ISO8601 strings
+dynamic _convertToQueryFormat(DateTime dateTime) {
+  // 🔑 Try querying with Firestore Timestamp first
+  // return Timestamp.fromDate(dateTime);
+
+  //ISO8601 strings as well,
+  return dateTime.toUtc().toIso8601String();
 }
 
 Stream<List<NotificationsModel>> streamAlertData(String sensorId, DateTime selectedDate){

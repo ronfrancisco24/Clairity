@@ -22,6 +22,8 @@ import '../../constants.dart' as constants;
 //TODO: fix user creation. checkout sha-1 and sha-256 creation
 // https://stackoverflow.com/questions/46751766/this-app-is-not-authorized-to-use-firebase-authentication-please-verify-that-the
 //TODO: add logo
+//TODO: fix progress bar not loading.
+//TODO: adjust notification message (round the aqi value)
 //TODO: fix about popup
 //TODO: add info buttons.
 //TODO: fix size constraints

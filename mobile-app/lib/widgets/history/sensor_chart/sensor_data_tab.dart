@@ -18,7 +18,8 @@ class SensorDataTab extends StatefulWidget {
 }
 
 class _SensorDataTabState extends State<SensorDataTab> {
-  DateTime selectedDate = DateTime.now().toUtc().add(const Duration(hours: 8));
+  // DateTime selectedDate = DateTime.now().toUtc().add(const Duration(hours: 8));
+  DateTime selectedDate = DateTime.now();
   final PageController _pageController = PageController(viewportFraction: 0.95);
   late String selectedSensor;
 
@@ -81,6 +82,7 @@ class _SensorDataTabState extends State<SensorDataTab> {
           Expanded(
             // Chart list with snapping effect
             child: StreamBuilder<List<SensorDataModel>>(
+                key: ValueKey('$selectedSensor-$selectedDate'),
                 stream: streamSensorHistoryData(selectedSensor, selectedDate),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {

@@ -139,7 +139,14 @@ class _PastAlertsTabState extends State<PastAlertsTab> {
                           onTap: (){
                             showDialog(
                               context: context,
-                              builder: (context) => AlertPopup(),
+                              builder: (context) => AlertPopup(
+                                level: alert.warningLevel,
+                                aqiCategory: getAlertLabel(alert.warningLevel),
+                                aqiValue: alert.aqi,
+                                sensorId: alert.sensorId,
+                                time: alert.timestamp,
+                                description: getAqiDescription(alert.aqiCategory),
+                              ),
                             );
                           },
                           date: alert.timestamp,
