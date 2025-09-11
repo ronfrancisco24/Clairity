@@ -61,7 +61,7 @@ class SensorDataModel implements AqiBase {
       ch4: (map['ch4'] as num?)?.toDouble() ?? 0.0,
       co2: (map['co2'] as num?)?.toDouble() ?? 0.0,
       tvoc: (map['tvoc'] as num?)?.toDouble() ?? 0.0,
-      temp: (map['temp'] as num?)?.toDouble() ?? 0.0,
+      temp: (map['temperature'] as num?)?.toDouble() ?? 0.0,
       humidity: (map['humidity'] as num?)?.toDouble() ?? 0.0,
       aqi: (map['general_aqi'] as num?)?.toDouble() ?? 0.0,
       aqiCategory: map['aqi_category'] as String? ?? 'Unknown',

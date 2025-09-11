@@ -97,7 +97,7 @@ class _AddUserDialogState extends State<AddUserDialog> {
                             };
 
                             userProvider.addUser(
-                              phoneNumber: _phoneController.text.trim(),
+                              phoneNumber: "+63${_phoneController.text.trim()}",
                               userData: userData,
                               onCodeSent: (verificationId) {
                                 Navigator.pop(context);
