@@ -63,3 +63,7 @@ Backend & Database: Firebase Firestore
 Machine Learning: Gradient Boosting (Python, scikit-learn)
 
 Containerization: Docker (managed by developers, no setup required for users)
+
+## Download App
+1. Head to release and download apk.
+2. Install apk and use app. 
