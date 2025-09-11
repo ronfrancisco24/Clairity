@@ -19,14 +19,9 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../constants.dart' as constants;
 
-//TODO: fix user creation. checkout sha-1 and sha-256 creation
-// https://stackoverflow.com/questions/46751766/this-app-is-not-authorized-to-use-firebase-authentication-please-verify-that-the
-//TODO: add logo
-//TODO: fix progress bar not loading.
-//TODO: adjust notification message (round the aqi value)
-//TODO: fix about popup
-//TODO: add info buttons.
+//TODO: fix user creation error on real phone numbers SMS verification code request failed: unknown status code: 17028 null
 //TODO: fix size constraints
+//TODO: fix filtering and reset stream everytime.
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -175,8 +170,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     );
                                     return;
                                   }
-                                  await SensorReadingService()
-                                      .generateRawTestData(_selectedSensorId!);
+                                  // await SensorReadingService()
+                                  //     .generateRawTestData(_selectedSensorId!);
                                   NavController.of(context)?.onNavSelect(
                                       constants.NavRoute.history,
                                       initialIndex: 2);
