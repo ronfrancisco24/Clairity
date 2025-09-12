@@ -4,7 +4,7 @@ import '../../screens/notifications/notifications_screen.dart';
 
 
 class NotificationsButton extends StatelessWidget {
-  final bool readNotfications; //TODO: implement logic when notifications is detected (use state management tool for this)
+  final bool readNotfications;
 
   const NotificationsButton({super.key, this.readNotfications = true});
 

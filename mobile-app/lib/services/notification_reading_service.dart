@@ -32,6 +32,29 @@ class NotificationReadingService {
     print("Device token saved globally!");
   }
 
+  Future<void> setupTokenRefresh() async {
+    // Listen for token refresh
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+      print('FCM Token refreshed: $newToken');
+      _updateTokenInFirestore(newToken);
+    });
+  }
+
+  Future<void> _updateTokenInFirestore(String token) async {
+    final tokenRef = FirebaseFirestore.instance.collection('devices').doc(token);
+    try {
+      await tokenRef.set({
+        'token': token,
+        'enabled': true,
+        'createdAt': FieldValue.serverTimestamp(),
+        'lastUpdated': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+      print("Device token saved/updated: $token");
+    } catch (e) {
+      print("Error saving token: $e");
+    }
+  }
+
   Future<void> setGlobalNotifications(bool enabled) async {
     final token = await FirebaseMessaging.instance.getToken();
     print(token);

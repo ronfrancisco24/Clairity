@@ -12,8 +12,13 @@ async function sendToEnabledDevices(readingData) {
        .where("enabled", "==", true)
        .get();
 
+  if (!readingData || !readingData.sensorId) {
+    console.log("Invalid reading data or missing sensorId");
+    return;
+   }
+
   if (devicesSnap.empty) {
-    console.log(`No enabled device tokens found for sensor ${sensorId}`);
+    console.log(`No enabled device tokens found for sensor ${readingData.sensorId}`);
     return;
   }
 
@@ -25,6 +30,11 @@ async function sendToEnabledDevices(readingData) {
       title: readingData.title,
       body: `Sensor ${readingData.sensorId} recorded: ${readingData.message}`,
     },
+    // Add data payload for background processing
+        data: {
+          sensorId: readingData.sensorId,
+          type: readingData.type,
+        }
   };
 
   const response = await getMessaging().sendEachForMulticast(payload);

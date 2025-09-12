@@ -1,10 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../controllers/dashboard_manager.dart';
 import '../../providers/log_provider.dart';
 import 'package:provider/provider.dart';
 import '../../services/notification_reading_service.dart';
-import '../../services/sensor_reading_service.dart';
 import '../../utils/navbar_utils.dart';
 import '../../widgets/dashboard/cleaned_time_tiles.dart';
 import '../../widgets/dashboard/forecast_card.dart';
@@ -18,10 +18,12 @@ import '../../utils/dashboard_utils.dart';
 import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../constants.dart' as constants;
+import '../notifications/notifications_screen.dart';
 
 //TODO: fix user creation error on real phone numbers SMS verification code request failed: unknown status code: 17028 null
 //TODO: fix size constraints
 //TODO: fix filtering and reset stream everytime.
+//TODO: extract helper functions and keep this purely for building widgets only.
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -31,7 +33,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final DashboardService _dashboardService = DashboardService();
+  final _dashboardService = DashboardService();
+  final _notificationService = NotificationReadingService();
 
   String? _selectedSensorId;
 
@@ -40,10 +43,53 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        await NotificationReadingService().saveDeviceToken();
+        await _notificationService.saveDeviceToken();
+        await _setupNotificationHandlers();
+        await _notificationService.setupTokenRefresh();
         await _initializeSensor();
       },
     );
+  }
+
+  //TODO: put to notification handler.
+  Future<void> _setupNotificationHandlers() async {
+    // Request permission
+    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    // for testing foreground notifications
+    // Handle foreground notifications - just log them, no refresh needed
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+      // No need to refresh - user is already on dashboard seeing live data
+    });
+
+    // Handle notification taps when app is in background/terminated
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const NotificationScreen()),
+      );
+      // Navigate to notifications tab - dashboard will auto-refresh when navigated to
+
+    });
+
+    // Handle initial message from terminated state
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      print('App opened from terminated state via notification');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const NotificationScreen()),
+        );
+      });
+    }
   }
 
   Future<void> _initializeSensor() async {
