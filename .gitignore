@@ -46,7 +46,7 @@ app.*.map.json
 
 # secret keys
 node_modules
-firebase.json
+mobile-app/lib/firebase_options.dart
 functions/node_modules
 functions/package-lock.json
 functions/package.json
