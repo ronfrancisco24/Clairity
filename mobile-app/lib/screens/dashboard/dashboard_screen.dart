@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../controllers/dashboard_manager.dart';
@@ -6,20 +5,17 @@ import '../../controllers/notification_manager.dart';
 import '../../providers/log_provider.dart';
 import 'package:provider/provider.dart';
 import '../../services/notification_reading_service.dart';
-import '../../utils/navbar_utils.dart';
+import '../../widgets/dashboard/air_quality_section.dart';
 import '../../widgets/dashboard/cleaned_time_tiles.dart';
 import '../../widgets/dashboard/forecast_card.dart';
 import '../../widgets/header.dart';
 import '../../widgets/dashboard/card_location.dart';
-import '../../widgets/dashboard/aqi_card.dart';
-import '../../widgets/dashboard/card_quality.dart';
 import '../../widgets/dashboard/pollutant_grid.dart';
 import '../../widgets/dashboard/card_message.dart';
 import '../../utils/dashboard_utils.dart';
 import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../constants.dart' as constants;
-import '../notifications/notifications_screen.dart';
 
 //TODO: fix user creation error on real phone numbers SMS verification code request failed: unknown status code: 17028 null
 //TODO: fix size constraints
@@ -138,62 +134,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 // Air Quality & Trend Cards
-                Row(
-                  children: [
-                    // Currents Card
-                    Expanded(
-                      child: Consumer<SensorProvider>(
-                        builder: (context, provider, _) {
-                          // You can adjust how you calculate these
-                          final value = (selectedReading?.aqi ?? 0);
-                          final status =
-                              selectedReading?.aqiCategory ?? 'Unknown';
-                          return AqiCard(
-                            value: value,
-                            status: status,
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Consumer<SensorProvider>(
-                            builder: (context, provider, _) {
-                              final highest = selectedReading != null
-                                  ? getHighestPollutant(selectedReading)
-                                  : null;
-                              final level = highest != null
-                                  ? getPollutantLevel(highest.value)
-                                  : null;
-                              return CardQuality(
-                                onTap: () async {
-                                  if (_selectedSensorId == null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text("No sensor selected"),
-                                      ),
-                                    );
-                                    return;
-                                  }
-                                  // await SensorReadingService()
-                                  //     .generateRawTestData(_selectedSensorId!);
-                                  NavController.of(context)?.onNavSelect(
-                                      constants.NavRoute.history,
-                                      initialIndex: 2);
-                                },
-                                trendLabel: 'Air Quality Trend',
-                                trendValue: highest?.key ?? '--',
-                                trendLevel: level ?? 'No Data',
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                AirQualitySection(
+                  selectedReading: selectedReading,
+                  selectedSensorId: _selectedSensorId,
                 ),
                 const SizedBox(height: 16),
                 // Warning
