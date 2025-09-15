@@ -17,12 +17,13 @@ import '../../providers/sensor_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../constants.dart' as constants;
 
-//TODO: fix user creation error on real phone numbers SMS verification code request failed: unknown status code: 17028 null
+//TODO: fix user creation error on real phone numbers SMS verification
+//TODO: code request failed: unknown status code: 17028 null
 //TODO: fix size constraints
 //TODO: fix filtering and reset stream everytime.
-//TODO: extract helper functions and keep this purely for building widgets only.
 //TODO: fix current notifications not notifying
 //TODO: add labels for easier user experience
+//TODO: add info buttons to pollutant card.
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});

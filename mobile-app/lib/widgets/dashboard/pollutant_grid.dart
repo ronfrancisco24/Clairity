@@ -33,11 +33,35 @@ class PollutantGrid extends StatelessWidget {
             value:(data['value'] as num).toDouble(),
             // take from pollutantMaxValues and assign its label.
             maxValue: (pollutantMaxValues[data['label']] ?? 100).toInt(),
-            label: data['label'],
+            label: '${_getLabelName(data['label'])} (${data['label']})',
             progress: data['progress'],
           ),
         );
       }).toList(),
     );
   }
+
+  String _getLabelName (String label){
+    switch (label) {
+      case 'PM2.5':
+        return 'Particulate Matter';
+      case 'H₂S':
+        return 'Hydrogen Sulfide';
+      case 'NH₃':
+        return 'Ammonia';
+      case 'CO':
+        return 'Carbon Monoxide';
+      case 'CO₂':
+        return 'Carbon Dioxide';
+      case 'TVOC':
+        return 'Total Volatile Organic Compounds';
+      case 'CH₄':
+        return 'Methane';
+      default:
+        return 'Pollutant';
+    }
+  }
+
 }
+
+

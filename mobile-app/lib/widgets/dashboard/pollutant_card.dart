@@ -55,7 +55,7 @@ class PollutantCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(fontSize: 14),
+            style: const TextStyle(fontSize: 12),
             softWrap: true,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

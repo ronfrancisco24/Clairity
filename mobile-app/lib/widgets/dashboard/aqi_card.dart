@@ -26,68 +26,81 @@ class AqiCard extends StatelessWidget {
           const SizedBox(height: 2),
           SizedBox(
             height: 125,
-            child: Stack(children: [
-              AnimatedRadialGauge(
-                duration: const Duration(seconds: 1),
-                curve: Curves.elasticOut,
-                radius: 100,
-                value: value,
-                axis: const GaugeAxis(
-                  min: 0,
-                  max: 200,
-                  degrees: 240,
-                  style: GaugeAxisStyle(
-                    thickness: 20,
-                    background: Color(0xFFDFDFDF),
-                    segmentSpacing: 4,
-                  ),
-                  progressBar: GaugeProgressBar.rounded(
-                    gradient: GaugeAxisGradient(
-                      colors: [
-                        Color(0xFF00E400), // Good
-                        Color(0xFFFFFF00), // Moderate
-                        Color(0xFFFF7E00), // Unhealthy for Sensitive
-                        Color(0xFFFF0000), // Unhealthy
-                      ],
-                      colorStops: [
-                        0.0,
-                        0.33,
-                        0.66,
-                        1.0
-                      ], // Optional: control color positions
+            child: Stack(
+              children: [
+                AnimatedRadialGauge(
+                  duration: const Duration(seconds: 1),
+                  curve: Curves.elasticOut,
+                  radius: 100,
+                  value: value,
+                  axis: const GaugeAxis(
+                    min: 0,
+                    max: 200,
+                    degrees: 240,
+                    style: GaugeAxisStyle(
+                      thickness: 20,
+                      background: Color(0xFFDFDFDF),
+                      segmentSpacing: 4,
                     ),
-                  ),
-                  pointer: GaugePointer.circle(
-                    radius: 10,
-                    color: Colors.white,
-                    border: GaugePointerBorder(
-                      color: Colors.black,
-                      width: 3,
+                    progressBar: GaugeProgressBar.rounded(
+                      gradient: GaugeAxisGradient(
+                        colors: [
+                          Color(0xFF00E400), // Good
+                          Color(0xFFFFFF00), // Moderate
+                          Color(0xFFFF7E00), // Unhealthy for Sensitive
+                          Color(0xFFFF0000), // Unhealthy
+                        ],
+                        colorStops: [
+                          0.0,
+                          0.33,
+                          0.66,
+                          1.0
+                        ], // Optional: control color positions
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Text(
-                    value.toStringAsFixed(0),
-                    style: const TextStyle(
+                    pointer: GaugePointer.circle(
+                      radius: 10,
                       color: Colors.white,
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
+                      border: GaugePointerBorder(
+                        color: Colors.black,
+                        width: 3,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ]),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Column(
+                      children: [
+                        Text(
+                          value.toStringAsFixed(0),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          'AQI',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 10),
           Text(
             status,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 30,
+              fontSize: 25,
             ),
           ),
         ],
