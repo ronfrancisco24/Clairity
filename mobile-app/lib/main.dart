@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,9 @@ import 'providers/log_provider.dart';
 import 'providers/sensor_provider.dart';
 import 'providers/user_provider.dart';
 import 'providers/notification_provider.dart';
+import 'screens/dashboard/dashboard_screen.dart';
 import 'screens/onboarding/splash_screen.dart';
+import 'utils/navbar_utils.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -46,9 +49,23 @@ class MyApp extends StatelessWidget {
       designSize: const Size(360, 690),
       minTextAdapt: true,
       builder: (context, child) {
-        return const MaterialApp(
+        return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: SplashScreen(),
+          home: StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (BuildContext context, snapshot) {
+              print(snapshot.data);
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SplashScreen();
+              }
+              if (snapshot.hasData && snapshot.data != null) {
+                context.read<UserProvider>().loadUserData();
+                return const NavController();
+              } else {
+                return const SplashScreen();
+              }
+            },
+          )
         );
       },
     );

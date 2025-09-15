@@ -7,7 +7,7 @@ import '../services/sensor_reading_service.dart';
 class SensorProvider extends ChangeNotifier {
   SensorDataModel? _currentData;
   SensorDataModel? _forecastReadingData;
-  ForecastedDataModel? _predictedData; // change to forecasting data
+  ForecastedDataModel? _predictedData;
   final List<String> _sensorIds = [];
   String? _sensorId;
 

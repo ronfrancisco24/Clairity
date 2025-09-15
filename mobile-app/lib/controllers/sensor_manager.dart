@@ -22,7 +22,6 @@ class SensorManager {
         provider.setCurrentData(SensorDataModel.fromMap(doc.data()));
         _checkCurrentNotification(sensorId);
       }
-
     });
 
     _predictedDataSub?.cancel();

@@ -6,8 +6,6 @@ import '../utils/aqi_base_utils.dart';
 import '../utils/dashboard_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-//TODO adjust to new notifications model.
-
 class NotificationReadingService {
   final FirebaseFirestore _notifications = FirebaseFirestore.instance;
 

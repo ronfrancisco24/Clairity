@@ -25,10 +25,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Load user data once when screen opens
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    userProvider.loadUserData();
   }
 
   @override
